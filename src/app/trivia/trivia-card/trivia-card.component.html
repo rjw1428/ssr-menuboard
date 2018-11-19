@@ -1,0 +1,30 @@
+<div *ngIf="editMode" (click)="toggleMenu()" [ngClass]="{'showQuestion':triviaCard.order-1==activeQuestion}">
+  <div class="card" [ngClass]="{'showAnswer':triviaCard.showAnswer}">
+    <h3>{{triviaCard.order}} - {{triviaCard.question}}</h3>
+    <h4>{{triviaCard.answer}}</h4>
+    <div class="button-group btn-sm" *ngIf="menuOpen">
+      <button class="btn btn-success first-btn" (click)="onAdd()">Insert Below</button>
+      <button class="btn btn-danger" (click)="onDelete()">Delete</button>
+      <button class="btn btn-warning" (click)="onEdit()">Edit</button>
+      <button class="btn btn-secondary" (click)="hideQuestion()" *ngIf="triviaCard.order-1==activeQuestion">Hide
+        Question</button>
+      <button class="btn btn-secondary" (click)="setQuestion()" *ngIf="triviaCard.order-1!=activeQuestion">Show
+        Question</button>
+      <button class="btn btn-light" (click)="showAnswer()" *ngIf="!triviaCard.showAnswer">Show Answer</button>
+      <button class="btn btn-light" (click)="showAnswer()" *ngIf="triviaCard.showAnswer">Hide Answer</button>
+      <button class="btn btn-primary move-btn" (click)="onShiftDown()">Move Down</button>
+      <button class="btn btn-primary move-btn" (click)="onShiftUp()">Move Up</button>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="!editMode">
+  <div class="main">
+    <div class="center">
+      <h1>Question: {{triviaCard.order}}</h1>
+      <h1>{{triviaCard.question}}</h1>
+      <br>
+      <h2 *ngIf="triviaCard.showAnswer">{{triviaCard.answer}}</h2>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,12 @@
+<div class="container">
+  <h3>
+    {{ index+1 }} - {{ property.title }}:
+    <div class="form-group input-group-lg">
+      <input type="hidden" name="key" #key="ngModel" [(ngModel)]="storeValue.key">
+      <input type="hidden" name="title" #title="ngModel" [(ngModel)]="storeValue.title">
+      <input type="text" name="value" #value="ngModel" [(ngModel)]="storeValue.value" class="form-control">
+      <button class="btn btn-primary btn-sm" (click)="onSave()">Save</button>
+      <button class="btn btn-danger btn-sm" (click)="onCancel()">Cancel</button>
+    </div>
+  </h3>
+</div>

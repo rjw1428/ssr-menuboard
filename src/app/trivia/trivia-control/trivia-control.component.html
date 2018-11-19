@@ -1,0 +1,27 @@
+<div *ngIf="!showTeams">
+  <div class="bg container" *ngIf="triviaDeck.length>0; else blank">
+    <div class="button-row">
+      <div class="button-group">
+        <button class="btn btn-light" (click)="toggleTriviaMode()" *ngIf="triviaModeState">Trivia Mode</button>
+        <button class="btn btn-dark" (click)="toggleTriviaMode()" *ngIf="!triviaModeState">Trivia Mode</button>
+        <button class="btn btn-primary" (click)="onTeams()">Teams</button>
+        <button class="btn btn-light" (click)="displayTeams()" *ngIf="triviaService.showScore">Show Score</button>
+        <button class="btn btn-dark" (click)="displayTeams()" *ngIf="!triviaService.showScore">Show Score</button>
+      </div>
+    </div>
+    <div *ngFor="let trivia of triviaDeck; let i=index">
+      <app-trivia-card [triviaCard]="trivia" [editMode]=true [activeQuestion]="activeNum" (add)="onInsert($event)"
+        (remove)="onRemove($event)" (edit)="onEdit($event)" (shiftUp)="onShiftUp($event)" (shiftDown)="onShiftDown($event)"
+        (showAnswerEmitter)="onShowAnswer($event)" (onShowQuestion)="onSetQuestion($event)" (onHideQuestion)="onSetNoQuestion($event)">
+      </app-trivia-card>
+    </div>
+  </div>
+  <ng-template #blank>
+    <button class="btn btn-success btn-lg" (click)="onAdd()">Add Question</button>
+  </ng-template>
+  <app-trivia-form *ngIf="triviaService.editMode==true" (formSubmitted)="onInsertComplete($event)" (formClosed)="onClose()"></app-trivia-form>
+</div>
+
+<div *ngIf="showTeams">
+  <app-team-list [editMode]="true" (showQuestions)="onShowQuestions()"></app-team-list>
+</div>

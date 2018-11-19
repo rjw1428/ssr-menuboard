@@ -1,0 +1,29 @@
+.background {
+  position: absolute;
+  width:100vw;
+  height: 100vh;
+}
+
+.twitter {
+  color: white;
+  background-color: #00aced;
+}
+
+.facebook {
+  color: white;
+  background-color: #3b5998;
+}
+
+.instagram {
+  color: #125688;
+  background: white;
+}
+
+.icon {
+  width: 400px;
+  height: auto;
+  transform: translate(-50%, -50%);
+  position: absolute;
+  left: 50%;
+  top: 50%;
+}

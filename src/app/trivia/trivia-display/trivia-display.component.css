@@ -1,0 +1,10 @@
+p {
+    color: white;
+}
+
+.contain {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    /* border: 2px solid red; */
+}

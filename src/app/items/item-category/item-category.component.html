@@ -1,0 +1,14 @@
+<div [ngClass]="{'container':true, 'shift-center':centerFlag, 'display-mode':!editMode, 'edit-mode':editMode}">
+    <div class="header">
+        <h1 (click)="onClick()" [ngStyle]="setTitleStyle()">{{category.title}}</h1>
+        <div class="button-group" *ngIf="menuToggle && editMode">
+            <button class="btn btn-success add" (click)="onAddItem()">Add Item</button>
+            <button class="btn btn-danger delete" (click)="onDeleteCategory()">Delete</button>
+            <button class="btn btn-warning edit" (click)="onEditCategory()">Edit Title</button>
+            <button class="btn btn-primary down" (click)="onDownCategory()">Move Down</button>
+            <button class="btn btn-primary up" (click)="onUpCategory()">Move Up</button>
+        </div>
+    </div>
+    <app-item class="left-element" (itemAdded)="onInsertBelow($event)" (itemEdited)="onEdit($event)" (itemDeleted)="onDelete($event)" (itemShiftUp)="onShiftUp($event)"
+    (itemShiftDown)="onShiftDown($event)" (itemOut)="onOut($event)" (iconOff)="onIconOff($event)" *ngFor="let item of itemList" [item]="item" [editMode]="editMode"></app-item>
+</div>

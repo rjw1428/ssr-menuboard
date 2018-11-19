@@ -1,0 +1,19 @@
+<div class="container edit-container" *ngIf="editMode">
+  <div class="name">{{team.name}}</div>
+  <div class="score">{{team.score}}</div>
+  <div class="points"><span *ngIf="team.points>0">+</span>{{team.points}}</div>
+  <div class="remove"><button class="btn btn-danger" (click)="onRemove()">X</button></div>
+  <div class="controls">
+    <button class="btn btn-danger" (click)="onRemovePoints()">-</button>
+    <button class="btn btn-success" (click)="onAddPoints()">+</button>
+  </div>
+</div>
+
+<div class="container" *ngIf="!editMode">
+  <div class=" display-container">
+    <div class="num-display">{{index}}</div>
+    <div class="name-display">{{team.name}}</div>
+    <div class="score-display">{{team.score}}</div>
+    <div class="points-display"><span *ngIf="team.points>0">+</span>{{team.points}}</div>
+  </div>
+</div>

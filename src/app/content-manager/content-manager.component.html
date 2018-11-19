@@ -1,0 +1,22 @@
+<div class="bg">
+  <div *ngIf="currentUpload">
+    <div class="progress">
+      <div class="progress-bar" role="progressbar" [style.width]="currentUpload?.progress + '%'" aria-valuenow="25"
+        aria-valuemin="0" aria-valuemax="100">{{currentUpload?.progress}}/100</div>
+    </div>
+  </div>
+
+  <label>
+    <input type="file" (change)="detectFiles($event)">
+  </label>
+
+  <button class="btn btn-primary" [disabled]="!selectedFiles" (click)="uploadSingle()">
+    Upload File
+  </button>
+  <div style="background-color: black">
+    <hr>
+    <div *ngFor="let file of fileList">
+      <app-upload [file]="file"></app-upload>
+    </div>
+  </div>
+</div>

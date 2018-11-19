@@ -1,0 +1,17 @@
+<div class="formBG">
+  <div class="title">
+    <h1>Add Menu Category</h1>
+  </div>
+  <form #categoryForm="ngForm" (ngSubmit)="onSubmit(categoryForm)">
+    <input type="hidden" name="key" #key="ngModel" [(ngModel)]="catService.selectedCategory.key">
+    <input type="hidden" name="order" #order="ngModel" [(ngModel)]="catService.selectedCategory.order">
+    <div class="form-group input-group-lg">
+      <label for="comapny">Title</label>
+      <input type="text" name="title" class="form-control" #title="ngModel" [(ngModel)]="catService.selectedCategory.title" placeholder="Category Title">
+    </div>
+    <div class="form-group">
+      <button class="btn btn-success btn-lg" type="submit">Submit</button>
+      <button class="btn btn-danger btn-lg" type="button" (click)="onClose()">Cancel</button>
+    </div>
+  </form>
+</div>

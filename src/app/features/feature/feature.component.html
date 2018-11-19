@@ -1,0 +1,108 @@
+<div *ngIf="editable==true; else display">
+  <div [ngClass]="{'container': true, 'child': feature.child && editable}" (click)="toggleMenu()">
+    <div class="row" [ngClass]="{'panel-body':!feature.active}">
+      <div class="text col-sm">
+        <h3>
+          <span class="index">{{ feature.order }} </span>
+          <span class="headEdit"> {{ feature.header }} </span>
+        </h3>
+        <h4 class="itemEdit"> {{ feature.caption }} </h4>
+        <h5 class="itemEdit">{{ feature.subcaption }} </h5>
+        <h5 class="itemEdit" *ngIf="feature.startDate!=''">Start: {{ feature.startDate }}</h5>
+        <h5 class="itemEdit" *ngIf="feature.endDate!=''">End: {{ feature.endDate }}</h5>
+      </div>
+      <div class="col-sm" *ngIf="feature.url.substring(feature.url.length-4)=='.mp4'; else image">
+        <video #video class="previewImage" autoplay loop [muted]="true">
+          <source [src]="feature.url" type="video/mp4">
+        </video>
+      </div>
+      <ng-template #image class="col-sm">
+        <img class="previewImage" [src]="feature.url">
+      </ng-template>
+    </div>
+    <div class="row">
+      <h5 class="itemEdit">Layout: {{ feature.layout }}</h5>
+    </div>
+    <div class="button-row">
+      <div class="button-group btn-sm " *ngIf="menuToggle">
+        <button class="btn btn-success" (click)="onInsert()">Insert</button>
+        <button class="btn btn-success" (click)="onAddChild()">Child</button>
+        <button class="btn btn-danger" (click)="onDelete()">Delete</button>
+        <button class="btn btn-warning" (click)="onEdit()">Edit</button>
+        <button class="btn btn-primary" (click)="onShiftUp()">Shift Up</button>
+        <button class="btn btn-primary" (click)="onShiftDown()">Shift Down</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #display>
+  <div [ngSwitch]="feature.layout">
+    <div *ngSwitchCase="'fullscreen'">
+      <div class="no-split">
+        <div class="displayImageFull" *ngIf="feature.url.substring(feature.url.length-4)=='.mp4'; else image">
+          <video #video autoplay loop [muted]="true">
+            <source [src]="feature.url" type="video/mp4" (error)="loadError($event)">
+          </video>
+        </div>
+        <ng-template #image>
+          <img class="displayImageFull" [src]="feature.url" (error)="loadError($event)">
+        </ng-template>
+      </div>
+    </div>
+    <div *ngSwitchCase="'right'">
+      <div class="splitRight right" [ngStyle]="setBannerStyle()">
+        <h1 class="centered header" [ngStyle]="setHeaderStyle()">{{ feature.header | featureTitle }}</h1>
+        <h1 class="centered caption" [ngStyle]="setCaptionStyle()">{{ feature.caption | featureMain }}</h1>
+        <h2 class="centered subcaption" [ngStyle]="setSubCaptionStyle()">{{ feature.subcaption }}</h2>
+        <img class="logo centered" [src]="logoUrl">
+      </div>
+      <div class="splitLeft left " [ngStyle]="setImageStyle()" *ngIf="feature.url.substring(feature.url.length-4)=='.mp4'; else image">
+        <video class="displayImage" #video autoplay loop [muted]="true">
+          <source [src]="feature.url" type="video/mp4" (error)="loadError($event)">
+        </video>
+      </div>
+      <ng-template #image>
+        <div class="splitLeft left" [ngStyle]="setImageStyle()">
+          <img class="displayImage" [src]="feature.url" (error)="loadError($event)">
+        </div>
+      </ng-template>
+    </div>
+    <div *ngSwitchCase="'left'">
+      <div class="splitLeft left" [ngStyle]="setBannerStyle()">
+        <h1 class="centered header" [ngStyle]="setHeaderStyle()">{{ feature.header | featureTitle }}</h1>
+        <h1 class="centered caption" [ngStyle]="setCaptionStyle()">{{ feature.caption | featureMain }}</h1>
+        <h2 class="centered subcaption" [ngStyle]="setSubCaptionStyle()">{{ feature.subcaption }}</h2>
+        <img class="logo centered" [src]="logoUrl">
+      </div>
+      <div class="splitRight right " [ngStyle]="setImageStyle()" *ngIf="feature.url.substring(feature.url.length-4)=='.mp4'; else image">
+        <video class="displayImage" #video autoplay loop [muted]="true">
+          <source [src]="feature.url" type="video/mp4" (error)="loadError($event)">
+        </video>
+      </div>
+      <ng-template #image>
+        <div class="splitRight right" [ngStyle]="setImageStyle()">
+          <img class="displayImage" [src]="feature.url" (error)="loadError($event)">
+        </div>
+      </ng-template>
+    </div>
+    <div *ngSwitchCase="'no-border'">
+      <div class="splitLeft left">
+        <div class="text-box">
+          <h1 class="line1">{{feature.caption}}</h1>
+          <h1 class="line2">{{feature.subcaption}}</h1>
+        </div>
+      </div>
+      <div class="no-split">
+        <div class="displayImageFull" *ngIf="feature.url.substring(feature.url.length-4)=='.mp4'; else image">
+          <video #video autoplay loop [muted]="true">
+            <source [src]="feature.url" type="video/mp4" (error)="loadError($event)">
+          </video>
+        </div>
+        <ng-template #image>
+          <img class="displayImageFull" [src]="feature.url" (error)="loadError($event)">
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</ng-template>

@@ -1,0 +1,28 @@
+<div *ngIf="itemService.showItemForm">
+  <app-item-form></app-item-form>
+</div>
+
+<div class="container">
+  <button class="btn btn-success float-right" (click)="saveSort()">Save Sort</button>
+  <div class="dropdown float-right">
+    <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+      aria-haspopup="true" aria-expanded="false">
+      Sort
+    </button>
+    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+      <a class="dropdown-item" (click)="sortProperty('company', 'asc')">Sort By Name</a>
+      <a class="dropdown-item" (click)="sortProperty('lastModified', 'asc')">Sort By Date</a>
+      <a class="dropdown-item" (click)="sortProperty('lastModified', 'desc')">Sort By Date (Reverse)</a>
+      <a class="dropdown-item" (click)="sortProperty('order', 'asc')">Sort By Taps</a>
+    </div>
+  </div>
+  <!-- <button class="btn btn-info" (click)="sortProperty('company')">Sort By Name</button>
+  <button class="btn btn-info" (click)="sortProperty('lastModified')">Sort By Date</button>
+  <button class="btn btn-danger" (click)="sortProperty('order')">Remove Sort</button> -->
+
+  <div *ngFor="let item of filterList">
+    <app-item [item]="item" [movable]="sortable" [editMode]="editMode" (itemAdded)="onInsertBelow($event)" (itemEdited)="onEdit($event)"
+      (itemDeleted)="onDelete($event)" (itemShiftUp)="onShiftUp($event)" (itemShiftDown)="onShiftDown($event)"
+      (itemOut)="onOut($event)" (iconOff)="onIconOff($event)"></app-item>
+  </div>
+</div>

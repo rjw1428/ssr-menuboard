@@ -1,0 +1,13 @@
+<div class="container block">
+  <div class="row">
+    <div class="col-sm-6">
+      <p><button class="btn btn-danger" (click)="removeFile(file.key, file.name)">X</button>{{file.name}} </p>
+      <p>{{file.url}} </p>
+
+    </div>
+    <div class="col-sm-6 float-left">
+      <img [src]="file.url">
+    </div>
+  </div>
+  <hr>
+</div>

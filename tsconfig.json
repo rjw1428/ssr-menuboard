@@ -14,6 +14,49 @@
     "lib": [
       "es2017",
       "dom"
-    ]
+    ],
+    "baseUrl": "src",
+    "paths": {
+      "@angular2/*": [
+        "../node_modules/angularfire2/*"
+      ],
+      "@shared/*": [
+        "app/shared/*"
+      ],
+      "@environments/*": [
+        "environments/*"
+      ],
+      "@item/*": [
+        "app/items/*"
+      ],
+      "@features/*": [
+        "app/features/*"
+      ],
+      "@specials/*": [
+        "app/specials/*"
+      ],
+      "@social/*": [
+        "app/social/*"
+      ],
+      "@static/*": [
+        "app/static/*"
+      ],
+      "@assets/*": [
+        "assets/*"
+      ],
+      "@auth/*": [
+        "app/auth/*"
+      ],
+      "@display/*": [
+        "app/display/*"
+      ],
+      "@nav-bar/*": [
+        "app/nav-bar/*"
+      ],
+      "@trivia/*": [
+        "app/trivia/*"
+      ]
+    },
+    "module": "es2015"
   }
 }

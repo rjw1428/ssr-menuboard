@@ -1,0 +1,18 @@
+<div class="main">
+  <div class="left">
+    <div @left *ngFor="let left of leftList; let i=index">
+      <div *ngIf="i!=leftList.length-1; else single">
+        <app-item-category [category]="left"></app-item-category>
+      </div>
+      <ng-template #single>
+        <app-item-category [category]="left" [centerFlag]="center"></app-item-category>
+      </ng-template>
+    </div>
+  </div>
+  <div class="right">
+    <div @right *ngFor="let right of rightList">
+      <app-item-category [category]="right"></app-item-category>
+    </div>
+  </div>
+</div>
+

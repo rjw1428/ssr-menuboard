@@ -1,0 +1,11 @@
+<div class="bg container" *ngIf="specialsList.length>0; else blank">
+  <div *ngFor="let special of specialsList; let i=index" class="element">
+    <app-special [special]="special" [editable]=true (add)="onInsert($event)" (remove)="onRemove($event)" (edit)="onEdit($event)"
+      (shiftUp)="onShiftUp($event)" (shiftDown)="onShiftDown($event)">
+    </app-special>
+  </div>
+</div>
+<ng-template #blank>
+  <button class="btn btn-success btn-lg" (click)="onAdd()">Add Special</button>
+</ng-template>
+<app-specials-form *ngIf="specialsService.editMode==true" (formSubmitted)="onInsertComplete($event)" (formClosed)="onClose()"></app-specials-form>

@@ -1,0 +1,30 @@
+<app-team-form *ngIf="showForm" (closeForm)="closeForm()"></app-team-form>
+
+<div class="container" *ngIf="editMode">
+  <div class="button-row">
+    <div class="button-group">
+      <button class="btn btn-primary" (click)="onQuestions()">Questions</button>
+      <button class="btn btn-light" (click)="showTeams()" *ngIf="triviaService.showScore">Show Score</button>
+      <button class="btn btn-dark" (click)="showTeams()" *ngIf="!triviaService.showScore">Show Score</button>
+      <button class="btn btn-success" (click)="openForm()">Add Team</button>
+      <button class="btn btn-warning" (click)="updateScore()">Update Score</button>
+      <button class="btn btn-danger" style="float: right" (click)="clearTeams()">Clear Teams</button>
+    </div>
+  </div>
+  <div *ngFor="let team of teamList">
+    <app-team [team]="team" [editMode]="editMode"></app-team>
+  </div>
+</div>
+
+<!-- DISPLAY -->
+<div class="container" *ngIf="!editMode">
+  <div *ngIf="!fancy" class="block">
+    <div *ngFor="let team of teamList; let i=index">
+      <app-team [team]="team" [editMode]="editMode" [index]="i+1"></app-team>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="fancy && !editMode">
+  <app-nintendo-score></app-nintendo-score>
+</div>

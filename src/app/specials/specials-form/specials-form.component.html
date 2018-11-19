@@ -1,0 +1,22 @@
+<div class="formBG">
+  <div class="title">
+    <h3>Add Event</h3>
+  </div>
+  <form #specialForm="ngForm" (ngSubmit)="onSubmit(specialForm)">
+    <input type="hidden" name="key" #key="ngModel" [(ngModel)]="specialsService.specialSelected.key">
+    <input type="hidden" name="order" #order="ngModel" [(ngModel)]="specialsService.specialSelected.order">
+    <div class="form-group input-group-sm">
+      <label for="title">Title</label>
+      <input type="text" name="title" class="form-control" #title="ngModel" [(ngModel)]="specialsService.specialSelected.title">
+    </div>
+    <div class="form-group input-group-sm">
+      <label for="note">Description</label>
+      <input type="text" name="note" class="form-control" #note="ngModel" [(ngModel)]="specialsService.specialSelected.note">
+    </div>
+    <div class="col-xs-3"></div>
+    <div class="form-group">
+      <button class="btn btn-success btn-lg" type="submit">Submit</button>
+      <button class="btn btn-danger btn-lg" type="button" (click)="onClose()">Cancel</button>
+    </div>
+  </form>
+</div>

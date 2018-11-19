@@ -1,0 +1,14 @@
+<div class="bg">
+  <div *ngIf="featuredList.length>0; else blank">
+    <div class="main" *ngFor="let featured of featuredList; let i=index">
+      <app-feature [feature]="featured" [editable]=true (addFeature)="insertParent($event)" (remove)="onRemove($event)" (addChild)="insertChild($event)"
+        (shiftUp)="onShiftUp($event)" (shiftDown)="onShiftDown($event)">
+      </app-feature>
+    </div>
+  </div>
+
+  <ng-template #blank>
+    <button class="btn btn-success btn-lg" (click)="addFeature()">Add Feature</button>
+  </ng-template>
+  <app-feature-form *ngIf="featureService.editMode==true" (formSubmitted)="onInsertComplete($event)" (formClosed)="onClose()"></app-feature-form>
+</div>

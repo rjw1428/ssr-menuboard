@@ -1,0 +1,39 @@
+.formBG {
+    background-color: white;
+    border-radius: 20px;
+    border: solid black 4px;
+    padding: 10px;
+    width: 75vw;
+    position: fixed;
+    left: 12%;
+    top: 6%;
+    z-index: 2;
+}
+
+.button-group {
+    margin-top: 10px;
+    padding-top: 10px;
+}
+
+.focusTitle {
+    top: 0%;
+}
+
+.focusCap {
+    top: -4%;
+}
+
+.focusSubcap {
+    top: -8%;
+}
+
+.focusImg {
+    top: -12%;
+}
+.focusStart {
+    top: -16%;
+}
+
+.focusEnd {
+    top: -20%;
+}

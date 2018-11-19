@@ -1,0 +1,23 @@
+.main {
+    position: relative;
+    /* margin: 0px; */
+    /* padding: 0px; */
+    width: 100vw;
+    overflow: hidden;
+}
+
+.side {
+    display: block;
+    position: relative;
+    width: 50%;
+    /* transform: translate(-50%,0) */
+    /* overflow: hidden; */
+}
+
+.left {
+    float: left;
+}
+
+.right {
+    float: right;
+}

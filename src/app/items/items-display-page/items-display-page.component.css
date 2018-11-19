@@ -1,0 +1,21 @@
+::ng-deep:root {
+}
+
+.main {
+    position: absolute;
+    width: 98vw;
+    height: 100vh;
+    overflow: hidden;
+    margin: 0px;
+}
+
+.left {
+    float: left;
+    width: 49%;
+    /* border: 1px solid black; */
+}
+.right {
+    float: left;
+    width: 49%;
+    /* border: 1px solid blue; */
+}

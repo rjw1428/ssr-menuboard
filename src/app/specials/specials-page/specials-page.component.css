@@ -1,0 +1,132 @@
+@font-face {
+    font-family: "American Typewriter";
+    src: url("../../../assets/American.ttf");
+}
+
+
+.hidden {
+    visibility: hidden;
+}
+
+.right {
+    overflow: hidden;
+    position: relative;
+    float: right;
+    width: 50vw;
+    max-height: 100vh;
+    /* border: 1px solid black; */
+}
+
+.left {
+    position: relative;
+    float: left;
+    left: 50px;
+    max-width: 50vw;
+    /* border: 1px solid black; */
+}
+
+@keyframes flyInLeft {
+    0% { transform: translateX(100%);}
+    100% { transform: translateX(0);}
+}
+
+@keyframes flyInRight {
+    0% { transform: translateX(-100%);}
+    100% { transform: translateX(0);}
+}
+
+@keyframes flyOutLeft {
+    0% { transform: translateX(0);}
+    100% { transform: translateX(100%);}
+}
+
+@keyframes flyOutRight {
+    0% { transform: translateX(0%);}
+    100% { transform: translateX(-100%);}
+}
+
+@keyframes fadeIn {
+    0% { opacity: 0;}
+    100% { opacity: 1;}
+}
+
+@keyframes fadeOut {
+    0% { opacity: 1;}
+    100% { opacity: 0;}
+}
+
+.container {
+    margin-top: 5vh;
+    display: table;
+    height: 90vh;
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.row {
+    display: table-row;
+    padding-bottom: 0px;
+    /* border: 3px solid blue; */
+}
+
+.element {
+    display: table-cell;
+    padding-bottom: 0px;
+    /* border: 3px solid black; */
+}
+
+.row:nth-child(even) {
+    animation: flyInLeft;
+    animation-duration: 500ms;
+}
+
+.row:nth-child(odd) {
+    animation: flyInRight;
+    animation-duration: 500ms;
+}
+
+.row-out:nth-child(even) {
+    animation: flyOutRight;
+    animation-duration: 500ms;
+}
+
+.row-out:nth-child(odd) {
+    animation: flyOutLeft;
+    animation-duration: 500ms;
+}
+
+.title-out {
+    display: inline-block;
+    color: white;
+    font-family: "American Typewriter";
+    text-shadow: 2px 2px 2px black;
+    position: relative;
+    animation: fadeOut;
+    animation-duration: 500ms;
+}
+
+.title {
+    display: inline-block;
+    color: white;
+    font-family: "American Typewriter";
+    text-shadow: 2px 2px 2px black;
+    position: relative;
+    animation: fadeIn;
+    animation-duration: 500ms;
+}
+
+hr {
+    position: relative;
+    top: -10px;
+    border: none;
+    background-color: white;
+    height: 3px;
+    box-shadow: 2px 2px 2px black;
+    border-radius: 50%;
+}
+
+@media screen and (max-width: 750px) {
+    h1 {
+        font-size: 25px;
+    }
+  }

@@ -1,0 +1,12 @@
+.formBG {
+    background-color: white;
+    border-radius: 20px;
+    border: solid black 2px;
+    padding: 10px;
+    width: 50vw;
+    position: fixed;
+    left: 25%;
+    margin-top: 10vh;
+    z-index: 2;
+    box-shadow: 4px 4px #666666;
+}

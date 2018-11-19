@@ -1,0 +1,13 @@
+.bg {
+    width: 50vw;
+   }
+   
+   @media screen and (max-width: 750px) {
+       .bg {
+         width: 90vw;
+       }
+     }
+   
+   .element {
+       margin-bottom: 20px;
+   }

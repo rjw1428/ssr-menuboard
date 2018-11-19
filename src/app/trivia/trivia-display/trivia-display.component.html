@@ -1,0 +1,10 @@
+<div *ngIf="!triviaService.showScore" class="contain">
+  <div *ngFor="let trivia of triviaDeck; let i=index">
+    <app-trivia-card [triviaCard]="trivia" [editMode]=false *ngIf="i==activeNum"></app-trivia-card>
+  </div>
+</div>
+
+<div *ngIf="triviaService.showScore">
+  <app-team-list [editMode]='false'></app-team-list>
+</div>
+

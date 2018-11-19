@@ -1,0 +1,48 @@
+<div class="formBG" [ngClass]="{'focusCompany':focusCompany, 'focusBeer':focusBeer, 'focusDesc': focusDescription, 'focusAbv':focusAbv}">
+  <div class="title">
+    <h3>Add Menu Item</h3>
+  </div>
+  <form #itemForm="ngForm" (ngSubmit)="onSubmit(itemForm)">
+    <input type="hidden" name="key" #key="ngModel" [(ngModel)]="itemService.selectedItem.key">
+    <input type="hidden" name="imgUrl" #imgUrl="ngModel" [(ngModel)]="itemService.selectedItem.imgUrl">
+    <input type="hidden" name="available" #available="ngModel" [(ngModel)]="itemService.selectedItem.available">
+    <input type="hidden" name="order" #order="ngModel" [(ngModel)]="itemService.selectedItem.order">
+    <input type="hidden" name="happyHour" #happyHour="ngModel" [(ngModel)]="itemService.selectedItem.happyHour">
+    <div class="form-group">
+      <div class="input-group input-group-sm mb-3">
+        <div class="input-group-prepend"><span class="input-group-text">Brewery</span></div>
+        <input type="text" name="company" class="form-control" #company="ngModel" [(ngModel)]="itemService.selectedItem.company"
+          (click)="onSelect('company')" placeholder="Brewery">
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="input-group input-group-sm mb-3">
+        <div class="input-group-prepend"><span class="input-group-text">Beer</span></div>
+        <input type="text" name="beer" class="form-control" #beer="ngModel" [(ngModel)]="itemService.selectedItem.beer"
+          (click)="onSelect('beer')" placeholder="Beer Name...">
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="input-group input-group-sm mb-3">
+        <div class="input-group-prepend"><span class="input-group-text">Description</span></div>
+        <input type="text" name="note" class="form-control" #note="ngModel" [(ngModel)]="itemService.selectedItem.note"
+          (click)="onSelect('desc')" placeholder="Beer Description...">
+      </div>
+    </div>
+    <div class="form-group col-xs-4">
+      <div class="input-group  input-group-sm mb-3">
+        <div class="input-group-prepend"><span class="input-group-text">ABV</span></div>
+        <input type="text" name="abv" class="form-control" #abv="ngModel" [(ngModel)]="itemService.selectedItem.abv"
+          (click)="onSelect('abv')" placeholder="0.0">
+        <div class="input-group-addon">%</div>
+      </div>
+      <div class="col-xs-3"></div>
+      <div class="button-row">
+        <div class="button-group btn-sm">
+          <button class="btn btn-success" type="submit">Submit</button>
+          <button class="btn btn-danger" type="button" (click)="onClose()">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

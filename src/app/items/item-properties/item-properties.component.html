@@ -1,0 +1,18 @@
+<!-- 
+  -Left side lists item properties
+  -Righ side has demo item
+  -Changes wont be saved until save button is clicked
+-->
+
+<div class="container">
+  <div class="left">
+    <button class="btn btn-success">Save</button>
+    <button class="btn btn-danger">Cancel</button>
+    <h1>Title Font</h1>
+    <p *ngFor="let prop of titleProperties; let i=index">Item {{ i }}</p>
+    <!-- <div class="property" *ngFor="let property of itemProperties"></div> -->
+  </div>
+  <div class="right">
+    <app-item [item]="testItem" [editMode]="false"></app-item>>
+  </div>
+</div>

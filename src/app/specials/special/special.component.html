@@ -1,0 +1,19 @@
+<div class="border" [ngStyle]="setBackground()" (click)="toggleMenu()">
+    <div class="bg" [ngStyle]="setBg()">
+        <div class="text">
+            <h1 [ngStyle]="setTitleStyle()"> {{ special.title }} </h1>
+            <h3 [ngStyle]="setDescStyle()"> {{ special.note }} </h3>
+        </div>
+        <div *ngIf="editable && menuOpen==true">
+            <div class="button-row">
+                <div class="button-group btn-sm">
+                    <button class="btn btn-success" (click)="onAdd()">Insert Below</button>
+                    <button class="btn btn-danger" (click)="onDelete()">Delete</button>
+                    <button class="btn btn-warning" (click)="onEdit()">Edit</button>
+                    <button class="btn btn-primary" (click)="onShiftDown()">Move Down</button>
+                    <button class="btn btn-primary" (click)="onShiftUp()">Move Up</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

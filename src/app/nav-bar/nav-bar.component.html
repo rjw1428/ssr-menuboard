@@ -1,0 +1,35 @@
+<nav class="navbar navbar-expand-md navbar-light bg-light">
+  <a class="navbar-brand">{{ barName }}</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup"
+    aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav mr-auto" data-toggle="collapse" data-target=".navbar-collapse">
+      <a class="nav-item nav-link active" routerLink='/edit/items' routerLinkActive="active" *ngIf="userRole!='trivia'">Beer List</a>
+      <a class="nav-item nav-link" routerLink='/edit/events' *ngIf="userRole!='trivia'">Events</a>
+      <a class="nav-item nav-link" routerLink='/edit/features' routerLinkActive="active" *ngIf="userRole!='trivia'">Features</a>
+      <a class="nav-item nav-link" routerLink='/edit/content' routerLinkActive="active" *ngIf="userRole!='trivia'">Content Management</a>
+      <a class="nav-item nav-link" routerLink='/edit/properties' routerLinkActive="active" *ngIf="userRole!='trivia'">Properties</a>
+      <a class="nav-item nav-link" routerLink='/edit/trivia' routerLinkActive="active" *ngIf="userRole=='trivia' || userRole=='admin'">Trivia</a>
+    </div>
+    <div class="navbar-nav" *ngIf="userRole=='admin'">
+      <li class="dropdown">
+        <a style="cursor: pointer;" class="dropdown-toggle" data-toggle="dropdown">Manage
+          <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-right" data-toggle="collapse" data-target=".navbar-collapse">
+          <li><a class="sub-option" style="cursor: pointer;" (click)="onForceRefresh()">Force Refresh</a></li>
+          <li><a class="sub-option" style="cursor: pointer;" routerLink="/signup" style="color: black">Enroll New User</a></li>
+          <li><a class="sub-option" style="cursor: pointer;" (click)="pauseScreen()"><i class="fa fa-check" *ngIf="isPaused"></i>Logo
+              Only</a></li>
+          <li><a class="sub-option" style="cursor: pointer;" (click)="slideshowOnly()"><i class="fa fa-check" *ngIf="isSlideshow"></i>Slideshow
+              Only</a></li>
+          <li><a class="sub-option" style="cursor: pointer;" (click)="triviaOnly()"><i class="fa fa-check" *ngIf="isTrivia"></i>Trivia
+              (Beta)</a></li>
+        </ul>
+      </li>
+    </div>
+  </div>
+</nav>
+<router-outlet></router-outlet>

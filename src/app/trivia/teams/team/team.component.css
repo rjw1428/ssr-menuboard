@@ -1,0 +1,70 @@
+::ng-deep:root {
+    --button-width: 35px;
+    --name-size: 20px;
+    --point-size: 18px;
+    --display-size: 36px;
+}
+
+.edit-container {
+    display: grid;
+    background-color: white;
+    margin: 10px;
+    grid-template-columns: var(--button-width) 1fr 1fr 1fr calc(2 * var(--button-width));
+}
+
+.display-container {
+    display: grid;
+    color: white;
+    margin: 10px;
+    font-size: var(--display-size);
+    grid-template-columns: 5% auto 10% 10%;
+    background-color: rgba(50,50,50,.8);
+    border-radius: 10px;
+}
+.num-display {
+    grid-column: 1 / span 1;
+    grid-row: 1 / span 1;
+}
+
+.name-display {
+    grid-column: 2 / span 1;
+    grid-row: 1 / span 1;
+}
+
+.score-display {
+    grid-column: 3 / span 1;
+    grid-row: 1 / span 1;;
+}
+
+.points-display {
+    grid-column: 4 / span 1;
+    grid-row: 1 / span 1;
+}
+
+.remove {
+    grid-column: 1 / span 1;
+    grid-row: 1 / span 1;
+}
+
+.name {
+    grid-column: 2 / span 1;
+    grid-row: 1 / span 1;
+    font-size: var(--name-size);
+}
+
+.score {
+    grid-column: 3 / span 1;
+    grid-row: 1 / span 1;
+    font-size: var(--point-size);
+}
+
+.points {
+    grid-column: 4 / span 1;
+    grid-row: 1 / span 1;
+    font-size: var(--point-size);
+}
+
+.controls {
+    grid-column: 5 / span 1;
+    grid-row: 1 / span 1;
+}

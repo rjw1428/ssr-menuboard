@@ -1,0 +1,14 @@
+<div *ngIf="itemService.showItemForm">
+  <app-item-form></app-item-form>
+</div>
+<div *ngIf="catService.showCategoryForm">
+  <app-item-category-form></app-item-category-form>
+</div>
+
+<div class="container">
+  <app-item-category class="container" *ngFor="let category of categoryList; let i=index" [category]="category" [editMode]="editMode"
+    [index]="i" (shiftUp)="onShiftUp($event)" (shiftDown)="onShiftDown($event)" (delete)="deleteCategory($event)"></app-item-category>
+</div>
+<div class="button">
+  <button class="btn btn-primary" (click)="addCategory()">Add Category</button>
+</div>
