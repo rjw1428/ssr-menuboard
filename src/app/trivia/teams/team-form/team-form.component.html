@@ -2,7 +2,7 @@
   <div class="title">
     <h3>Add Team</h3>
   </div>
-  <form #teamForm="ngForm" (ngSubmit)="onSubmit(teamForm)">
+  <form #teamForm="ngForm" (ngSubmit)="onSubmit()">
     <input type="hidden" name="key" #key="ngModel" [(ngModel)]="triviaService.selectedTeam.key">
     <input type="hidden" name="points" #points="ngModel" [(ngModel)]="triviaService.selectedTeam.score">
     <div class="form-group">

@@ -8,7 +8,7 @@ import { TriviaService } from '@shared/services/trivia.service';
 })
 export class TeamFormComponent implements OnInit {
   @Output() closeForm = new EventEmitter<{}>()
-  constructor(private triviaService: TriviaService) { }
+  constructor(public triviaService: TriviaService) { }
 
   ngOnInit() {
   }
