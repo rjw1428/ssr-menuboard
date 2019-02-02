@@ -1,0 +1,34 @@
+<div class="main">
+  <div [ngSwitch]="feature.layout">
+    <div *ngSwitchCase="'fullscreen'">
+        <img class="img-container extra" [src]="feature.url">
+    </div>
+    <div *ngSwitchCase="'left'">
+      <img class="img-container left" [src]="feature.url">
+      <div class="img-container side-panel-right">
+        <h1 class="centered header right" [ngStyle]="setHeaderStyle()">{{ feature.header | featureTitle }}</h1>
+        <h1 class="centered caption right" [ngStyle]="setCaptionStyle()">{{ feature.caption | featureMain }}</h1>
+        <h2 class="centered subcaption right" [ngStyle]="setSubCaptionStyle()">{{ feature.subcaption }}</h2>
+        <img class="logo centered right" [src]="logo">
+      </div>
+    </div>
+    <div *ngSwitchCase="'right'">
+      <img class="img-container right" [src]="feature.url">
+      <div class="img-container side-panel-left">
+        <h1 class="centered header left" [ngStyle]="setHeaderStyle()">{{ feature.header | featureTitle }}</h1>
+        <h1 class="centered caption left" [ngStyle]="setCaptionStyle()">{{ feature.caption | featureMain }}</h1>
+        <h2 class="centered subcaption left" [ngStyle]="setSubCaptionStyle()">{{ feature.subcaption }}</h2>
+        <img class="logo centered left" [src]="logo">
+      </div>
+    </div>
+    <div *ngSwitchCase="'no-border'">
+      <img class="img-container extra" [src]="feature.url">
+    </div>
+  </div>
+
+  <!-- <img class="img-container left" src="https://firebasestorage.googleapis.com/v0/b/menu-demo.appspot.com/o/content%2Ffeatures%2Fspecial1.jpg?alt=media&token=c6915f72-0dd2-43fb-bc89-a42426d658ae"> -->
+  <!-- <img class="img-container full" src="https://media.giphy.com/media/92wsX8GEoNTYA/giphy.gif"> -->
+
+
+  <!-- <h1>This is a beer!</h1> -->
+</div>

@@ -1,0 +1,30 @@
+.example-full-width {
+    position: relative;
+    /* border: 1px solid red;
+    background-color: white; */
+    /* border-radius: 5px; */
+    width: 100%;
+    /* padding: 10px; */
+  }
+
+  .example-button-width{
+      width: 10%;
+  }
+
+  .example-option-img {
+    vertical-align: middle;
+    margin-right: 8px;
+  }
+
+  .test {
+      /* border: 1px solid green; */
+      background-color: white;
+  }
+
+  label, p {
+      color: white;
+  }
+
+  .search-box {
+      background-color: white;
+  }

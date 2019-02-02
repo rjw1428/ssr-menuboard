@@ -9,6 +9,7 @@ import { FeaturesService } from '@shared/services/features.service';
 import { FormsModule } from "@angular/forms";
 import { FeatureTitlePipe } from "@shared/pipes/feature-title.pipe";
 import { FeatureMainPipe } from "@shared/pipes/feature-main.pipe";
+import { Feature2Component } from './feature2/feature2.component';
 
 @NgModule({
     imports: [
@@ -21,7 +22,8 @@ import { FeatureMainPipe } from "@shared/pipes/feature-main.pipe";
         FeatureFormComponent,
         FeaturesControlPageComponent,
         FeatureTitlePipe,
-        FeatureMainPipe
+        FeatureMainPipe,
+        Feature2Component
     ],
     providers: [
         FeaturesService
@@ -31,6 +33,7 @@ import { FeatureMainPipe } from "@shared/pipes/feature-main.pipe";
         FeatureComponent,
         FeatureFormComponent,
         FeaturesControlPageComponent,
+        Feature2Component
     ],//PUBLICLY AVAILABLE
     bootstrap: [] //BASE COMPONENT
 })

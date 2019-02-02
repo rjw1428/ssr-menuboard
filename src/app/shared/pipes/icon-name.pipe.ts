@@ -10,14 +10,14 @@ export class IconNamePipe implements PipeTransform {
     let names = this.removeSpecialChars(lowerName).split("<>");
     
     //ADD SPECIAL BEER ICONS HERE
-    if (names[1].indexOf("cali creamin")>-1) {
-      return "cali creamin.png"
-    } else if (names[1].indexOf("racer 5")>-1) {
-      return "racer 5.png"
-    }
+    // if (names[1].indexOf("cali creamin")>-1) {
+    //   return "cali creamin.png"
+    // } else if (names[1].indexOf("racer 5")>-1) {
+    //   return "racer 5.png"
+    // }
     
     //PARSE COMPANY NAME TO CREATE ICON
-    else 
+    //else 
     {
       let firstSlash = names[0].split("/")
       let words = firstSlash[0].split(" ");

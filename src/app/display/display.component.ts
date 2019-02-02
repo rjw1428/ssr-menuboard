@@ -100,24 +100,10 @@ export class DisplayComponent implements OnInit {
       })
       console.log('MODE: ' + this.mode)
     })
-    this.getImages()
 
     setTimeout(() => {
       this.listenForClose()
     }, 500)
-  }
-
-  getImages() {
-    // this.storage.ref('red.jpg').getDownloadURL().toPromise()
-    //   .then(value => {
-    //     this.bgUrl = value;
-    //   })
-    //   .catch(e => console.log(e))
-    this.storage.ref('logo.png').getDownloadURL().toPromise()
-      .then(value => {
-        this.logoUrl = value;
-      })
-      .catch(e => console.log(e))
   }
 
   nextPage() {

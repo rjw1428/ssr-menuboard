@@ -1,0 +1,53 @@
+<h1 mat-dialog-title>Add Beer</h1>
+<div mat-dialog-content [formGroup]="beerForm">
+  <p>Beer Information:</p>
+  <mat-form-field class="example-full-width">
+    <input type="hidden" formControlName="id">
+    <input type="hidden" formControlName="masterBreweryKey">
+    <input matInput formControlName="brewery" placeholder="Brewery Name..." [matAutocomplete]="auto">
+    <img matPrefix *ngIf="beerForm.get('brewery').valid && isSelectedValue(beerForm.get('brewery'))" class="example-option-img" aria-hidden [src]="parseSelectionForIcon(beerForm.get('brewery'))" height="40">
+    <button mat-button *ngIf="beerForm.get('brewery').valid" matSuffix mat-icon-button aria-label="Clear" (click)="resetBrewery()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-form-field>
+  <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayName">
+    <mat-option *ngFor="let b of filteredBreweries | async" [value]="b">
+      <img class="example-option-img" aria-hidden [src]="b.icon" height="40">
+      <span>{{b.name }}</span> |
+      <small>{{b.city}},{{b.state}}</small>
+    </mat-option>
+  </mat-autocomplete>
+  <button class="example-button-width" mat-raised-button color="primary" (click)="openDialog()">New</button>
+
+  <mat-form-field>
+    <input matInput formControlName="name" placeholder="Beer Name...">
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput formControlName="type" placeholder="Beer Type...">
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput formControlName="description" placeholder="Description...">
+  </mat-form-field>
+
+  <mat-form-field>
+    <input matInput formControlName="abv" placeholder="ABV...">
+    <span matSuffix>%</span>
+  </mat-form-field>
+
+  <mat-form-field>
+    <input matInput formControlName="ibu" placeholder="IBU...">
+  </mat-form-field>
+  <mat-form-field>
+    <mat-select placeholder="Show with Brewery" formControlName="withBrewery">
+      <mat-option [value]="true">Yes</mat-option>
+      <mat-option [value]="false">No</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput formControlName="icon" placeholder="Custom Icon (Optional)...">
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">Cancel</button>
+  <button mat-raised-button color="primary" [mat-dialog-close]="onAdd()" cdkFocusInitial>Ok</button>
+</div>

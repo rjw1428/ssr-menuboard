@@ -1,0 +1,62 @@
+::ng-deep:root {
+    --width: 100vw;
+    --height: 100vh;
+    --border-padding-width: 2.5vw;
+    --border-padding-height: 2.5vh;
+}
+
+.main {
+    position: relative;
+    height: 100vh;
+    width: 100vw;
+    //MAIN COLOR
+    background-color: rgb(7, 61, 19);
+    background-image:
+    //BACKSLASH LINE
+    repeating-linear-gradient(120deg, rgba(255,255,255,.15), rgba(255,255,255,.15) 1px, transparent 1px, transparent 60px),
+    //FORWARD SLASH LINE
+    repeating-linear-gradient(60deg, rgba(255,255,255,.15), rgba(255,255,255,.15) 1px, transparent 1px, transparent 60px),
+    linear-gradient(60deg, rgba(0,0,0,.1) 25%, transparent 25%, transparent 75%, rgba(0,0,0,.1) 75%, rgba(0,0,0,.1)),
+    linear-gradient(120deg, rgba(0,0,0,.1) 25%, transparent 25%, transparent 75%, rgba(0,0,0,.1) 75%, rgba(0,0,0,.1));
+    background-size: 70px 120px;
+    overflow: hidden;
+}
+
+.box {
+    // border: 2px solid red;
+    width: var(--width);
+    height: var(--height);
+}
+
+.page {
+    // border: 2px solid blue;
+    width: 100vw;
+    height: 100vh;
+}
+
+.wrapper {
+    position: relative;
+    margin-top: var(--border-padding-height);
+    margin-left: var(--border-padding-width);
+    margin-right: var(--border-padding-width);
+    margin-bottom: var(--border-padding-height);
+    width: calc(var(--width) - 2 * var(--border-padding-width));
+    height: calc(var(--height) - 2 * var(--border-padding-height));
+    // border: 5px solid white;
+    border-radius: 10px;
+    background-color: rgba(0,0,0, .5);
+    box-shadow: 10px 10px 10px black;
+    overflow: hidden;
+}
+
+.logo {
+    width: var(--logo-size);
+    height: var(--logo-size);
+    // animation: fadeIn;
+    // animation-duration: 1s;
+    transform: translate(-50%, -50%);
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    z-index: 0;
+}

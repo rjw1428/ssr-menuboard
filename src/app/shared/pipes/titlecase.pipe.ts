@@ -10,6 +10,8 @@ export class TitlecasePipe implements PipeTransform {
     var lowerValue = value.toLowerCase();
     var words = lowerValue.split(" ");
     words.forEach(word => {
+      if (word.length==1)
+        return word.toUpperCase()
       if (word.indexOf('ipa') > -1)
         output += word.toUpperCase();
       else if (word.indexOf('ibu') > -1)
@@ -17,6 +19,6 @@ export class TitlecasePipe implements PipeTransform {
       else
         output += word.substr(0, 1).toUpperCase() + word.substr(1, value.length).toLowerCase() + " "
     })
-    return output;
+    return output.trim();
   }
 }

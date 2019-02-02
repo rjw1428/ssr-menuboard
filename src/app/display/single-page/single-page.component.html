@@ -1,0 +1,76 @@
+<div class="main">
+  <ngb-carousel class="page" (slide)="onSlide($event)">
+    <ng-template ngbSlide>
+      <div class="wrapper">
+        <app-items-display-page2></app-items-display-page2>
+      </div>
+    </ng-template>
+    <!-- <ng-template ngbSlide *ngFor="let feature of featuredList; let i=index;">
+      <div class="wrapper" *ngIf="i==activeFeature[0]">
+        <app-feature2 [feature]="feature"></app-feature2>
+      </div>
+    </ng-template> -->
+    <ng-template ngbSlide>
+      <div *ngFor="let feature of featuredList; let i=index;">
+        <div class="wrapper" *ngIf="i==activeFeature[0]">
+          <app-feature2 [feature]="feature"></app-feature2>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template ngbSlide>
+      <div *ngFor="let feature of featuredList; let i=index;">
+        <div class="wrapper" *ngIf="i==activeFeature[1]">
+          <app-feature2 [feature]="feature"></app-feature2>
+        </div>
+      </div>
+    </ng-template>
+  </ngb-carousel>
+</div>
+
+
+<!-- <div class="wrapper">
+        <app-demo [value]="'A'"></app-demo>
+      </div> -->
+
+<!--
+<div class="main">
+  <div id="demo" class="carousel slide" data-ride="carousel">
+    <ol class="carousel-indicators">
+
+      <li data-target="#demo" data-slide-to="0" class="active"></li>
+      <li data-target="#demo" data-slide-to="1"></li>
+      <li data-target="#demo" data-slide-to="2"></li>
+      <li data-target="#demo" data-slide-to="3"></li>
+    </ol>
+
+    <div class="carousel-inner box">
+      <img [src]="logoUrl" class="logo" *ngIf="logoUrl!=null">
+
+      <div class="carousel-item page active">
+        <div class="wrapper">
+          <app-items-display-page2></app-items-display-page2>
+        </div>
+      </div>
+      <div class="carousel-item page">
+        <div class="wrapper">
+          <app-feature2 [start]=0 [step]=2 [currentPos]=1 [active]="iteration"></app-feature2>
+        </div>
+      </div>
+      <div class="carousel-item page">
+        <div class="wrapper">
+          <app-feature2 [start]=1 [step]=2 [currentPos]=2 [active]="iteration"></app-feature2>
+        </div>
+      </div>
+      <div class="carousel-item page">
+        <div class="wrapper">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+-->
+<!-- <li *ngFor="let s of slides; let i=index" data-target="#demo" data-slide-to="i" [class.active]="i==activeSlide"></li> -->
+<!-- <div *ngFor="let slide of slides; let i=index" class="carousel-item page" [class.active]="i==activeSlide">
+        <div class="wrapper" [appSlide]="slide"></div>
+      </div> -->

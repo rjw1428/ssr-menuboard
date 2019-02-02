@@ -1,16 +1,14 @@
-<div [ngClass]="{'hidden': !active}">
-  <div class="left">
-    <div [ngClass]="{'title': active, 'title-out':!active}" >
-      <h1 [ngStyle]="setHederStyle()">{{header}}</h1>
-      <hr>
-    </div>
+<div class="left">
+  <div class="title">
+    <h1 [ngStyle]="setHederStyle()">{{header}}</h1>
+    <hr>
   </div>
-  <div class="right">
-    <div class="container">
-      <div [ngClass]="{'row': active, 'row-out':!active}" *ngFor="let special of specialsList;">
-        <div class="element">
-          <app-special [special]="special"></app-special>
-        </div>
+</div>
+<div class="right">
+  <div class="container">
+    <div class="row" *ngFor="let special of specialsList;">
+      <div class="element">
+        <app-special [special]="special"></app-special>
       </div>
     </div>
   </div>

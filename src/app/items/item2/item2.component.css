@@ -1,0 +1,193 @@
+::ng-deep:root {
+    --overhang-space: 15px;
+    --background-shift: 40px;
+    --img-size: calc(52px + (120 - 52) * ((100vh - 500px) / (1080 - 500)));
+    --abv-width: calc(var(--img-size)/2);
+}
+
+@font-face {
+    font-family: "American Typewriter";
+    src: url("../../../assets/American.ttf");
+}
+
+button {
+    font-size: 16px;
+}
+
+.container {
+    /* border: 1px solid green; */
+    margin-left: calc(var(--img-size) / 8);
+    position: relative;
+    display: grid;
+    width: calc(100% - var(--img-size) / 8);
+    grid-template-columns: var(--img-size) auto var(--abv-width) var(--abv-width);;
+    grid-template-rows: var(--overhang-space) auto auto var(--overhang-space);
+    grid-template-rows: calc(var(--img-size)*.1) auto auto calc(var(--img-size)*.1);
+    padding: 0px;
+    z-index: 0;
+    align-content: baseline;
+    margin-bottom:  calc(var(--img-size)*.025);
+}
+
+.image-container {
+    height: var(--img-size);
+    width: var(--img-size);
+    grid-column-start: 1;
+    grid-row: 1/span 4;
+    justify-self: left;
+    align-self: center;
+    /* border: 2px solid red; */
+}
+
+img {
+    height: 100%;
+    width: 100%;
+    /* visibility: hidden; */
+}
+
+.title-container {
+    grid-column: 2/ span 3;
+    grid-row-start: 2;
+    text-align: left;
+    justify-self: left;
+    margin-left: 20px;
+    color: white;
+    font-size: calc(var(--img-size) * .3);
+    /* border: 1px solid red; */
+}
+
+.description-container {
+    grid-column-start: 2;
+    grid-row-start: 3;
+    text-align: left;
+    margin-left: 20px;
+    align-self: baseline;
+    color: white;
+    font-size: calc(var(--img-size) * .2);
+    /* border: 1px solid red; */
+}
+
+.abv-container {
+    grid-column-start: 3;
+    grid-row-start: 3;
+    justify-self: right;
+    /* text-align: left; */
+    margin-right: calc(var(--img-size) * .2);
+    align-self: baseline;
+    color: white;
+    font-size: calc(var(--img-size) * .2);
+    white-space: nowrap;
+    /* border:1px solid blue; */
+}
+
+.price-container {
+    grid-column-start: 4;
+    grid-row-start: 3;
+    justify-self: right;
+    /* text-align: left; */
+    margin-left: calc(var(--abv-width) / 4);
+    margin-right: calc(var(--abv-width) / 8);
+    align-self: baseline;
+    color: white;
+    font-size: calc(var(--img-size) * .2);
+    white-space: nowrap;
+    /* border: 1px solid red */
+}
+
+.blank1 {
+    grid-row: 1;
+    grid-column: 2/span 2;
+    height: var(--overhang-space);
+}
+.blank2 {
+    grid-row: 4;
+    grid-column: 2/span 2;
+    height: var(--overhang-space);
+}
+
+.background {
+    margin-left: calc(var(--img-size) / 2);
+    grid-row: 2/span 2;
+    grid-column: 1/span 4;
+    height: 100%;
+    width: calc(100% - var(--img-size) / 2);
+    /* width: 100%; */
+    justify-self: left;
+    background-color: rgba(100,100,100,.4);
+    z-index: -1;
+    position: relative;
+    /* transform: skew(-30deg) translateX(40px);  */
+    /* border-style: outset;  */
+    /* border-width: 5px; */
+    /* border-radius: 50px; */
+    /* box-shadow: 8px 8px 8px gray; */
+}
+.button-row {
+    grid-column: 2/span 3;
+    grid-row-start: 5;
+}
+
+.button-group {
+    position: relative;
+    display: grid;
+    justify-self: center;
+    width: 100%;
+    grid-column-gap: 10px;
+    grid-template-columns: repeat(8, 1fr);
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: #F5F5F5;
+    border-radius: 10px;
+    border: 2px solid #DDDDDD;
+    box-shadow: 2px 2px 2px black;
+    position: relative;
+    z-index: 2;
+    /* grid-column: 2/span 1; */
+}
+
+.add {
+    grid-column-start: 1;
+    grid-row-start: 1;
+}
+
+.edit {
+    grid-column-start: 2;
+    grid-row-start: 1;
+}
+
+.delete {
+    grid-column-start: 3;
+    grid-row-start: 1;
+}
+
+.setOut {
+    grid-column-start: 4;
+    grid-row-start: 1;
+}
+
+.up {
+    grid-column-start: 7;
+    grid-row-start: 1;
+}
+
+.down {
+    grid-column-start: 8;
+    grid-row-start: 1;
+}
+.out {
+    grid-column: 2/span 3;
+    grid-row: 2/span 2;
+    position: relative;
+    width: 90%;
+    z-index: 2;
+    color: rgb(255,20,20);
+    text-shadow: 2px 2px 2px black;
+    align-self: center;
+    text-align: center;
+    font-size: calc(var(--img-size) * .5);
+    white-space: nowrap;
+}
+
+.blur {
+    opacity: .7;
+}

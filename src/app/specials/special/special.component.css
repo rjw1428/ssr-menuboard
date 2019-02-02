@@ -8,8 +8,8 @@
 }
 
 .border {
-    overflow: hidden;
-    position: relative;
+    /* overflow: hidden; */
+    /* position: relative; */
     width: 90%;
     /* margin: 15px; */
     z-index: 1;

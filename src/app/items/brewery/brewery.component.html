@@ -1,0 +1,8 @@
+<div class="wrapper">
+  <div class="icon">
+    <img *ngIf="icon" [src]="icon">
+  </div>
+  <div class="text">
+    <h3>{{brewery.name | uppercase}} | <small>{{brewery.city}}, {{brewery.state}}</small></h3>
+  </div>
+</div>

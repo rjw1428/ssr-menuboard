@@ -21,8 +21,8 @@ const appRoutes: Routes = [
   { path: 'display/:screen', component: DisplayComponent },
   {path: 'edit', component: NavBarComponent, canActivate: [ AuthGaurdService],
   children: [
-    {path: 'items', component: ItemsControlPage2Component},
-    {path: 'features', component: FeaturesControlPageComponent},
+    {path: 'items', component: ItemsControlPage2Component, loadChildren: '@item/items.module#ItemsModule'},
+    {path: 'features', component: FeaturesControlPageComponent, loadChildren: '@features/features.module#FeaturesModule'},
     {path: 'events', component: SpecialsControlPageComponent},
     {path: 'properties', component: PropertiesEditComponent},
     {path: 'content', component: ContentManagerComponent},

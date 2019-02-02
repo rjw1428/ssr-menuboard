@@ -6,12 +6,16 @@
 export const environment = {
   production: false,
   firebase: {
-    apiKey: "AIzaSyB0TIdi4pv4CqRdyhqPP_Lh0BVF_w3XDCY",
-    authDomain: "menu-demo.firebaseapp.com",
-    databaseURL: "https://menu-demo.firebaseio.com",
-    projectId: "menu-demo",
-    storageBucket: "menu-demo.appspot.com",
-    messagingSenderId: "1032055243209"
+    apiKey: "AIzaSyDWucZhVx0NiZpkiHiw31Do7i23jm_QphM",
+    authDomain: "ssrwebsite-1428.firebaseapp.com",
+    databaseURL: "https://ssrwebsite-1428.firebaseio.com",
+    projectId: "ssrwebsite-1428",
+    storageBucket: "ssrwebsite-1428.appspot.com",
+    messagingSenderId: "397185718304"
+  },
+  algolia: {
+    appId: "2B8AHSKLCB",
+    apiKey: "d710b3e239465e1dffc1404f9c4b3abe"
   },
   version: "1.0.2",
   barName: "Hilltown Tavern",

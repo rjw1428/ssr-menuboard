@@ -129,8 +129,8 @@ export class FeatureComponent implements OnInit {
 
   setImageStyle() {
     let style = {
-      'width': (100 - +this.ms.featuredBannerWidth.value) + 'vw',
-      'height': '100%'
+      // 'width': (100 - +this.ms.featuredBannerWidth.value) + 'vw',
+      // 'height': '100%'
     }
     return style
   }

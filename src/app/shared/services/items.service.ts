@@ -72,8 +72,7 @@ export class ItemsService {
   }
 
   setMissingIcon(company: string, filename: string) {
-    this.firebaseData.list('error/').push({
-      company: company,
+    this.firebaseData.list('error/beerLogo/').update(company, {
       filename: filename,
       timestamp: this.timestamp()
     })

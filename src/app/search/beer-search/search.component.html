@@ -1,0 +1,51 @@
+<div class="container search-box">
+  <h3>Beer Search:</h3>
+  <div class="form-group row" [formGroup]="searchForm">
+    <div class="col-sm-6">
+      <mat-form-field class="example-full-width col-sm-10">
+        <input matInput formControlName="keyword" placeholder="Brewery Name..." [matAutocomplete]="auto_brew">
+        <img matPrefix *ngIf="isSelectedValue(searchForm.get('keyword'))" class="example-option-img" aria-hidden [src]="parseSelectionForIcon(searchForm.get('keyword'))"
+          height="40">
+        <button mat-button *ngIf="searchForm.get('keyword').value" matSuffix mat-icon-button aria-label="Clear" (click)="resetKeyword()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+      <button class="example-button-width col-sm-2" mat-raised-button color="primary" (click)="openBrewDialog()">New</button>
+
+      <mat-autocomplete #auto_brew="matAutocomplete" [displayWith]="displayName" (optionSelected)="filterBrewery()">
+        <mat-option *ngFor="let b of filteredBreweries | async" [value]="b">
+          <img class="example-option-img" aria-hidden [src]="b.icon" height="40">
+          <span>{{b.name }}</span> |
+          <small>{{b.city}},{{b.state}}</small>
+        </mat-option>
+      </mat-autocomplete>
+    </div>
+
+    <div class="col-sm-4">
+      <mat-form-field class="example-full-width col-sm-10">
+        <input matInput formControlName="type" placeholder="Type..." [matAutocomplete]="auto_type">
+        <button mat-button *ngIf="searchForm.get('type').value" matSuffix mat-icon-button aria-label="Clear" (click)="resetType()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+
+      <mat-autocomplete #auto_type="matAutocomplete" [displayWith]="displayType" (optionSelected)="filterType()">
+        <mat-option *ngFor="let type of filteredTypes | async" [value]="type">
+          <span>{{ type | titlecase }}</span>
+        </mat-option>
+      </mat-autocomplete>
+    </div>
+
+
+    <div class="col-sm-2">
+      <button type="button" mat-fab color="primary" (click)="openBeerDialog()">New Beer</button>
+      <button type="button" mat-fab color="warn" (click)="editDialog()">Edit</button>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="col-md-10" *ngFor="let beer of filteredBeerList; let i=index ">
+    <app-item2 [item]="beer"></app-item2>
+  </div>
+</div>

@@ -10,19 +10,20 @@
     z-index: 2;
     box-shadow: 4px 4px #666666;
 }
+@media screen and (max-width: 750px) {
+    .focusCompany {
+        top: 0%;
+    }
 
-.focusCompany {
-    top: 0%;
-}
+    .focusBeer {
+        top: -4%;
+    }
 
-.focusBeer {
-    top: -4%;
-}
+    .focusDesc {
+        top: -8%;
+    }
 
-.focusDesc {
-    top: -8%;
-}
-
-.focusAbv {
-    top: -12%;
+    .focusAbv {
+        top: -12%;
+    }
 }

@@ -1,18 +1,12 @@
 <div class="main">
-
-  <!-- <div *ngFor="let icon of iconList">
-    <div [innerHtml="icon" style="width:100px; height: 100px"></div>
-  </div> -->
-
-  <div class="side left" [@list1]="leftList.length">
+  <div class="side left">
     <div *ngFor="let item of leftList">
       <app-item class="item" [item]="item" [editMode]="editMode"></app-item>
     </div>
   </div>
-  <div class="side right" [@list2]="rightList.length">
+  <div class="side right">
     <div *ngFor="let item of rightList">
       <app-item [item]="item" [editMode]="editMode"></app-item>
     </div>
   </div>
-
 </div>

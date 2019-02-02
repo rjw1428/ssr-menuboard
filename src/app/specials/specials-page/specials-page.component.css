@@ -3,26 +3,20 @@
     src: url("../../../assets/American.ttf");
 }
 
-
-.hidden {
-    visibility: hidden;
-}
-
 .right {
-    overflow: hidden;
-    position: relative;
-    float: right;
-    width: 50vw;
-    max-height: 100vh;
-    /* border: 1px solid black; */
+    position: absolute;
+    right: 0px;
+    width: 50%;
+    height: 100%;
+    /* border: 1px solid blue; */
 }
 
 .left {
-    position: relative;
-    float: left;
-    left: 50px;
-    max-width: 50vw;
-    /* border: 1px solid black; */
+    position: absolute;
+    left: 0px;
+    width: 50%;
+    height: 100%;
+    /* border: 1px solid red; */
 }
 
 @keyframes flyInLeft {
@@ -56,26 +50,25 @@
 }
 
 .container {
-    margin-top: 5vh;
+    margin-top: 5%;
     display: table;
-    height: 90vh;
+    height: 100%;
     width: 100%;
-    border-collapse: collapse;
+    /* border-collapse: collapse; */
 }
 
 .row {
     display: table-row;
+    /* width: 100%; */
     padding-bottom: 0px;
-    /* border: 3px solid blue; */
 }
 
 .element {
     display: table-cell;
     padding-bottom: 0px;
-    /* border: 3px solid black; */
 }
 
-.row:nth-child(even) {
+/* .row:nth-child(even) {
     animation: flyInLeft;
     animation-duration: 500ms;
 }
@@ -93,7 +86,7 @@
 .row-out:nth-child(odd) {
     animation: flyOutLeft;
     animation-duration: 500ms;
-}
+} */
 
 .title-out {
     display: inline-block;
@@ -106,11 +99,16 @@
 }
 
 .title {
-    display: inline-block;
+    /* display: inline-block; */
     color: white;
     font-family: "American Typewriter";
     text-shadow: 2px 2px 2px black;
-    position: relative;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    left: 50%;
+    top: 10%;
+    /* width: 100%; */
+    white-space: nowrap;
     animation: fadeIn;
     animation-duration: 500ms;
 }

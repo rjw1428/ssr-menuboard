@@ -11,7 +11,7 @@ import { UsernamePipe } from '@shared/pipes/username.pipe'
 @Injectable()
 export class AuthService {
   user: Observable<firebase.User>;
-  username: String
+  username: string
   token: string;
   constructor(private firebaseAuth: AngularFireAuth, private firebaseData: AngularFireDatabase, private router: Router) {
     this.user = firebaseAuth.authState;
@@ -61,23 +61,20 @@ export class AuthService {
       .signInWithEmailAndPassword(email, password)
       .then(
         response => {
-          let key: string
           firebase.auth().currentUser.getIdToken()
             .then(
               (token: string) => this.token = token
             ).then(() => {
-              let newRef = this.firebaseData.list('userlogs/').push({
-                user: email,
-                connect: this.timestamp(),
+              this.firebaseData.list('users/').update(this.username, {
+                connected: this.timestamp(),
                 agent: navigator.userAgent,
                 active: 'true'
               })
               this.firebaseData.list('status/edit/').update('lastUpdate', {
                 user: email
               })
-              key = newRef.key
             }).then(() => {
-              firebase.database().ref().child('userlogs/' + key).onDisconnect().update({
+              firebase.database().ref().child('users/' + this.username).onDisconnect().update({
                 active: 'false'
               })
             })

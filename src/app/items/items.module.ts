@@ -19,6 +19,7 @@ import { ItemPropertiesComponent } from './item-properties/item-properties.compo
 import { ItemsDisplayPage2Component } from './items-display-page2/items-display-page2.component';
 import { ItemsControlPage2Component } from './items-control-page2/items-control-page2.component';
 
+
 @NgModule({
     imports: [
         CommonModule,

@@ -81,50 +81,50 @@ export class ItemComponent implements OnInit {
 
   setTitleStyle() {
     let style = {
-      'color': this.ms.itemTitleFontColor.value,
-      'font-size': this.screenWidth <= 750 ? +this.ms.itemTitleFontSize.value / 2 + 'px' : this.ms.itemTitleFontSize.value + 'px',
-      'font-family': this.ms.itemTitleFont.value,
-      'text-shadow': this.ms.itemTitleShadow.value,
-      'letter-spacing': this.ms.itemTitleLetterSpace.value + 'px',
+      // 'color': this.ms.itemTitleFontColor.value,
+      // 'font-size': this.screenWidth <= 750 ? +this.ms.itemTitleFontSize.value / 2 + 'px' : this.ms.itemTitleFontSize.value + 'px',
+      // 'font-family': this.ms.itemTitleFont.value,
+      // 'text-shadow': this.ms.itemTitleShadow.value,
+      // 'letter-spacing': this.ms.itemTitleLetterSpace.value + 'px',
     }
     return style
   }
 
   setNoteStyle() {
     let style = {
-      'color': this.ms.itemNoteFontColor.value,
-      'font-size': this.screenWidth <= 750 ? +this.ms.itemNoteFontSize.value / 2 + 'px' : this.ms.itemNoteFontSize.value + 'px',
-      'font-family': this.ms.itemNoteFont.value,
-      'text-shadow': this.ms.itemNoteShadow.value
+      // 'color': this.ms.itemNoteFontColor.value,
+      // 'font-size': this.screenWidth <= 750 ? +this.ms.itemNoteFontSize.value / 2 + 'px' : this.ms.itemNoteFontSize.value + 'px',
+      // 'font-family': this.ms.itemNoteFont.value,
+      // 'text-shadow': this.ms.itemNoteShadow.value
     }
     return style
   }
 
   setIconStyle() {
     let style = {
-      'width': this.screenWidth <= 750 ? +this.ms.iconSize.value / 2 + 'px' : this.ms.iconSize.value + 'px',
-      'height': this.screenWidth <= 750 ? +this.ms.iconSize.value / 2 + 'px' : this.ms.iconSize.value + 'px',
+      // 'width': this.screenWidth <= 750 ? +this.ms.iconSize.value / 2 + 'px' : this.ms.iconSize.value + 'px',
+      // 'height': this.screenWidth <= 750 ? +this.ms.iconSize.value / 2 + 'px' : this.ms.iconSize.value + 'px',
     }
     return style
   }
 
   setAbvStyle() {
     let style = {
-      'color': this.ms.itemAbvFontColor.value,
-      'font-size': this.screenWidth <= 750 ? +this.ms.itemAbvFontSize.value / 2 + 'px' : this.ms.itemAbvFontSize.value + 'px',
-      'font-family': this.ms.itemAbvFont.value,
-      'text-shadow': this.ms.itemAbvShadow.value
+      // 'color': this.ms.itemAbvFontColor.value,
+      // 'font-size': this.screenWidth <= 750 ? +this.ms.itemAbvFontSize.value / 2 + 'px' : this.ms.itemAbvFontSize.value + 'px',
+      // 'font-family': this.ms.itemAbvFont.value,
+      // 'text-shadow': this.ms.itemAbvShadow.value
     }
     return style
   }
 
   setElementStyle() {
     let style = {
-      'border-collapse': 'separate !important',
-      'background-color': this.ms.itemBackground.value,
-      'border': this.ms.itemBorder.value,
-      'border-radius': this.ms.itemBorderRadius.value + 'px',
-      'box-shadow': this.ms.itemBoxShadow.value,
+      // 'border-collapse': 'separate !important',
+      // 'background-color': this.ms.itemBackground.value,
+      // 'border': this.ms.itemBorder.value,
+      // 'border-radius': this.ms.itemBorderRadius.value + 'px',
+      // 'box-shadow': this.ms.itemBoxShadow.value,
       // 'height': this.ms.itemBackgroundHeight.value+'px'
     }
     return style
@@ -132,17 +132,17 @@ export class ItemComponent implements OnInit {
 
   setSoldOutStyle() {
     let style = {
-      'color': this.ms.itemSoldOutFontColor.value,
-      'font-size': this.screenWidth <= 750 ? +this.ms.itemSoldOutFontSize.value / 2 + 'px' : this.ms.itemSoldOutFontSize.value + 'px',
-      'font-family': this.ms.itemSoldOutFont.value,
-      'text-shadow': this.ms.itemSoldOutShadow.value
+      // 'color': this.ms.itemSoldOutFontColor.value,
+      // 'font-size': this.screenWidth <= 750 ? +this.ms.itemSoldOutFontSize.value / 2 + 'px' : this.ms.itemSoldOutFontSize.value + 'px',
+      // 'font-family': this.ms.itemSoldOutFont.value,
+      // 'text-shadow': this.ms.itemSoldOutShadow.value
     }
     return style
   }
 
   setColumnStyle() {
     let style = {
-      'grid-template-columns': this.screenWidth <= 750 ? +this.ms.iconSize.value / 2 + 'px auto' : this.ms.iconSize.value + 'px auto'
+      // 'grid-template-columns': this.screenWidth <= 750 ? +this.ms.iconSize.value / 2 + 'px auto' : this.ms.iconSize.value + 'px auto'
     }
     return style
   }

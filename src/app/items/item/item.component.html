@@ -8,7 +8,8 @@
   <div class="title-container" [class.blur]="!item.available" [ngStyle]="setTitleStyle()">{{item.company |
     uppercase}} {{item.beer | uppercase}}</div>
   <div class="description-container" [class.blur]="!item.available" [ngStyle]="setNoteStyle()">{{item.note}}</div>
-  <div class="abv-container" [class.blur]="!item.available" [ngStyle]="setAbvStyle()">{{ item.abv | abv}}</div>
+  <div class="abv-container" [class.blur]="!item.available" [ngStyle]="setAbvStyle()">ABV: {{ item.abv | abv}}</div>
+  <div class="price-container" [class.blur]="!item.available">$ 7<sup>00</sup></div>
   <div class="blank2"></div>
   <div class="button-row" *ngIf="editMode">
     <div class="button-group btn-sm " *ngIf="menuToggle">

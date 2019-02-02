@@ -37,64 +37,65 @@
 </div>
 
 <ng-template #display>
-  <div [ngSwitch]="feature.layout">
-    <div *ngSwitchCase="'fullscreen'">
-      <div class="no-split">
-        <div class="displayImageFull" *ngIf="feature.url.substring(feature.url.length-4)=='.mp4'; else image">
-          <video #video autoplay loop [muted]="true">
+  <div class="wrapper">
+    <div [ngSwitch]="feature.layout">
+      <div *ngSwitchCase="'fullscreen'">
+        <div class="no-split">
+          <div class="displayImageFull" *ngIf="feature.url.substring(feature.url.length-4)=='.mp4'; else image">
+            <video #video autoplay loop [muted]="true">
+              <source [src]="feature.url" type="video/mp4" (error)="loadError($event)">
+            </video>
+          </div>
+          <ng-template #image>
+            <img class="displayImageFull" [src]="feature.url" (error)="loadError($event)">
+          </ng-template>
+        </div>
+      </div>
+      <div *ngSwitchCase="'right'">
+        <div class="splitRight right" [ngStyle]="setBannerStyle()">
+          <h1 class="centered header" [ngStyle]="setHeaderStyle()">{{ feature.header | featureTitle }}</h1>
+          <h1 class="centered caption" [ngStyle]="setCaptionStyle()">{{ feature.caption | featureMain }}</h1>
+          <h2 class="centered subcaption" [ngStyle]="setSubCaptionStyle()">{{ feature.subcaption }}</h2>
+          <img class="logo centered" [src]="logoUrl">
+        </div>
+        <div class="splitLeft left " [ngStyle]="setImageStyle()" *ngIf="feature.url.substring(feature.url.length-4)=='.mp4'; else image">
+          <video class="displayImage" #video autoplay loop [muted]="true">
             <source [src]="feature.url" type="video/mp4" (error)="loadError($event)">
           </video>
         </div>
         <ng-template #image>
-          <img class="displayImageFull" [src]="feature.url" (error)="loadError($event)">
+          <div class="splitLeft left" [ngStyle]="setImageStyle()">
+            <img class="displayImage" [src]="feature.url" (error)="loadError($event)">
+          </div>
         </ng-template>
       </div>
-    </div>
-    <div *ngSwitchCase="'right'">
-      <div class="splitRight right" [ngStyle]="setBannerStyle()">
-        <h1 class="centered header" [ngStyle]="setHeaderStyle()">{{ feature.header | featureTitle }}</h1>
-        <h1 class="centered caption" [ngStyle]="setCaptionStyle()">{{ feature.caption | featureMain }}</h1>
-        <h2 class="centered subcaption" [ngStyle]="setSubCaptionStyle()">{{ feature.subcaption }}</h2>
-        <img class="logo centered" [src]="logoUrl">
-      </div>
-      <div class="splitLeft left " [ngStyle]="setImageStyle()" *ngIf="feature.url.substring(feature.url.length-4)=='.mp4'; else image">
-        <video class="displayImage" #video autoplay loop [muted]="true">
-          <source [src]="feature.url" type="video/mp4" (error)="loadError($event)">
-        </video>
-      </div>
-      <ng-template #image>
-        <div class="splitLeft left" [ngStyle]="setImageStyle()">
-          <img class="displayImage" [src]="feature.url" (error)="loadError($event)">
+      <div *ngSwitchCase="'left'">
+        <div class="splitLeft left" [ngStyle]="setBannerStyle()">
+          <h1 class="centered header" [ngStyle]="setHeaderStyle()">{{ feature.header | featureTitle }}</h1>
+          <h1 class="centered caption" [ngStyle]="setCaptionStyle()">{{ feature.caption | featureMain }}</h1>
+          <h2 class="centered subcaption" [ngStyle]="setSubCaptionStyle()">{{ feature.subcaption }}</h2>
+          <img class="logo centered" [src]="logoUrl">
         </div>
-      </ng-template>
-    </div>
-    <div *ngSwitchCase="'left'">
-      <div class="splitLeft left" [ngStyle]="setBannerStyle()">
-        <h1 class="centered header" [ngStyle]="setHeaderStyle()">{{ feature.header | featureTitle }}</h1>
-        <h1 class="centered caption" [ngStyle]="setCaptionStyle()">{{ feature.caption | featureMain }}</h1>
-        <h2 class="centered subcaption" [ngStyle]="setSubCaptionStyle()">{{ feature.subcaption }}</h2>
-        <img class="logo centered" [src]="logoUrl">
-      </div>
-      <div class="splitRight right " [ngStyle]="setImageStyle()" *ngIf="feature.url.substring(feature.url.length-4)=='.mp4'; else image">
-        <video class="displayImage" #video autoplay loop [muted]="true">
-          <source [src]="feature.url" type="video/mp4" (error)="loadError($event)">
-        </video>
-      </div>
-      <ng-template #image>
-        <div class="splitRight right" [ngStyle]="setImageStyle()">
-          <img class="displayImage" [src]="feature.url" (error)="loadError($event)">
+        <div class="splitRight right " [ngStyle]="setImageStyle()" *ngIf="feature.url.substring(feature.url.length-4)=='.mp4'; else image">
+          <video class="displayImage" #video autoplay loop [muted]="true">
+            <source [src]="feature.url" type="video/mp4" (error)="loadError($event)">
+          </video>
         </div>
-      </ng-template>
-    </div>
-    <div *ngSwitchCase="'no-border'">
-      <div class="splitLeft left">
+        <ng-template #image>
+          <div class="splitRight right" [ngStyle]="setImageStyle()">
+            <img class="displayImage" [src]="feature.url" (error)="loadError($event)">
+          </div>
+        </ng-template>
+      </div>
+      <div *ngSwitchCase="'no-border'">
+        <div class="splitLeft left">
         <div class="text-box">
           <h1 class="line1">{{feature.caption}}</h1>
           <h1 class="line2">{{feature.subcaption}}</h1>
         </div>
       </div>
-      <div class="no-split">
-        <div class="displayImageFull" *ngIf="feature.url.substring(feature.url.length-4)=='.mp4'; else image">
+        <div class="no-split">
+          <div class="displayImageFull" *ngIf="feature.url.substring(feature.url.length-4)=='.mp4'; else image">
           <video #video autoplay loop [muted]="true">
             <source [src]="feature.url" type="video/mp4" (error)="loadError($event)">
           </video>
@@ -102,6 +103,7 @@
         <ng-template #image>
           <img class="displayImageFull" [src]="feature.url" (error)="loadError($event)">
         </ng-template>
+        </div>
       </div>
     </div>
   </div>

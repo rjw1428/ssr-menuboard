@@ -13,24 +13,6 @@
     animation-duration: 3s; */
 }
 
-.logo {
-    width: var(--logo-size);
-    height: var(--logo-size);
-    animation: fadeIn;
-    animation-duration: 1s;
-    transform: translate(-50%, -50%);
-    position: relative;
-    left: 50%;
-    top: 50%;
-    
-}
-
-.logo-container {
-    position: absolute;
-    z-index:-1;
-    width: 100vw;
-    height: 100vh;
-}
 
 .shiftDown {
     transform: translateY(70vh);

@@ -1,0 +1,23 @@
+<div class="container" [ngStyle]="setColumnStyle()" (click)="onClick()">
+<!-- <div class="container" [ngStyle]="{'background-color': service.itemSelected.id==item.id?rgba(100,100,100,1):rgba(100,100,100,.4)}" (click)="onClick()"> -->
+  <div class="background" [ngStyle]="setElementStyle()"></div>
+  <div class="blank1"></div>
+  <div class="image-container" [ngStyle]="setIconStyle()"><img *ngIf="displayIcon" [src]="displayIcon"></div>
+  <div class="title-container" [ngStyle]="setTitleStyle()">{{ title |
+    uppercase}}</div>
+  <div class="description-container" [ngStyle]="setNoteStyle()">{{item.description}}</div>
+  <div class="abv-container" [ngStyle]="setAbvStyle()">ABV: {{ item.abv }}</div>
+  <div class="price-container" [ngStyle]="setAbvStyle()">IBU: {{ item.ibu }}</div>
+  <!-- <div class="price-container">$ 7<sup>00</sup></div> -->
+  <div class="blank2"></div>
+  <!-- <div class="button-row" *ngIf="editMode">
+    <div class="button-group btn-sm " *ngIf="menuToggle">
+      <button class="btn btn-success add" (click)="onAdd()">Insert</button>
+      <button class="btn btn-warning edit" (click)="onEdit()">Edit</button>
+      <button class="btn btn-danger delete" (click)="onDelete()">Delete</button>
+      <button class="btn btn-default setOut" (click)="onOut()">Out</button>
+      <button *ngIf="movable" class="btn btn-primary down" (click)="onShiftDown()">Shift Down</button>
+      <button *ngIf="movable" class="btn btn-primary up" (click)="onShiftUp()">Shift Up</button>
+    </div>
+  </div> -->
+</div>

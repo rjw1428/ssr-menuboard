@@ -12,14 +12,8 @@ import { Observable } from 'rxjs/Rx';
   ]
 })
 export class SpecialsPageComponent implements OnInit {
-  @Input() delay: number;
-  @Input() activePage: number;
-  @Output() displayStarted = new EventEmitter<{}>()
-  @Output() displayComplete = new EventEmitter<{}>()
-  header = "Test"
+  header = "Upcoming Events"
   specialsList: Specials[] = [];
-  interval: any;
-  active = true;
   constructor(private service: SpecialsService, private ms: ManagementService) {
     let observable = this.service.getSpecials().snapshotChanges().map(specials => {
       let list = [];
@@ -36,30 +30,13 @@ export class SpecialsPageComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.displayStarted.emit()
-    console.log("SPECIALS STARTED")
-    //SET COMPLETION INTERVAL
-    if (this.delay == null) {
-      console.log("INFINITE")
-    } else {
-      //OVERALL PAGE TIMER
-      this.interval = setInterval(() => {
-        console.log("SPECIALS COMPLETE")
-        this.displayComplete.emit();
-        this.active = false;
-      }, 1000 * this.delay)
-    }
-  }
-
-  ngOnDestroy() {
-    if (this.interval)
-      clearInterval(this.interval)
   }
 
   setHederStyle() {
-    this.header = this.ms.specialHeader.value
+    // this.header = this.ms.specialHeader.value
     let style = {
-      'font-size': this.ms.specialHeaderSize.value + 'px'
+      // 'font-size': this.ms.specialHeaderSize.value + 'px'
+      'font-size': '50px'
     }
     return style
   }
