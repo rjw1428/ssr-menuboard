@@ -1,0 +1,11 @@
+.block-inverse .text-muted {
+    color: rgba(255, 255, 255, .7) !important;
+}
+
+.app-footer {
+    background-color: #262F36;
+}
+.app-footer a {
+    color: #fff;
+}
+      

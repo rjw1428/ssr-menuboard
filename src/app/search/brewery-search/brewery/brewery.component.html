@@ -1,0 +1,18 @@
+<div [ngClass]="{'selected':selected, 'not-selected':!selected}" (click)="onClick()">
+  <div class="row main">
+    <div class="col-sm-1">
+      <img class="img-container" *ngIf="brewery.iconLoc" [src]="brewery.iconLoc">
+    </div>
+    <div class="col-sm-1"></div>
+    <div class="col-md-10">
+      <div class="row">
+        <div class="col-sm-12 align-text-bottom">
+          <h3>{{brewery.name | uppercase}}</h3>
+        </div>
+        <div class="col-sm-12 align-text-bottom">
+          <p>{{location}}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

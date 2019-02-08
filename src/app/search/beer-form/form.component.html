@@ -5,14 +5,15 @@
     <input type="hidden" formControlName="id">
     <input type="hidden" formControlName="masterBreweryKey">
     <input matInput formControlName="brewery" placeholder="Brewery Name..." [matAutocomplete]="auto">
-    <img matPrefix *ngIf="beerForm.get('brewery').valid && isSelectedValue(beerForm.get('brewery'))" class="example-option-img" aria-hidden [src]="parseSelectionForIcon(beerForm.get('brewery'))" height="40">
+    <img matPrefix *ngIf="beerForm.get('brewery').valid && isSelectedValue(beerForm.get('brewery'))" class="example-option-img"
+      aria-hidden [src]="parseSelectionForIcon(beerForm.get('brewery'))" height="40">
     <button mat-button *ngIf="beerForm.get('brewery').valid" matSuffix mat-icon-button aria-label="Clear" (click)="resetBrewery()">
       <mat-icon>close</mat-icon>
     </button>
   </mat-form-field>
-  <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayName">
+  <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayBrewName">
     <mat-option *ngFor="let b of filteredBreweries | async" [value]="b">
-      <img class="example-option-img" aria-hidden [src]="b.icon" height="40">
+      <img class="example-option-img" aria-hidden [src]="b.iconLoc" height="40">
       <span>{{b.name }}</span> |
       <small>{{b.city}},{{b.state}}</small>
     </mat-option>
@@ -20,8 +21,14 @@
   <button class="example-button-width" mat-raised-button color="primary" (click)="openDialog()">New</button>
 
   <mat-form-field>
-    <input matInput formControlName="name" placeholder="Beer Name...">
+    <input matInput formControlName="name" placeholder="Beer Name..." [matAutocomplete]="autoBeer">
   </mat-form-field>
+  <mat-autocomplete #autoBeer="matAutocomplete" >
+    <mat-option *ngFor="let name of filteredNames | async" [value]="name">
+      <span>{{ name }}</span>
+    </mat-option>
+  </mat-autocomplete>
+
   <mat-form-field>
     <input matInput formControlName="type" placeholder="Beer Type...">
   </mat-form-field>

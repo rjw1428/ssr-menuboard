@@ -1,0 +1,46 @@
+<div [ngClass]="{'selected':selected, 'not-selected':!selected}" (click)="onClick()">
+  <div class="row main">
+    <div class="col-md-6">
+      <div class="row">
+        <div class="col-xs-4">
+          <img class="img-container" *ngIf="displayIcon" [src]="displayIcon">
+        </div>
+        <div class="col-xs-8">
+          <div class="row">
+            <div class="col-md-12">
+              <h3>{{ beer.name | uppercase }}</h3>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <h4>{{beer.brewery.name}}</h4>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <p>{{location}}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="row">
+        <div class="col-sm-10 description">
+          <p>{{ beer.description }}</p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-4">
+          <p>Type: {{ beer.type }}</p>
+        </div>
+        <div class="col-md-4">
+          <p>ABV: {{ beer.abv }}</p>
+        </div>
+        <div class="col-md-4">
+          <p>IBU: {{ beer.ibu }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

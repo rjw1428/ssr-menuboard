@@ -4,8 +4,9 @@ import { AngularFireStorage } from '@angular/fire/storage';
 import { environment } from '@environments/environment';
 import { ManagementService } from '@shared/services/management.service';
 import { Beer } from '@shared/interfaces/beer';
-import { Items2Service } from '@shared/services/items2.service';
+import { DataService } from '@shared/services/data.service';
 import { Brewery } from '@shared/interfaces/brewery';
+import { Localbeer } from '@shared/interfaces/localbeer';
 
 @Component({
   selector: 'app-item2',
@@ -14,12 +15,13 @@ import { Brewery } from '@shared/interfaces/brewery';
   animations: [
   ]
 })
-export class Item2Component implements OnInit, AfterViewInit, OnChanges {
-  @Input() item: Beer;
+export class Item2Component implements OnInit {
+  @Input() item: Localbeer;
+  @Input() selected: boolean
   @Input() editMode: boolean = false;
   @Input() movable: boolean = true;
   @Output() itemDeleted = new EventEmitter<{ item: Item }>()
-  @Output() selected = new EventEmitter<Beer>()
+  // @Output() selected = new EventEmitter<Beer>()
   @Output() itemAdded = new EventEmitter<{ item: Item }>()
   @Output() itemEdited = new EventEmitter<{ item: Item }>()
   @Output() itemShiftUp = new EventEmitter<{ item: Item }>()
@@ -35,35 +37,51 @@ export class Item2Component implements OnInit, AfterViewInit, OnChanges {
   menuToggle: boolean = false;
   title: string
   displayIcon: string
-  constructor(private storage: AngularFireStorage, private ms: ManagementService, private service: Items2Service) {
+  location: string
+  constructor(private storage: AngularFireStorage, private ms: ManagementService, private service: DataService) {
     this.onResize();
   }
 
   ngOnInit() {
-    this.title = this.item.withBrewery ? this.item.brewery.name + " " + this.item.name : this.item.name
-    let loadIcon = this.item.icon ? this.item.icon : this.item.brewery.icon
-    this.getImage(loadIcon)
+    this.title = this.item.beer.withBrewery ? this.item.beer.brewery.name + " " + this.item.beer.name : this.item.beer.name
+    this.location = this.buildLocation()
+    this.getIcon()
+  }
+  getIcon() {
+    if (this.item.beer.icon)
+      this.storage.ref(environment.itemIconRootAddress + this.item.beer.icon).getDownloadURL().toPromise()
+        .then(value => {
+          this.displayIcon = value
+        })
+        .catch(e => {
+          this.displayIcon = '../../../assets/404icon.png'
+        })
+    else
+      this.storage.ref(environment.itemIconRootAddress + this.item.beer.brewery.icon).getDownloadURL().toPromise()
+        .then(value => {
+          this.displayIcon = value
+        })
+        .catch(e => {
+          this.displayIcon = '../../../assets/404icon.png'
+        })
   }
 
-  ngOnChanges() {
+  buildLocation() {
+    if (this.item.beer.brewery.city && this.item.beer.brewery.state)
+      return this.location = `${this.item.beer.brewery.city}, ${this.item.beer.brewery.state.substr(0, 2)}`
+    if (this.item.beer.brewery.city && this.item.beer.brewery.country)
+      return this.location = `${this.item.beer.brewery.city}, ${this.item.beer.brewery.country.substr(0, 2)}`
+    return ''
   }
 
-  ngAfterViewInit() {
-
+  isSelected() {
+    if (!this.service.selectedBeer)
+      return false
+    return this.service.selectedBeer.id == this.item.id
   }
 
-  getImage(name: string) {
-    const ref = this.storage.ref(environment.itemIconRootAddress + name);
-    ref.getDownloadURL()
-      .toPromise()
-      .then(value => {
-        this.displayIcon = value;
-      })
-      .catch(e => {
-        //console.log(name)
-        this.displayIcon = '../../../assets/404icon.png'
-        //this.iconOff.emit({ company: this.item.brewery.name, filename: name })
-      })
+  test() {
+    console.log("item2 - Click")
   }
 
   onDelete() {
@@ -92,9 +110,14 @@ export class Item2Component implements OnInit, AfterViewInit, OnChanges {
   }
 
   onClick() {
+    //this.fixKey()
+    //this.selected.emit(this.item)
+    // if (this.service.selectedBeer && this.service.selectedBeer.id == this.item.id)
+    //   this.service.selectedBeer = null
+    // else
+    //   this.service.selectedBeer = this.item.bee
+
     //this.service.selectedBeer = this.item
-    //console.log(this.item)
-    this.selected.emit(this.item)
     //this.menuToggle == true ? this.menuToggle = false : this.menuToggle = true;
   }
 
@@ -165,4 +188,17 @@ export class Item2Component implements OnInit, AfterViewInit, OnChanges {
     }
     return style
   }
+
+  // fixKey() {
+  //   let x = this.item
+  //   let hold = x.id
+  //   delete x.id
+  //   delete x.iconLoc
+  //   delete x.brewery
+  //   if (!x.icon)
+  //     delete x.icon
+  //   let id = x.masterBreweryKey + " " + x.name.toLowerCase()
+  //   this.service.beerFirestoreList.doc(id).set(x)
+  //   this.service.beerFirestoreList.doc(hold).delete()
+  // }
 }

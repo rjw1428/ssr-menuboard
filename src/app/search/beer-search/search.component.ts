@@ -1,5 +1,4 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { Items2Service } from '@shared/services/items2.service';
 import { Observable, Subject, Subscription, of, BehaviorSubject } from 'rxjs';
 import { Beer } from '@shared/interfaces/beer';
 import { AngularFirestoreCollection, AngularFirestore, AngularFirestoreDocument, DocumentChangeAction } from '@angular/fire/firestore';
@@ -9,7 +8,7 @@ import { environment } from '@environments/environment';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { AngularFireDatabase, AngularFireList } from '@angular/fire/database';
 import { combineLatest, defer } from 'rxjs'
-import { map, switchMap, startWith } from 'rxjs/operators';
+import { map, switchMap, startWith, concat } from 'rxjs/operators';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatSnackBar } from '@angular/material';
 import { DialogAddBeerDialog } from '../beer-form/form.component';
 import { transformAll } from '@angular/compiler/src/render3/r3_ast';
@@ -18,39 +17,10 @@ import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms'
 import * as _ from "lodash";
 import { TitlecasePipe } from '@shared/pipes/titlecase.pipe';
 import { DialogAddBreweryDialog } from '../brewery-form/form.component';
-
-
-export const docJoin = (
-  afs: AngularFirestore,
-  field: string, //masterBreweryKey
-  collection: string, //masterBreweryList
-) => {
-  return source =>
-    defer(() => {
-      let collectionData: DocumentChangeAction<Brewery>[]
-
-      return source.pipe(
-        switchMap((data: DocumentChangeAction<Brewery>[]) => {
-
-          //Save the parent data state
-          collectionData = data;
-          const reads$ = [];
-
-          collectionData.forEach(brewery => {
-            let obj = brewery.payload.doc.data()
-            reads$.push(afs.doc(`${collection}/${obj[field]}`).valueChanges());
-          })
-          return combineLatest(reads$)
-        }),
-        //Takes result of switchmap and joins to parent
-        map(joins => {
-          return collectionData.map((v, i) => {
-            return { ...v.payload.doc.data(), ['brewery']: joins[i], ['id']: v.payload.doc.id };
-          })
-        })
-      )
-    })
-}
+import { DataService } from '@shared/services/data.service';
+import { TransactionFormComponent } from '../transaction-form/transaction-form.component';
+import { Transaction } from '@shared/interfaces/transaction';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-beer-search',
@@ -64,33 +34,27 @@ export class SearchComponent implements OnInit {
   beerList: Beer[] = []
   filteredBeerList: Beer[] = []
   breweryList: Brewery[] = []
-  filteredBreweries: Observable<Brewery[]>
+  filteredBreweries: Brewery[] = []
   typeList: string[] = []
   filteredTypes: Observable<string[]>
   filters = {}
   searchForm: FormGroup
   selectedBeer: Beer
+  client: string
   constructor(private afs: AngularFirestore,
     public dialog: MatDialog,
     private snackBar: MatSnackBar,
     private fb: FormBuilder,
+    public service: DataService,
+    public route: ActivatedRoute,
     private storage: AngularFireStorage) { }
 
   ngOnInit() {
     this.buildForm()
-    this.beerCollection = this.afs.collection('masterBeerList', ref => {
-      return ref.limit(100).orderBy('name')
-    })
-    this.breweryCollection = this.afs.collection('masterBreweryList', ref => {
-      return ref.limit(100).orderBy('name')
-    })
-
-    //GET BEER LIST
-    this.beerCollection.snapshotChanges()
-      .pipe(docJoin(this.afs, 'masterBreweryKey', 'masterBreweryList'))
+    this.service.beerCollection
       .subscribe((beers: Beer[]) => {
         this.beerList = []
-        beers.forEach((val: Beer) => {
+        beers.forEach((val) => {
           let temp = val
           temp['type'] = new TitlecasePipe().transform(val.type)
           this.beerList.push(temp)
@@ -102,55 +66,29 @@ export class SearchComponent implements OnInit {
           return 0
         })
         this.filteredTypes = this.searchForm.get('type').valueChanges
-          .pipe(startWith(''),
-            map(value => {
+          .map(value => {
+            if (value)
               return this.typeList.filter(type => type.includes(value.toLowerCase()))
-            })
-          )
+          })
         this.applyFilters()
       })
 
 
     //GET BREWERY LIST
-    this.afs.collection('masterBreweryList')
-      .snapshotChanges()
-      .map(vals => {
-        return vals
-          .map(val => {
-            let brewery = val.payload.doc.data() as Brewery
-            brewery['masterBreweryKey'] = val.payload.doc.id
-            return brewery
-          })
-      })
+    this.service.breweryCollection
       .subscribe((breweries) => {
-        this.breweryList = []
-        breweries.forEach(el => {
-          this.storage.ref(environment.itemIconRootAddress + el.icon).getDownloadURL().toPromise()
-            .then(value => {
-              el.icon = value;
-            })
-            .catch(e => {
-              el.icon = '../../../assets/404icon.png'
-            })
-          this.breweryList.push(el)
-        })
-        this.breweryList.sort((a, b) => {
-          if (a.name > b.name) return 1
-          if (a.name < b.name) return -1
-          return 0
-        })
-        this.filteredBreweries = this.searchForm.get('keyword').valueChanges
-          .pipe(startWith<string | Brewery>(''),
-            map((value: any) => typeof value === 'object' ? value.name : value),
-            map((brew: string) => brew ? this._instafilter(brew) : this.breweryList.slice())
-          )
+        this.breweryList = breweries
+      })
+    this.searchForm.get('keyword').valueChanges
+      .subscribe(value => {
+        let filterword = typeof value === 'object' ? value.name : value
+        this.filteredBreweries = this._instafilter(filterword)
       })
   }
 
   private _instafilter(value: string): Brewery[] {
-    if (!value)
-      return [];
-    return this.breweryList.filter((brew: Brewery) => brew.name.toLowerCase().indexOf(value.toLowerCase()) === 0)
+    if (value)
+      return this.breweryList.filter((brew: Brewery) => brew.name.toLowerCase().indexOf(value.toLowerCase()) === 0)
   }
 
   buildForm() {
@@ -177,18 +115,19 @@ export class SearchComponent implements OnInit {
   }
 
   applyFilters() {
-    this.filteredBeerList = _.filter(this.beerList, _.conforms(this.filters)).sort((a, b) => {
-      let t1=a.withBrewery?a.brewery.name+" "+a.name:a.name
-      let t2=b.withBrewery?b.brewery.name+" "+b.name:b.name
-      if (t1 > t2) return 1
-      if (t1 < t2) return -1
-      return 0
-    })
+    this.filteredBeerList = _.filter(this.beerList, _.conforms(this.filters))
+    // .sort((a, b) => {
+    //   let t1 = a.withBrewery ? a.brewery.name + " " + a.name : a.name
+    //   let t2 = b.withBrewery ? b.brewery.name + " " + b.name : b.name
+    //   if (t1 > t2) return 1
+    //   if (t1 < t2) return -1
+    //   return 0
+    // })
   }
 
   filterBrewery() {
     let b = this.searchForm.get('keyword').value as Brewery
-    this.filters['masterBreweryKey'] = val => val == b.masterBreweryKey
+    this.filters['masterBreweryKey'] = val => val == b.id
     this.applyFilters()
   }
 
@@ -218,30 +157,65 @@ export class SearchComponent implements OnInit {
   }
 
   parseSelectionForIcon(b: any) {
-    return b.value.icon
+    return b.value.iconLoc
   }
 
   openBeerDialog(): void {
     const dialogRef = this.dialog.open(DialogAddBeerDialog, {
       width: '500px',
       disableClose: true,
-      data: {} //SET OUTPUT DATA KEYS
+      data: {}
     });
 
     //SET BEER DATA FROM FORM
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        let beer = Object.assign({}, result)
-        beer['masterBreweryKey'] = result.brewery.masterBreweryKey
-        let brewname = beer.brewery.name
+        console.log(result)
+        let beer = Object.assign({ 'active': true }, result)
+        let key = beer.brewery.name.toLowerCase() + " " + beer.name.toLowerCase()
+        let brewname = typeof beer.brewery === 'string' ? beer.brewery : beer.brewery.name
         delete beer.brewery
         delete beer.id
-        this.beerCollection.add(beer)
-          .then(ref => {
-            this.snackBar.open(brewname + " " + beer.name + " Added", "OK", {
-              duration: 2000,
+        delete beer.iconLoc
+        if (result.brewery.id) {
+          beer['masterBreweryKey'] = result.brewery.id
+          this.service.beerFirestoreList.doc(key).set(beer)
+            .then(ref => {
+              this.snackBar.open(brewname + " " + beer.name + " Added", "OK", {
+                duration: 2000,
+              })
             })
-          })
+        } else this.snackBar.open(beer.name + " was not added! - You need to add " + brewname + " to the Brewery List first.", "OK")
+      }
+      this.service.selectedBeer = null
+    });
+  }
+
+  editBeerDialog(): void {
+    const dialogRef = this.dialog.open(DialogAddBeerDialog, {
+      width: '500px',
+      disableClose: true,
+      data: this.service.selectedBeer
+    });
+
+    //SET BEER DATA FROM FORM
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        let beer = Object.assign({ 'active': true }, result)
+        let brewname = typeof beer.brewery === 'string' ? beer.brewery : beer.brewery.name
+        delete beer.brewery
+        delete beer.id
+        delete beer.iconLoc
+        if (this.service.selectedBeer && result.masterBreweryKey) {
+          beer['masterBreweryKey'] = result.masterBreweryKey
+          this.service.beerFirestoreList.doc(this.service.selectedBeer.id).update(beer)
+            .then(ref => {
+              this.snackBar.open(brewname + " " + beer.name + " has been edited", "OK", {
+                duration: 2000,
+              })
+            })
+          this.service.selectedBeer = null
+        } else this.snackBar.open(beer.name + " was not added! - You need to add " + brewname + "to the Brewery List first.", "OK")
       }
     });
   }
@@ -250,62 +224,114 @@ export class SearchComponent implements OnInit {
     const dialogRef = this.dialog.open(DialogAddBreweryDialog, {
       width: '500px',
       disableClose: true,
-      data: {} //SET OUTPUT DATA KEYS
+      data: this.beerList
     });
 
     //BREWERY INFORMATION FROM FORM
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        let brewery = Object.assign({ 'icon': new IconNamePipe().transform(result.name) }, result)
-        this.breweryCollection.add(brewery)
+        let brewery = Object.assign({ 'icon': new IconNamePipe().transform(result.name), 'active': true }, result)
+        let key = brewery.name.toLowerCase()
+        this.service.breweryFirestoreList.doc(key).set(brewery)
           .then(ref => {
             this.snackBar.open(brewery.name + " Added", "OK", {
-              duration: 1000,
+              duration: 2000,
             })
           })
       }
     });
   }
 
-  editDialog() {
-    if (this.selectedBeer) {
-      let input = Object.assign({}, this.selectedBeer)
-      if (input.icon)
-        input.icon = new IconNamePipe().transform(input.name)
-      const dialogRef = this.dialog.open(DialogAddBeerDialog, {
-        width: '500px',
-        disableClose: true,
-        data: input
-      });
-      dialogRef.afterClosed().subscribe(result => {
-        if (result) {
-          let beer = Object.assign({}, result)
-          if (result.brewery.masterBreweryKey)
-            beer['masterBreweryKey'] = result.brewery.masterBreweryKey
-          let brewname = beer.brewery.name
-          let id = beer.id
-          delete beer.brewery
-          delete beer.id
-          console.log(beer)
-          this.beerCollection.doc(id).update(beer)
+  removeBeer() {
+    if (confirm("Are you sure you want to delete this Beer?")) {
+      this.service.beerFirestoreList.doc(this.service.selectedBeer.id).update({
+        'active': false
+      })
+    }
+    this.service.selectedBeer = null
+  }
+
+
+  openTransactionDialog() {
+    this.service.selectedBeer = this.selectedBeer
+    let localBeerList = this.service.localFirestoreList
+    const dialogRef = this.dialog.open(TransactionFormComponent, {
+      width: '500px',
+      height: '75vh',
+      disableClose: true,
+      data: {}
+    });
+
+
+    //SET BEER DATA FROM FORM
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+
+        let brewname = this.service.selectedBeer.withBrewery ? this.service.selectedBeer.brewery.name + " " + this.service.selectedBeer.name : this.service.selectedBeer.name
+        if (result.action == 'swap') {
+          delete result.action
+          console.log(result)
+          result['soldOut'] = false
+          localBeerList.doc(result.id).update(result)
             .then(ref => {
-              this.snackBar.open(brewname + " " + beer.name + " Updated", "OK", {
+              this.snackBar.open(brewname + " has been swapped into your menu", "OK", {
+                duration: 2000,
+              })
+            }).then(ref => {
+              this.route.parent.params.subscribe(bar => {
+                let trans: Transaction = {
+                  client: bar['client'],
+                  itemIn: this.service.selectedBeer.id,
+                  itemOut: result.beerID,
+                  timestamp: this.service.timestamp()
+                }
+                this.afs.collection('masterBeerTransactions').add(trans)
+              })
+            })
+        } else {
+          delete result.action
+          result['soldOut'] = false
+          localBeerList.add(result)
+            .then(ref => {
+              this.route.parent.params.subscribe(bar => {
+                let trans: Transaction = {
+                  client: bar['client'],
+                  itemIn: this.service.selectedBeer.id,
+                  timestamp: this.service.timestamp()
+                }
+                this.afs.collection('masterBeerTransactions').add(trans)
+              })
+              this.snackBar.open(brewname + " has been added to your menu", "OK", {
                 duration: 2000,
               })
             })
         }
-      });
-    }
+        this.onClick(this.selectedBeer)
+      }
+    })
   }
 
-  onSelect(b: Beer) {
-    let x: Beer = b
-    // console.log(b)
-    // console.log(this.keyword)
-    // this.selectedBeer = b
-    console.log(x)
+  getRoute() {
+    this.route.parent.params.subscribe(val => {
+      return val
+    })
   }
 
+  showButton(b: Beer) {
+    if (!this.selectedBeer)
+      return false
+    return b.id == this.selectedBeer.id
+  }
+
+  onClick(beer: Beer) {
+    this.isSelected(beer) ? this.selectedBeer = null : this.selectedBeer = beer
+  }
+
+  isSelected(beer: Beer) {
+    if (this.selectedBeer)
+      return this.selectedBeer.id == beer.id
+    return false
+  }
 }
 
 

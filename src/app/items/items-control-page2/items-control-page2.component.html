@@ -1,4 +1,4 @@
-<div *ngIf="itemService.showItemForm">
+<!-- <div *ngIf="itemService.showItemForm">
   <app-item-form></app-item-form>
 </div>
 
@@ -15,14 +15,39 @@
       <a class="dropdown-item" (click)="sortProperty('lastModified', 'desc')">Sort By Date (Reverse)</a>
       <a class="dropdown-item" (click)="sortProperty('order', 'asc')">Sort By Taps</a>
     </div>
-  </div>
-  <!-- <button class="btn btn-info" (click)="sortProperty('company')">Sort By Name</button>
+  </div> -->
+<!-- <button class="btn btn-info" (click)="sortProperty('company')">Sort By Name</button>
   <button class="btn btn-info" (click)="sortProperty('lastModified')">Sort By Date</button>
   <button class="btn btn-danger" (click)="sortProperty('order')">Remove Sort</button> -->
 
-  <div *ngFor="let item of filterList">
+<!-- <div *ngFor="let item of filterList">
     <app-item [item]="item" [movable]="sortable" [editMode]="editMode" (itemAdded)="onInsertBelow($event)" (itemEdited)="onEdit($event)"
       (itemDeleted)="onDelete($event)" (itemShiftUp)="onShiftUp($event)" (itemShiftDown)="onShiftDown($event)"
       (itemOut)="onOut($event)" (iconOff)="onIconOff($event)"></app-item>
+  </div>
+</div> -->
+
+<div class="container">
+  <div class="row justify-content-center" *ngFor="let beer of itemsList | async; let i=index ">
+    <div class="col-sm-6">
+      <app-item2 [item]="beer" (click)="onClick(beer)" [selected]="isSelected(beer)"></app-item2>
+    </div>
+  </div>
+</div>
+
+<div class="container main">
+  <div class="row">
+    <div class="col-sm-1 float-right">
+      <button type="button" mat-raised-button color="default" (click)="soldOutBeer()" *ngIf="selected">{{getSoldOutState()}}</button>
+      <button type="button" mat-raised-button color="warn" (click)="editBeer()" *ngIf="selected">Edit
+        Beer</button>
+      <br>
+      <button type="button" mat-raised-button color="accent" (click)="removeBeer()" *ngIf="selected">Delete
+        Beer</button>
+    </div>
+    <div class="col-sm-10"></div>
+    <div class="col-sm-1 align-bottom">
+      <button type="button" mat-raised-button color="primary" (click)="addBeer()">Add Beer</button>
+    </div>
   </div>
 </div>

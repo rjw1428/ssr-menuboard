@@ -28,24 +28,24 @@ export class SinglePageComponent implements OnInit {
     config.wrap = true;
     config.keyboard = true;
     config.pauseOnHover = false;
-    console.log(this.activeFeature)
+    //console.log(this.activeFeature)
   }
 
   ngOnInit() {
-    this.getImages()
-    this.featureService.getFeaturedList(environment.featureRootAddress).snapshotChanges().forEach(featuredItems => {
-      this.featuredList = []
-      featuredItems.forEach(element => {
-        var y = element.payload.toJSON() as FeaturedItem;
-        y['key'] = element.key
-        // if (this.setActiveByDate(y) && y.active) {
-        if (y.active) {
-          this.featuredList.push(y)
-        }
-      })
-      // this.featureService.parentDisplayedCount = 0
-      this.featuredList.sort((el1, el2) => el1.order - el2.order)
-    })
+    //this.getImages()
+    // this.featureService.getFeaturedList(environment.featureRootAddress).snapshotChanges().forEach(featuredItems => {
+    //   this.featuredList = []
+    //   featuredItems.forEach(element => {
+    //     var y = element.payload.toJSON() as FeaturedItem;
+    //     y['key'] = element.key
+    //     // if (this.setActiveByDate(y) && y.active) {
+    //     if (y.active) {
+    //       this.featuredList.push(y)
+    //     }
+    //   })
+    //   // this.featureService.parentDisplayedCount = 0
+    //   this.featuredList.sort((el1, el2) => el1.order - el2.order)
+    // })
   }
 
   onSlide(slideData: { current: string; }) {

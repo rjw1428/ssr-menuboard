@@ -24,3 +24,29 @@
   .search-box {
     background-color: white;
 }
+
+.new {
+    position: fixed;
+    top: 80vh;
+    right: 5%;
+    z-index: 2;
+}
+
+.control {
+    margin-bottom: 10px;
+}
+
+.add-button {
+    align-self: center;
+    z-index: 3;
+    border-radius:50%;
+    /* box-shadow: 5px 5px 5px black */
+}
+
+@media only screen and (max-width: 640px) {
+    .add-button {
+        float: right;
+        position: relative;
+        top: -10vh;
+    }
+}

@@ -1,0 +1,16 @@
+.text-block {
+    background-color: rgba(0,0,0,.8);
+    box-shadow: 2px 2px 2px black;
+}
+
+.text-muted {
+    color: rgba(255, 255, 255, .7) !important;
+}
+
+h3 {
+    color: #fff;
+}
+
+p {
+    margin: 0px;
+}

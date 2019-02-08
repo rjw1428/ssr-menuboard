@@ -11,17 +11,20 @@ import { AngularFireStorage } from '@angular/fire/storage';
 import { environment } from '@environments/environment';
 import { map, switchMap, startWith } from 'rxjs/operators';
 import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { DataService } from '@shared/services/data.service';
+import { AuthService } from '@shared/services/auth.service';
 
 @Component({
   selector: 'dialog-add-beer-dialog',
   templateUrl: './form.component.html',
   styleUrls: ['./form.component.css']
 })
-export class DialogAddBeerDialog implements OnInit {
+export class DialogAddBeerDialog {
   breweryCollection: AngularFirestoreCollection<Brewery>
   breweryList: Brewery[] = []
+  beerNameList: string[] = []
   filteredBreweries: Observable<Brewery[]>
-  myControl = new FormControl()
+  filteredNames: Observable<string[]>
   beerForm: FormGroup
   constructor(public dialog: MatDialog,
     private snackBar: MatSnackBar,
@@ -30,65 +33,64 @@ export class DialogAddBeerDialog implements OnInit {
     public input: Beer,
     private afs: AngularFirestore,
     private storage: AngularFireStorage,
-    private fb: FormBuilder) {
+    private fb: FormBuilder,
+    private service: DataService) {
     this.buildForm()
-    this.breweryCollection = afs.collection('masterBreweryList', ref => {
-      return ref.orderBy('name')
-    })
-    this.breweryCollection.snapshotChanges()
-      .map(vals => {
-        return vals
-          .map(val => {
-            let brewery = val.payload.doc.data() as Brewery
-            brewery['masterBreweryKey'] = val.payload.doc.id
-            return brewery
-          })
-      }).subscribe(val => {
-        this.breweryList = []
-        val.forEach(el => {
-          this.storage.ref(environment.itemIconRootAddress + el.icon).getDownloadURL().toPromise()
-            .then(value => {
-              el.icon = value;
-            })
-            .catch(e => {
-              el.icon = '../../../assets/404icon.png'
-            })
-          this.breweryList.push(el)
-          this.filteredBreweries = this.beerForm.valueChanges
-            .pipe(startWith<string | Beer>(''),
-              map((value: Beer) => typeof value.brewery === 'object' ? value.brewery.name : value.brewery),
-              map((brew: string) => brew ? this._filter(brew) : this.breweryList.slice())
-            )
-        })
+    this.service.beerCollection.subscribe(vals => {
+      vals.forEach(val => {
+        this.beerNameList.push(val.name)
       })
-  }
-
-  ngOnInit() {
+      this.filteredNames = this.beerForm.get('name').valueChanges
+        .map(value => {
+          if (value)
+            return this.beerNameList.filter(name => name.toLowerCase().includes(value.toLowerCase()))
+        })
+    })
+    this.service.breweryCollection.subscribe(vals => {
+      this.breweryList = vals
+      this.filteredBreweries = this.beerForm.get('brewery').valueChanges.pipe(
+        map((value) => typeof value === 'string' ? value : value.name),
+        map((brew: string) => brew ? this._filter(brew) : [])
+      )
+    })
   }
 
   private _filter(value: string): Brewery[] {
-    if (!value)
-      return [];
     return this.breweryList.filter((brewery: Brewery) => brewery.name.toLowerCase().indexOf(value.toLowerCase()) === 0)
   }
 
-  displayName(brewery: Brewery) {
+  displayBrewName(brewery: Brewery) {
     return brewery.name
   }
 
   private buildForm() {
-    this.beerForm = this.fb.group({
-      id: this.input.id ? this.input.id : '',
-      brewery: [this.input.brewery ? this.input.brewery : '', [Validators.required]],
-      masterBreweryKey: this.input.masterBreweryKey ? this.input.masterBreweryKey : '',
-      name: this.input.name ? this.input.name : '',
-      abv: this.input.abv ? this.input.abv : '',
-      ibu: this.input.ibu ? this.input.ibu : '',
-      type: this.input.type ? this.input.type : '',
-      description: this.input.description ? this.input.description : '',
-      withBrewery: this.input.withBrewery!=null ? this.input.withBrewery === true : '',
-      icon: this.input.icon ? this.input.icon : ''
-    })
+    if (this.input)
+      this.beerForm = this.fb.group({
+        id: this.input.id ? this.input.id : '',
+        brewery: [this.input.brewery ? this.input.brewery : '', [Validators.required]],
+        masterBreweryKey: this.input.masterBreweryKey ? this.input.masterBreweryKey : '',
+        name: this.input.name ? this.input.name : '',
+        abv: this.input.abv ? this.input.abv : ['', [Validators.pattern("^[0-9]*\.?\[0-9]$"), Validators.maxLength(3)]],
+        ibu: this.input.ibu ? this.input.ibu : ['', [Validators.pattern("^[0-9]*$"), Validators.maxLength(3)]],
+        type: this.input.type ? this.input.type : '',
+        description: this.input.description ? this.input.description : '',
+        withBrewery: this.input.withBrewery != null ? this.input.withBrewery === true : '',
+        icon: this.input.icon ? this.input.icon : ''
+      })
+    else {
+      this.beerForm = this.fb.group({
+        id: '',
+        brewery: ['', [Validators.required]],
+        masterBreweryKey: '',
+        name: '',
+        abv: ['', [Validators.pattern("^[0-9]*\.?\[0-9]$"), Validators.maxLength(3)]],
+        ibu: ['', [Validators.pattern("^[0-9]*$"), Validators.maxLength(3)]],
+        type: '',
+        description: '',
+        withBrewery: '',
+        icon: ''
+      })
+    }
   }
 
   resetBrewery() {
@@ -112,8 +114,9 @@ export class DialogAddBeerDialog implements OnInit {
         this.breweryCollection.add(brewery)
           .then(ref => {
             this.snackBar.open(brewery.name + " Added", "OK", {
-              duration: 1000,
+              duration: 2000,
             })
+            //SET NEW BREWERY ON BEER FORM
             brewery.masterBreweryKey = ref.id
             let addnew = Object.assign({}, this.beerForm.value)
             addnew['brewery'] = brewery
@@ -132,7 +135,7 @@ export class DialogAddBeerDialog implements OnInit {
   }
 
   parseSelectionForIcon(b: any) {
-    return b.value.icon
+    return b.value.iconLoc
   }
 
   isSelectedValue(b: any) {

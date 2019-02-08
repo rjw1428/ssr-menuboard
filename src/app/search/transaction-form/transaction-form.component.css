@@ -1,0 +1,19 @@
+.example-option-img {
+    vertical-align: middle;
+    margin-right: 8px;
+  }
+
+  .highlighted {
+      background-color: #F44336;
+      color: white;
+      /* font-weight: bold; */
+  }
+
+  .viewport {
+      height: 30vh;
+      width: 100%;
+  }
+
+  textarea{
+      width: 100%;
+  }

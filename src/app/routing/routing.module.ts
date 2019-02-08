@@ -15,18 +15,25 @@ import { PropertiesEditComponent } from '../properties/properties-edit/propertie
 import { ContentManagerComponent } from 'app/content-manager/content-manager.component';
 import { TriviaControlComponent } from '@trivia/trivia-control/trivia-control.component';
 import { TeamListComponent } from '@trivia/teams/team-list/team-list.component';
+import { SearchComponent } from 'app/search/beer-search/search.component';
+import { BrewerySearchComponent } from 'app/search/brewery-search/brewery-search.component';
+import { Auth2Service } from '@shared/services/auth2.service';
+import { WebsiteComponent } from 'app/website/website.component';
 
 const appRoutes: Routes = [
-  { path: '', component: SigninComponent },
-  { path: 'display/:screen', component: DisplayComponent },
-  {path: 'edit', component: NavBarComponent, canActivate: [ AuthGaurdService],
+  { path: '', component: WebsiteComponent},// loadChildren: '@website/website.module#WebsiteModule' },
+  { path: 'display/:client/:screen', component: DisplayComponent},// loadChildren: '@display/display.module#DisplayModule' },
+  { path: 'signin', component: SigninComponent},
+  { path: 'edit/:client', component: NavBarComponent, canActivate: [ AuthGaurdService],
   children: [
-    {path: 'items', component: ItemsControlPage2Component, loadChildren: '@item/items.module#ItemsModule'},
-    {path: 'features', component: FeaturesControlPageComponent, loadChildren: '@features/features.module#FeaturesModule'},
-    {path: 'events', component: SpecialsControlPageComponent},
-    {path: 'properties', component: PropertiesEditComponent},
-    {path: 'content', component: ContentManagerComponent},
-    {path: 'trivia', component: TriviaControlComponent},
+    { path: 'items', component: ItemsControlPage2Component},  //
+    // { path: 'features', component: FeaturesControlPageComponent, loadChildren: '@features/features.module#FeaturesModule'},
+    // { path: 'events', component: SpecialsControlPageComponent},
+    // { path: 'properties', component: PropertiesEditComponent},
+    // { path: 'content', component: ContentManagerComponent},
+    // { path: 'trivia', component: TriviaControlComponent},
+    { path: 'beers', component: SearchComponent},
+    { path: 'breweries', component: BrewerySearchComponent},
   ]},
   { path: 'signup', component: SignupComponent, canActivate: [AuthGaurdService] },
 ]

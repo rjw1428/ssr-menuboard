@@ -10,11 +10,11 @@
           <mat-icon>close</mat-icon>
         </button>
       </mat-form-field>
-      <button class="example-button-width col-sm-2" mat-raised-button color="primary" (click)="openBrewDialog()">New</button>
+      <button class="example-button-width col-sm-2" mat-raised-button color="basic" (click)="openBrewDialog()"><i class="fas fa-plus fa-lg"></i></button>
 
       <mat-autocomplete #auto_brew="matAutocomplete" [displayWith]="displayName" (optionSelected)="filterBrewery()">
-        <mat-option *ngFor="let b of filteredBreweries | async" [value]="b">
-          <img class="example-option-img" aria-hidden [src]="b.icon" height="40">
+        <mat-option *ngFor="let b of filteredBreweries" [value]="b">
+          <img class="example-option-img" aria-hidden [src]="b.iconLoc" height="40">
           <span>{{b.name }}</span> |
           <small>{{b.city}},{{b.state}}</small>
         </mat-option>
@@ -36,16 +36,29 @@
       </mat-autocomplete>
     </div>
 
-
-    <div class="col-sm-2">
-      <button type="button" mat-fab color="primary" (click)="openBeerDialog()">New Beer</button>
-      <button type="button" mat-fab color="warn" (click)="editDialog()">Edit</button>
+    <div class="col-sm-12">
+      <div class="new">
+        <button type="button" class="control" mat-raised-button color="primary" (click)="openBeerDialog()">New Beer</button>
+        <br>
+        <button type="button" class="control" mat-raised-button color="warn" (click)="editBeerDialog()" *ngIf="service.selectedBeer">Edit
+          Beer</button>
+        <br>
+        <button type="button" class="control" mat-raised-button color="accent" (click)="removeBeer()" *ngIf="service.selectedBeer">Delete
+          Beer</button>
+      </div>
     </div>
   </div>
 </div>
 
 <div class="container">
-  <div class="col-md-10" *ngFor="let beer of filteredBeerList; let i=index ">
-    <app-item2 [item]="beer"></app-item2>
+  <div class="row" *ngFor="let beer of filteredBeerList; let i=index ">
+    <div class="col-sm-1"></div>
+    <div class="col-sm-10">
+      <app-beer [beer]="beer" [selected]="isSelected(beer)" (click)="onClick(beer)"></app-beer>
+    </div>
+    <div class="col-sm-1 add-button">
+      <button class="float-right" mat-fab color="default" (click)="openTransactionDialog()" *ngIf="showButton(beer)"><i
+          class="fas fa-external-link-alt fa-2x"></i></button>
+    </div>
   </div>
 </div>

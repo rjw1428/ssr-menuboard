@@ -13,6 +13,14 @@ export const environment = {
     storageBucket: "ssrwebsite-1428.appspot.com",
     messagingSenderId: "397185718304"
   },
+  // firebase2: {
+  //   apiKey: "AIzaSyB0TIdi4pv4CqRdyhqPP_Lh0BVF_w3XDCY",
+  //   authDomain: "menu-demo.firebaseapp.com",
+  //   databaseURL: "https://menu-demo.firebaseio.com",
+  //   projectId: "menu-demo",
+  //   storageBucket: "menu-demo.appspot.com",
+  //   messagingSenderId: "1032055243209"
+  // },
   algolia: {
     appId: "2B8AHSKLCB",
     apiKey: "d710b3e239465e1dffc1404f9c4b3abe"

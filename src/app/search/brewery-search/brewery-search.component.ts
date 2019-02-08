@@ -8,8 +8,9 @@ import { MatDialog, MatSnackBar } from '@angular/material';
 import { DialogAddBreweryDialog } from '../brewery-form/form.component';
 import { IconNamePipe } from '@shared/pipes/icon-name.pipe';
 import { startWith, map } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import * as _ from "lodash";
+import { DataService } from '@shared/services/data.service';
 
 @Component({
   selector: 'app-brewery-search',
@@ -18,47 +19,29 @@ import * as _ from "lodash";
 })
 export class BrewerySearchComponent implements OnInit {
   breweryCollection: AngularFirestoreCollection<Brewery>
-  filteredBreweries: Observable<Brewery[]>
+  filteredBreweries: Brewery[] = []
   mainFilteredList: Brewery[] = []
   breweryList: Brewery[] = []
   stateList: string[] = []
   filteredStates: Observable<string[]>
   searchForm: FormGroup
   filters = {}
+  selectedBrewery: Brewery
   constructor(
     private afs: AngularFirestore,
     public dialog: MatDialog,
     private snackBar: MatSnackBar,
     private fb: FormBuilder,
-    private storage: AngularFireStorage) { }
+    private storage: AngularFireStorage,
+    public service: DataService) { }
 
   ngOnInit() {
     this.buildForm()
-    this.breweryCollection = this.afs.collection('masterBreweryList', ref => {
-      return ref.limit(100).orderBy('name')
-    })
-    this.breweryCollection
-      .snapshotChanges()
-      .map(vals => {
-        return vals
-          .map(val => {
-            let brewery = val.payload.doc.data() as Brewery
-            brewery['masterBreweryKey'] = val.payload.doc.id
-            return brewery
-          })
-      })
+    this.service.breweryCollection
       .subscribe((breweries) => {
-        this.breweryList = []
+        this.breweryList = breweries
         breweries.forEach(el => {
-          this.storage.ref(environment.itemIconRootAddress + el.icon).getDownloadURL().toPromise()
-            .then(value => {
-              el.icon = value;
-            })
-            .catch(e => {
-              el.icon = '../../../assets/404icon.png'
-            })
           this.stateList.push(el.state)
-          this.breweryList.push(el)
         })
         this.stateList = this.stateList.filter((val, index, self) => self.indexOf(val) === index).sort((a, b) => {
           if (a > b) return 1
@@ -71,23 +54,25 @@ export class BrewerySearchComponent implements OnInit {
           return 0
         })
         this.filteredStates = this.searchForm.get('state').valueChanges
-          .pipe(startWith(''),
+          .pipe(
             map(value => {
-              return this.stateList.filter(type => type.includes(value.toLowerCase()))
+              if (value)
+                return this.stateList.filter(state => {
+                  return state ? state.toLowerCase().includes(value.toLowerCase()) : 0
+                })
             })
           )
-        this.filteredBreweries = this.searchForm.get('name').valueChanges
-          .pipe(startWith<string | Brewery>(''),
-            map((value: any) => typeof value === 'object' ? value.name : value),
-            map((brew: string) => brew ? this._instafilter(brew) : this.breweryList.slice())
-          )
+        this.searchForm.get('name').valueChanges
+          .subscribe(value => {
+            let filterword = typeof value === 'object' ? value.name : value
+            this.filteredBreweries = this._instafilter(filterword)
+          })
         this.applyFilters()
       })
   }
   private _instafilter(value: string): Brewery[] {
-    if (!value)
-      return [];
-    return this.breweryList.filter((brew: Brewery) => brew.name.toLowerCase().indexOf(value.toLowerCase()) === 0)
+    if (value)
+      return this.breweryList.filter((brew: Brewery) => brew.name.toLowerCase().indexOf(value.toLowerCase()) === 0)
   }
 
   buildForm() {
@@ -106,7 +91,7 @@ export class BrewerySearchComponent implements OnInit {
 
   filterName() {
     let b = this.searchForm.get('name').value as Brewery
-    this.filters['masterBreweryKey'] = val => val == b.masterBreweryKey
+    this.filters['id'] = val => val == b.id
     this.applyFilters()
   }
 
@@ -129,7 +114,7 @@ export class BrewerySearchComponent implements OnInit {
       'name': '',
       'state': this.searchForm.get('state').value
     })
-    this.removeFilter('masterBreweryKey')
+    this.removeFilter('id')
   }
 
   resetState() {
@@ -151,33 +136,100 @@ export class BrewerySearchComponent implements OnInit {
   }
 
   parseSelectionForIcon(b: any) {
-    return b.value.icon
+    return b.value.iconLoc
   }
 
 
   openDialog(): void {
+    this.service.selectedBrewery = this.selectedBrewery
     const dialogRef = this.dialog.open(DialogAddBreweryDialog, {
       width: '500px',
       disableClose: true,
-      data: {} //SET OUTPUT DATA KEYS
+      data: {}
     });
 
     //BREWERY INFORMATION FROM FORM
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        let brewery = Object.assign({ 'icon': new IconNamePipe().transform(result.name) }, result)
-        this.breweryCollection.add(brewery)
+        let brewery = Object.assign({ 'icon': new IconNamePipe().transform(result.name), 'active': true }, result)
+        let key = brewery.name.toLowerCase()
+        this.service.breweryFirestoreList.doc(key).set(brewery)
           .then(ref => {
             this.snackBar.open(brewery.name + " Added", "OK", {
-              duration: 1000,
+              duration: 2000,
             })
-            // brewery.masterBreweryKey = ref.id
-            // let addnew = Object.assign({}, this.beerForm.value)
-            // addnew['brewery'] = brewery
-            // this.beerForm.setValue(addnew)
           })
+        this.onClick(this.selectedBrewery)
       }
     });
   }
 
+  editDialog(): void {
+    this.service.selectedBrewery = this.selectedBrewery
+    const dialogRef = this.dialog.open(DialogAddBreweryDialog, {
+      width: '500px',
+      disableClose: true,
+      data: this.service.selectedBrewery
+    });
+
+    //BREWERY INFORMATION FROM FORM
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        let brewery
+        if (typeof result.name === 'object') {
+          brewery = Object.assign({ 'icon': result.name.icon }, result)
+          let x = brewery.name.name
+          let key = brewery.name.id
+          delete brewery.name
+          brewery['name'] = x
+          console.log(brewery)
+          this.service.breweryFirestoreList.doc(key).update(brewery)
+            .then(ref => {
+              this.snackBar.open(brewery.name + " has been edited", "OK", {
+                duration: 2000,
+              })
+            })
+          this.service.selectedBrewery = null
+        } else this.snackBar.open("An error has occurred while editing " + result.name + " has been edited", "OK", {
+          duration: 2000,
+        })
+        this.onClick(this.selectedBrewery)
+      }
+    });
+  }
+
+
+  onClick(brewery: Brewery) {
+    this.isSelected(brewery) ? this.selectedBrewery = null : this.selectedBrewery = brewery
+  }
+
+  isSelected(brewery: Brewery) {
+    if (this.selectedBrewery)
+      return this.selectedBrewery.id == brewery.id
+    return false
+  }
+
+  // checkClick() {
+  //   this.listItemSelected = true
+  // }
+
+  removeBrewery() {
+    //if (confirm("Are you sure you want to delete this Brewery?")) {
+    //this.breweryCollection.doc(this.service.selectedBrewery.masterBreweryKey).delete()
+    //this.fixKey();
+    this.service.selectedBrewery = null
+    //}
+  }
+
+  fixKey() {
+    let x = this.selectedBrewery
+    delete x.iconLoc
+    this.service.breweryFirestoreList.doc(x.id).set(x)
+    // let hold = this.service.selectedBrewery as Brewery
+    // this.service.breweryFirestoreList.doc(hold.key).delete()
+    // let name = hold.name
+    // delete hold.key
+    // delete hold.name
+    // this.service.breweryFirestoreList.doc(name).set(hold)
+  }
 }

@@ -1,0 +1,7 @@
+<div class="container-fluid main align-middle" style="overflow: hidden;">
+  <div class="row">
+    <div class="col-sm-4" *ngFor="let q of quoteList; let i=index">
+      <app-quote [quote]=q class="comment-left"></app-quote>
+    </div>
+  </div>
+</div>

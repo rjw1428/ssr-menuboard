@@ -64,46 +64,46 @@ export class DisplayComponent implements OnInit {
       displayNum = params['screen']
     });
 
-    this.screenKey = this.ms.setScreenName(displayNum);
-    this.ms.resetRefreshOnLoad(this.screenKey);
-    this.ms.setLastRefreshData(this.screenKey);
-    this.ms.setMachineActive(this.screenKey);
-    this.ms.storeScreenResolution(this.screenKey, this.screenWidth, this.screenHeight)
-    this.ms.checkForRefresh(this.screenKey);
-    this.ms.getConsecFeatureNum().snapshotChanges().subscribe(val => {
-      val.map(prop => {
-        this.consecFeatureNum = +prop.payload.val();
-      })
-    })
+    // this.screenKey = this.ms.setScreenName(displayNum);
+    // this.ms.resetRefreshOnLoad(this.screenKey);
+    // this.ms.setLastRefreshData(this.screenKey);
+    // this.ms.setMachineActive(this.screenKey);
+    // this.ms.storeScreenResolution(this.screenKey, this.screenWidth, this.screenHeight)
+    // this.ms.checkForRefresh(this.screenKey);
+    // this.ms.getConsecFeatureNum().snapshotChanges().subscribe(val => {
+    //   val.map(prop => {
+    //     this.consecFeatureNum = +prop.payload.val();
+    //   })
+    // })
 
-    this.ms.getTiming().snapshotChanges().subscribe(val => {
-      val.forEach(prop => {
-        if (prop.key == "value")
-          this.delay = +prop.payload.val()
-      })
-      console.log("DELAY: " + this.delay)
-    })
+    // this.ms.getTiming().snapshotChanges().subscribe(val => {
+    //   val.forEach(prop => {
+    //     if (prop.key == "value")
+    //       this.delay = +prop.payload.val()
+    //   })
+    //   console.log("DELAY: " + this.delay)
+    // })
 
-    this.ms.getState(this.screenKey).snapshotChanges().subscribe(val => {
-      this.mode = 'none'
-      val.map(prop => {
-        if (prop.key == "static") {
-          if (prop.payload.val() as boolean)
-            this.mode = 'static'
-        } else if (prop.key == "slideshow") {
-          if (prop.payload.val() as boolean)
-            this.mode = 'slideshow'
-        } else if (prop.key == "trivia") {
-          if (prop.payload.val() as boolean)
-            this.mode = 'trivia'
-        }
-      })
-      console.log('MODE: ' + this.mode)
-    })
+    // this.ms.getState(this.screenKey).snapshotChanges().subscribe(val => {
+    //   this.mode = 'none'
+    //   val.map(prop => {
+    //     if (prop.key == "static") {
+    //       if (prop.payload.val() as boolean)
+    //         this.mode = 'static'
+    //     } else if (prop.key == "slideshow") {
+    //       if (prop.payload.val() as boolean)
+    //         this.mode = 'slideshow'
+    //     } else if (prop.key == "trivia") {
+    //       if (prop.payload.val() as boolean)
+    //         this.mode = 'trivia'
+    //     }
+    //   })
+    //   console.log('MODE: ' + this.mode)
+    // })
 
-    setTimeout(() => {
-      this.listenForClose()
-    }, 500)
+    // setTimeout(() => {
+    //   this.listenForClose()
+    // }, 500)
   }
 
   nextPage() {

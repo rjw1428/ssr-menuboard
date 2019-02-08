@@ -1,21 +1,36 @@
-<h1 mat-dialog-title>Add Brewery</h1>
-<div mat-dialog-content>
+<div *ngIf="!service.selectedBrewery; else edit">
+  <h1 mat-dialog-title>Add Brewery</h1>
+</div>
+<ng-template #edit>
+  <h1 mat-dialog-title>Edit Brewery</h1>
+</ng-template>
+<div mat-dialog-content [formGroup]="breweryForm">
   <p>Brewery Information</p>
   <mat-form-field>
-    <input matInput [(ngModel)]="input.name" placeholder="Brewery Name...">
+    <input matInput formControlName="name" placeholder="Brewery Name..." [matAutocomplete]="auto">
+    <button mat-button *ngIf="breweryForm.get('name').valid" matSuffix mat-icon-button aria-label="Clear" (click)="resetBrewery()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-form-field>
+
+  <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayName">
+    <mat-option *ngFor="let b of filteredBreweries | async" [value]="b">
+      <span>{{b.name }}</span>
+    </mat-option>
+  </mat-autocomplete>
+
+  <mat-form-field>
+    <input matInput formControlName="city" placeholder="City...">
   </mat-form-field>
   <mat-form-field>
-    <input matInput [(ngModel)]="input.city" placeholder="City...">
-  </mat-form-field>
-  <mat-form-field>
-    <mat-select placeholder="State" [(ngModel)]="input.state">
+    <mat-select placeholder="State" formControlName="state">
       <mat-option *ngFor="let state of states" [value]="state">
         {{state}}
       </mat-option>
     </mat-select>
   </mat-form-field>
   <mat-form-field>
-    <mat-select placeholder="Country" [(ngModel)]="input.country">
+    <mat-select placeholder="Country" formControlName="country">
       <mat-option *ngFor="let country of countries" [value]="country">
         {{country}}
       </mat-option>
@@ -24,5 +39,5 @@
 </div>
 <div mat-dialog-actions>
   <button mat-button (click)="onNoClick()">Cancel</button>
-  <button mat-raised-button color="primary" [mat-dialog-close]="onAdd(input)" cdkFocusInitial>Ok</button>
+  <button mat-raised-button color="primary" [mat-dialog-close]="onAdd()" cdkFocusInitial>Ok</button>
 </div>

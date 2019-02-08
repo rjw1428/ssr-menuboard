@@ -4,7 +4,7 @@ import { ManagementService } from '@shared/services/management.service';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { AuthService } from '@shared/services/auth.service';
 import { Router } from '@angular/router';
-
+import * as $ from 'jquery';
 @Component({
   selector: 'app-menu',
   templateUrl: './nav-bar.component.html',
@@ -23,6 +23,8 @@ export class NavBarComponent implements OnInit {
   isTrivia: boolean
   barName: string;
   userRole: string;
+
+
   constructor(private service: ManagementService, private authService: AuthService, private db: AngularFireDatabase, private router: Router) {
     this.onResize();
     this.barName = environment.barName;
@@ -97,6 +99,7 @@ export class NavBarComponent implements OnInit {
   }
 
   onClick() {
-    this.toggleMenu == true ? this.toggleMenu = false : this.toggleMenu = true
+    console.log("OH YEA")
+    $('#navbarNav').collapse('hide');
   }
 }

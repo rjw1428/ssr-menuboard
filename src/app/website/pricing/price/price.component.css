@@ -1,0 +1,39 @@
+::ng-deep:root {
+    --num-size: 90px;
+    --font-color: rgb(50,50,50);
+}
+
+.container {
+    position: relative;
+    width: 200px;
+    height: 100px;
+    display: grid;
+    margin-bottom: calc(var(--num-size)/4);
+    color: var(--font-color);
+}
+
+.symbol {
+    grid-column: 1 / span 1;
+    grid-row: 1 / span 1;
+    font-size: calc(var(--num-size)/4);
+    align-self: start;
+}
+
+.number {
+    position: relative;
+    grid-column: 2 / span 1;
+    grid-row: 1 / span 1;
+    font-size: var(--num-size);
+    align-self: start;
+    top: calc(-1*var(--num-size)/4);
+    font-weight: bold;
+}
+
+.division {
+    position: relative;
+    grid-column: 3 / span 1;
+    grid-row: 1 / span 1;
+    font-size: calc(var(--num-size)/3);
+    align-self: end;
+    top: calc(-1*var(--num-size)/2);
+}

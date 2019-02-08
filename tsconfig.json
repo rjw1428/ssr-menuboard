@@ -55,7 +55,13 @@
       ],
       "@trivia/*": [
         "app/trivia/*"
-      ]
+      ],
+      "@website/*": [
+        "app/website/*"
+      ],
+      "@edit/*": [
+        "app/nav-bar/*"
+      ],
     },
     "module": "es2015"
   }

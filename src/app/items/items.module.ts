@@ -18,13 +18,14 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { ItemPropertiesComponent } from './item-properties/item-properties.component';
 import { ItemsDisplayPage2Component } from './items-display-page2/items-display-page2.component';
 import { ItemsControlPage2Component } from './items-control-page2/items-control-page2.component';
-
+import { Item2Component } from '@item/item2/item2.component'
+import { MatButtonModule } from "@angular/material";
+import { SharedModule } from "@shared/shared.module";
+import { EditFormComponent } from './items-control-page2/edit-form/edit-form.component';
 
 @NgModule({
     imports: [
-        CommonModule,
-        FormsModule,
-        BrowserAnimationsModule,
+        SharedModule
     ],
     declarations: [
         ItemFormComponent,
@@ -32,13 +33,9 @@ import { ItemsControlPage2Component } from './items-control-page2/items-control-
         ItemsControlPageComponent,
         ItemsDisplayPageComponent,
         ItemCategoryFormComponent,
-        IconNamePipe,
-        AbvPipe,
-        TitlecasePipe,
         ItemComponent,
         ItemPropertiesComponent,
-        ItemsDisplayPage2Component,
-        ItemsControlPage2Component,
+        // EditFormComponent,
     ],
     providers: [
         ItemsService, CategoryService, ManagementService
@@ -50,7 +47,8 @@ import { ItemsControlPage2Component } from './items-control-page2/items-control-
         ItemsDisplayPageComponent,
         ItemComponent,
         ItemPropertiesComponent,
-        ItemsDisplayPage2Component,
+        // ItemsDisplayPage2Component,
+        // EditFormComponent
     ]
 })
 export class ItemsModule { }

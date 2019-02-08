@@ -1,8 +1,10 @@
 export interface Brewery {
-    masterBreweryKey?:string;
+    id: string;
     name: string;
     city?: string;
     state?: string;
     country?: string;
+    iconLoc?: string
     icon: string;
+    active: boolean;
 }

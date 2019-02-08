@@ -1,16 +1,16 @@
-<div class="container" [ngStyle]="setColumnStyle()" (click)="onClick()">
+<!-- <div class="container" [ngStyle]="setColumnStyle()" [ngClass]="{'selected':isSelected()}" (click)="onClick()"> -->
 <!-- <div class="container" [ngStyle]="{'background-color': service.itemSelected.id==item.id?rgba(100,100,100,1):rgba(100,100,100,.4)}" (click)="onClick()"> -->
-  <div class="background" [ngStyle]="setElementStyle()"></div>
+<!-- <div class="background" [ngStyle]="setElementStyle()"></div>
   <div class="blank1"></div>
   <div class="image-container" [ngStyle]="setIconStyle()"><img *ngIf="displayIcon" [src]="displayIcon"></div>
   <div class="title-container" [ngStyle]="setTitleStyle()">{{ title |
     uppercase}}</div>
-  <div class="description-container" [ngStyle]="setNoteStyle()">{{item.description}}</div>
-  <div class="abv-container" [ngStyle]="setAbvStyle()">ABV: {{ item.abv }}</div>
-  <div class="price-container" [ngStyle]="setAbvStyle()">IBU: {{ item.ibu }}</div>
-  <!-- <div class="price-container">$ 7<sup>00</sup></div> -->
-  <div class="blank2"></div>
-  <!-- <div class="button-row" *ngIf="editMode">
+  <div class="description-container" [ngStyle]="setNoteStyle()">{{item.beer.description}}</div>
+  <div class="abv-container" [ngStyle]="setAbvStyle()">ABV: {{ item.beer.abv }}</div>
+  <div class="price-container" [ngStyle]="setAbvStyle()">IBU: {{ item.beer.ibu }}</div> -->
+<!-- <div class="price-container">$ 7<sup>00</sup></div> -->
+<!-- <div class="blank2"></div> -->
+<!-- <div class="button-row" *ngIf="editMode">
     <div class="button-group btn-sm " *ngIf="menuToggle">
       <button class="btn btn-success add" (click)="onAdd()">Insert</button>
       <button class="btn btn-warning edit" (click)="onEdit()">Edit</button>
@@ -20,4 +20,30 @@
       <button *ngIf="movable" class="btn btn-primary up" (click)="onShiftUp()">Shift Up</button>
     </div>
   </div> -->
+<!-- </div> -->
+<div class="row" [ngClass]="{'selected':selected, 'not-selected':!selected, 'display':true, 'sold-out':item.soldOut}"
+  (click)="test()">
+  <div class="col-sm-2 float-left">
+    <img class="img-container" *ngIf="displayIcon" [src]="displayIcon">
+  </div>
+  <div class="col-sm-10">
+    <div class="row">
+      <div class="col-sm-12">
+        <h2 [ngStyle]="{'color':'white'}">{{title}}</h2>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-10">
+        <p [ngStyle]="{'color':'white'}">{{item.beer.description}}</p>
+      </div>
+      <div class="col-sm-2">
+        <h2 [ngStyle]="{'color':'white'}">{{item.price}}</h2>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-10">
+        <p [ngStyle]="{'color':'white', 'font-style':'italic'}">{{item.local_description}}</p>
+      </div>
+    </div>
+  </div>
 </div>

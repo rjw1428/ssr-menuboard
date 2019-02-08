@@ -10,18 +10,17 @@
           <mat-icon>close</mat-icon>
         </button>
       </mat-form-field>
-      <button class="example-button-width col-sm-2" mat-raised-button color="primary" (click)="openDialog()">New</button>
 
       <mat-autocomplete #auto_name="matAutocomplete" [displayWith]="displayName" (optionSelected)="filterName()">
-        <mat-option *ngFor="let b of filteredBreweries | async" [value]="b">
-          <img class="example-option-img" aria-hidden [src]="b.icon" height="40">
+        <mat-option *ngFor="let b of filteredBreweries" [value]="b">
+          <img class="example-option-img" aria-hidden [src]="b.iconLoc" height="40">
           <span>{{b.name }}</span> |
           <small>{{b.city}},{{b.state}}</small>
         </mat-option>
       </mat-autocomplete>
     </div>
 
-    <div class="col-sm-2">
+    <div class="col-sm-4">
       <mat-form-field class="example-full-width col-sm-10">
         <input matInput placeholder="State..." formControlName="state" [matAutocomplete]="auto_state">
         <button mat-button *ngIf="searchForm.get('state').value" matSuffix mat-icon-button aria-label="Clear" (click)="resetState()">
@@ -35,11 +34,23 @@
         </mat-option>
       </mat-autocomplete>
     </div>
+
+    <div class="col-sm-12">
+      <div class="new">
+        <button type="button" mat-raised-button color="primary" (click)="openDialog()">New Brewery</button>
+        <br>
+        <button type="button" mat-raised-button color="warn" (click)="editDialog()" *ngIf="selectedBrewery">Edit
+          Brewery</button>
+        <br>
+        <button type="button" mat-raised-button color="accent" (click)="removeBrewery()" *ngIf="selectedBrewery">Delete
+          Brewery</button>
+      </div>
+    </div>
   </div>
 </div>
 
 <div class="container">
-  <div class="col-md-10" *ngFor="let brew of mainFilteredList; let i=index ">
-    <app-brewery [brewery]="brew"></app-brewery>
+  <div class="row" *ngFor="let brew of mainFilteredList">
+    <app-brewery class="col-sm-8 offset-sm-2" [brewery]="brew" [selected]="isSelected(brew)" (click)="onClick(brew)"></app-brewery>
   </div>
 </div>
