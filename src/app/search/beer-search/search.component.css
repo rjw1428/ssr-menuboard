@@ -25,20 +25,31 @@
     background-color: white;
 }
 
-.new {
+.main {
     position: fixed;
-    top: 80vh;
-    right: 5%;
+        float:right;
+        right: 10vw;
     z-index: 2;
 }
 
+.bottom {
+    bottom: 5vh;
+}
+
+.top {
+    top: 5vh;
+}
+
 .control {
+    position: relative;
     margin-bottom: 10px;
+    z-index: 4;
 }
 
 .add-button {
+    position: relative;
     align-self: center;
-    z-index: 3;
+    z-index: 2;
     border-radius:50%;
     /* box-shadow: 5px 5px 5px black */
 }
@@ -48,5 +59,9 @@
         float: right;
         position: relative;
         top: -10vh;
+    }
+
+    .example-button-width{
+        width: 5%;
     }
 }

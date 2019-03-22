@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {Observable} from 'rxjs/Rx';
 import { ManagementService } from '@shared/services/management.service';
 import { PreloaderService } from '@shared/services/preloader.service';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-root',

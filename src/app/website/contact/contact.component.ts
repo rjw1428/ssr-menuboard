@@ -28,7 +28,7 @@ export class ContactComponent implements OnInit {
 
   onSubmit() {
     if (this.contactForm.valid) {
-      this.firestore.collection("contact").add({
+      this.firestore.collection('website').doc('content').collection("contact").add({
         name: this.contactForm.value.name,
         location: this.contactForm.value.location,
         email: this.contactForm.value.email,

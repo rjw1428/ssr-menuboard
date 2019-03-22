@@ -1,4 +1,4 @@
-/* ::ng-deep:root {
+::ng-deep:root {
     --overhang-space: 15px;
     --background-shift: 40px;
     --img-size: calc(52px + (120 - 52) * ((100vh - 500px) / (1080 - 500)));
@@ -7,9 +7,15 @@
 
 @font-face {
     font-family: "American Typewriter";
-    src: url("../../../assets/American.ttf");
+    src: url("../../../assets/fonts/American.ttf");
 }
 
+@font-face {
+    font-family: "Blackwood";
+    src: url("../../../assets/fonts/Blackwood.ttf");
+}
+
+/*  
 button {
     font-size: 16px;
 }
@@ -180,7 +186,15 @@ img {
     transform: scale(1.1);
     border: 4px solid red;
 } */
+
+p, h2, h3, h4 {
+    color: white;
+    font-family: "American Typewriter";
+    text-shadow: 3px 3px 3px black;
+}
+
 .display{
+    margin-top: 1vh;
 
 }
 
@@ -188,16 +202,47 @@ img {
     opacity: .5;
 }
 
+.sold-out-text {
+    position: absolute;
+    color: red;
+    z-index: 4;
+    display: block;
+    font-size: 6vh;
+    opacity: .9;
+    text-shadow: 2px 2px black;
+    left: 25%;
+    font-family: "Blackwood";
+    transform: rotate(15deg);
+}
+
+.on-deck-text {
+    position: absolute;
+    color: white;
+    z-index: 4;
+    display: block;
+    font-size: 4vh;
+    text-shadow: 2px 2px black;
+    transform: rotate(-15deg);
+}
+
 .img-container {
-    /* width: 100%; */
     width: 75px;
     height: 75px;
+    position: relative;
 }
+
+// @media screen and (max-height: 850px) {
+//     .img-container {
+//         width: 50px;
+//         height: 50px;
+//     }
+// }
 
 .not-selected{
     background-color: rgb(50,50,50);
     transform: scale(.9);
     box-shadow: 2px 2px 2px black;
+    z-index: 1;
 }
 .selected {
     /* border: 5px solid red; */
@@ -205,4 +250,16 @@ img {
     box-shadow: 3px 3px 3px black;
     transform: scale(1);
     z-index: 2;
+}
+
+.over-text {
+    position: absolute;
+    left: 10px;
+    top: 10px;
+}
+
+.background {
+    background-color: rgba(50,50,50,.4);
+    margin: 10px;
+    border-radius: 10px;
 }

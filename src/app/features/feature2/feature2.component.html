@@ -1,34 +1,144 @@
-<div class="main">
-  <div [ngSwitch]="feature.layout">
-    <div *ngSwitchCase="'fullscreen'">
-        <img class="img-container extra" [src]="feature.url">
-    </div>
-    <div *ngSwitchCase="'left'">
-      <img class="img-container left" [src]="feature.url">
-      <div class="img-container side-panel-right">
-        <h1 class="centered header right" [ngStyle]="setHeaderStyle()">{{ feature.header | featureTitle }}</h1>
-        <h1 class="centered caption right" [ngStyle]="setCaptionStyle()">{{ feature.caption | featureMain }}</h1>
-        <h2 class="centered subcaption right" [ngStyle]="setSubCaptionStyle()">{{ feature.subcaption }}</h2>
-        <img class="logo centered right" [src]="logo">
+<div *ngIf="edit; else display">
+  <div [ngClass]="{'selected':selected, 'not-selected':!selected, 'display':true, 'not-active':!feature.active}">
+    <div class="row">
+      <div class="col-6">
+        <h3>{{feature.pageTitle}}</h3>
+        <h4>{{feature.itemTitle}}</h4>
+        <p>{{feature.itemCaption}}</p>
       </div>
-    </div>
-    <div *ngSwitchCase="'right'">
-      <img class="img-container right" [src]="feature.url">
-      <div class="img-container side-panel-left">
-        <h1 class="centered header left" [ngStyle]="setHeaderStyle()">{{ feature.header | featureTitle }}</h1>
-        <h1 class="centered caption left" [ngStyle]="setCaptionStyle()">{{ feature.caption | featureMain }}</h1>
-        <h2 class="centered subcaption left" [ngStyle]="setSubCaptionStyle()">{{ feature.subcaption }}</h2>
-        <img class="logo centered left" [src]="logo">
+      <div class="col-6" *ngIf="feature.img.sourceUrl && feature.img.sourceUrl.substring(feature.img.sourceUrl.length-4)!='.mp4'; else videoThumbnail">
+        <img class="img-thumbnail img-fluid float-left edit-img" [src]="feature.img.fbUrl" *ngIf="feature.img.fbUrl">
       </div>
+      <ng-template #videoThumbnail>
+        <div class="col-6">
+          <video #video autoplay loop [muted]="true" class="img-thumbnail img-fluid float-left edit-img">
+            <source [src]="feature.img.fbUrl" type="video/mp4" (error)="loadError($event)">
+          </video>
+        </div>
+      </ng-template>
     </div>
-    <div *ngSwitchCase="'no-border'">
-      <img class="img-container extra" [src]="feature.url">
+    <div class="row" *ngIf="selected">
+      <div class="col-6">
+        <div class="row">
+          <div class="col-12">
+            <h3>Start Date: {{feature.startDate}}</h3>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <h3>End Date: {{feature.endDate}}</h3>
+          </div>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="row">
+          <h3>Layout: {{feature.layout}}</h3>
+        </div>
+      </div>
     </div>
   </div>
-
-  <!-- <img class="img-container left" src="https://firebasestorage.googleapis.com/v0/b/menu-demo.appspot.com/o/content%2Ffeatures%2Fspecial1.jpg?alt=media&token=c6915f72-0dd2-43fb-bc89-a42426d658ae"> -->
-  <!-- <img class="img-container full" src="https://media.giphy.com/media/92wsX8GEoNTYA/giphy.gif"> -->
-
-
-  <!-- <h1>This is a beer!</h1> -->
 </div>
+
+<ng-template #display>
+  <div class="main" [ngSwitch]="feature.layout">
+
+    <div class="main bg" *ngSwitchCase="'notext'">
+      <img class="blur" [src]="feature.img.fbUrl">
+      <img sizeImg class="center" [source]="feature.img.sourceUrl" [src]="feature.img.fbUrl"
+        *ngIf="feature.img.sourceUrl.substring(feature.img.sourceUrl.length-4)!='.mp4'; else videoFull">
+      <ng-template #videoFull>
+        <video #video autoplay loop [muted]="true" class="center">
+          <source [src]="feature.img.fbUrl" type="video/mp4" (error)="loadError($event)">
+        </video>
+      </ng-template>
+    </div>
+
+    <div class="main bg" *ngSwitchCase="'left'">
+      <div class="main left-left"
+        *ngIf="feature.img.sourceUrl.substring(feature.img.sourceUrl.length-4)!='.mp4'; else videoLeft">
+        <img class="blur" [src]="feature.img.fbUrl">
+        <img sizeImg class="top center" [source]="feature.img.sourceUrl" [src]="feature.img.fbUrl">
+      </div>
+      <ng-template #videoLeft>
+        <video #video autoplay loop [muted]="true" class="main left-left">
+          <source [src]="feature.img.fbUrl" type="video/mp4" (error)="loadError($event)">
+        </video>
+      </ng-template>
+
+      <div class="main left-right">
+        <div class="container h-100 w-100">
+          <div class="row main">
+            <div class="col-12 h-100">
+              <div class="row page-title">
+                <h1 style="font-size: 5vh" class="display-text ">{{feature.pageTitle}}</h1>
+              </div>
+              <div class="row item-title">
+                <h2 style="font-size: 4vh" class="display-text">{{feature.itemTitle}}</h2>
+              </div>
+              <div class="row item-desc">
+                <h3 style="font-size: 3vh" class="display-text">{{feature.itemCaption}}</h3>
+              </div>
+              <div class="row main">
+                <div class="col-12 test">
+                  <img class="logo" [src]="logo" *ngIf="logo!=null">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="main bg" *ngSwitchCase="'right'">
+      <div class="main right-right"
+        *ngIf="feature.img.sourceUrl.substring(feature.img.sourceUrl.length-4)!='.mp4'; else videoRight">
+        <img class="blur" [src]="feature.img.fbUrl">
+        <img sizeImg class="top center" [source]="feature.img.sourceUrl" [src]="feature.img.fbUrl">
+      </div>
+      <ng-template #videoRight>
+        <video #video autoplay loop [muted]="true" class="main right-right">
+          <source [src]="feature.img.fbUrl" type="video/mp4" (error)="loadError($event)">
+        </video>
+      </ng-template>
+
+      <div class="main right-left">
+        <div class="container h-100 w-100">
+          <div class="row main">
+            <div class="col-12 h-100">
+              <div class="row page-title">
+                <h1 style="font-size: 5vh" class="display-text ">{{feature.pageTitle}}</h1>
+              </div>
+              <div class="row item-title">
+                <h2 style="font-size: 4vh" class="display-text">{{feature.itemTitle}}</h2>
+              </div>
+              <div class="row item-desc">
+                <h3 style="font-size: 3vh" class="display-text">{{feature.itemCaption}}</h3>
+              </div>
+              <div class="row main">
+                <div class="col-12 test">
+                  <img class="logo" [src]="logo" *ngIf="logo!=null">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="main bg" *ngSwitchCase="'textover'">
+      <h1 class="display-text over" style="font-size: 8vh; top: 15vh; left: 5vw;">{{feature.pageTitle}}</h1>
+      <h2 class="display-text over" style="font-size: 5vh; top: 47vh; left: 10vw; width: 30%">{{feature.itemTitle}}</h2>
+      <h3 class="display-text over" style="font-size: 3vh; top: 65vh; left: 7vw; width: 40%">{{feature.itemCaption}}
+      </h3>
+      <img class="blur" [src]="feature.img.fbUrl">
+      <img sizeImg class="center" [source]="feature.img.sourceUrl" [src]="feature.img.fbUrl"
+        *ngIf="feature.img.sourceUrl.substring(feature.img.sourceUrl.length-4)!='.mp4'; else videoOver">
+      <ng-template #videoOver>
+        <video #video autoplay loop [muted]="true" class="center" [poster]="feature.img.fbUrl">
+          <source [src]="feature.img.fbUrl" type="video/mp4" (error)="loadError($event)">
+        </video>
+      </ng-template>
+    </div>
+  </div>
+</ng-template>

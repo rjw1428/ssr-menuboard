@@ -1,5 +1,4 @@
 import { NgModule } from "@angular/core";
-import { CommonModule } from "@angular/common";
 
 import { ItemFormComponent } from '@item/item-form/item-form.component'
 import { ItemCategoryComponent } from '@item/item-category/item-category.component';
@@ -8,24 +7,14 @@ import { ItemsDisplayPageComponent } from '@item/items-display-page/items-displa
 import { ItemComponent } from '@item/item/item.component';
 import { ItemsService } from "@shared/services/items.service";
 import { ItemCategoryFormComponent } from '@item/item-category-form/item-category-form.component';
-import { FormsModule } from "@angular/forms";
 import { CategoryService } from "@shared/services/category.service";
-import { IconNamePipe } from "@shared/pipes/icon-name.pipe";
-import { AbvPipe } from "@shared/pipes/abv.pipe";
-import { TitlecasePipe } from "@shared/pipes/titlecase.pipe"
 import { ManagementService } from "@shared/services/management.service";
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { ItemPropertiesComponent } from './item-properties/item-properties.component';
-import { ItemsDisplayPage2Component } from './items-display-page2/items-display-page2.component';
-import { ItemsControlPage2Component } from './items-control-page2/items-control-page2.component';
-import { Item2Component } from '@item/item2/item2.component'
-import { MatButtonModule } from "@angular/material";
 import { SharedModule } from "@shared/shared.module";
-import { EditFormComponent } from './items-control-page2/edit-form/edit-form.component';
 
 @NgModule({
     imports: [
-        SharedModule
+        SharedModule,
     ],
     declarations: [
         ItemFormComponent,
@@ -35,7 +24,6 @@ import { EditFormComponent } from './items-control-page2/edit-form/edit-form.com
         ItemCategoryFormComponent,
         ItemComponent,
         ItemPropertiesComponent,
-        // EditFormComponent,
     ],
     providers: [
         ItemsService, CategoryService, ManagementService
@@ -47,8 +35,6 @@ import { EditFormComponent } from './items-control-page2/edit-form/edit-form.com
         ItemsDisplayPageComponent,
         ItemComponent,
         ItemPropertiesComponent,
-        // ItemsDisplayPage2Component,
-        // EditFormComponent
     ]
 })
 export class ItemsModule { }

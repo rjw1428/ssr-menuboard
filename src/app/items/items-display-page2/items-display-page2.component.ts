@@ -40,21 +40,38 @@ import { switchMap, map } from 'rxjs/operators';
   ]
 })
 export class ItemsDisplayPage2Component implements OnInit {
-  itemsList: Observable<Localbeer[]>
   //filterList: Item[] = []
   leftList: Observable<Localbeer[]>
   rightList: Observable<Localbeer[]>
-  //iconList: any[] = []
+  properties: any
   constructor(private service: DataService, private route: ActivatedRoute) { }
 
   ngOnInit() {
+    this.route.params.pipe(
+      switchMap(val => {
+        return this.service.getBarProperties(val['client']).valueChanges().map(val => val.itemSettings)
+      })).subscribe(val => {
+        if (val) {
+          this.properties = val
+        }
+        else {
+          this.properties = {
+            abv: true,
+            ibu: true,
+            type: true,
+            price: true,
+            description: true,
+          }
+        }
+      })
 
     this.leftList = this.route.params.pipe(
       switchMap(val => {
         return this.service.getLocalCollection(val['client'])
       }),
-      map(items => {
-        return items.filter((v, i) => i % 2 == 0)
+      map((items: Localbeer[]) => {
+        let max = Math.ceil(items.length / 2)
+        return items.filter((v, i) => i < max)
       })
     )
 
@@ -62,8 +79,9 @@ export class ItemsDisplayPage2Component implements OnInit {
       switchMap(val => {
         return this.service.getLocalCollection(val['client'])
       }),
-      map(items => {
-        return items.filter((v, i) => i % 2 == 1)
+      map((items: Localbeer[]) => {
+        let max = Math.ceil(items.length / 2)
+        return items.filter((v, i) => i >= max)
       })
     )
     // this.itemsList = this.route.params.pipe(
@@ -94,7 +112,4 @@ export class ItemsDisplayPage2Component implements OnInit {
   //   else
   //     return _.sortBy(list, [this.itemsService.sortProperty])
   // }
-  test(i) {
-    console.log(i)
-  }
 }

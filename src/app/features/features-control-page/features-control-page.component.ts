@@ -1,104 +1,141 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FeaturedItem } from '@shared/interfaces/featured-item';
 import { FeaturesService } from '@shared/services/features.service';
 import { environment } from '@environments/environment'
+import { MatDialog, MatSnackBar } from '@angular/material';
+import { FeatureForm2Component } from '@features/feature-form2/feature-form2.component';
+import { ActivatedRoute } from '@angular/router';
+import { AngularFirestore } from '@angular/fire/firestore';
+import { firestore } from 'firebase/app';
+import { switchMap } from 'rxjs/operators';
+import { DataService } from '@shared/services/data.service';
+import { Observable } from 'rxjs';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { ContentService } from '@shared/services/content.service';
 
 @Component({
   selector: 'app-features-control-page',
   templateUrl: './features-control-page.component.html',
   styleUrls: ['./features-control-page.component.css']
 })
-export class FeaturesControlPageComponent {
+export class FeaturesControlPageComponent implements OnInit {
   featuredList: FeaturedItem[] = []
-  features: FeaturedItem[] = []
-  constructor(public featureService: FeaturesService) {
-    this.featureService.getFeaturedList(environment.featureRootAddress).snapshotChanges().forEach(featuredItems => {
-      this.featuredList = []
-      featuredItems.forEach(element => {
-        var y = element.payload.toJSON();
-        y['key'] = element.key
-        this.featuredList.push(y as FeaturedItem)
-      })
-      this.featuredList.sort((el1, el2) => el1.order - el2.order)
-    })
+  selected: number
+  constructor(
+    // public featureService: FeaturesService, 
+    public dialog: MatDialog,
+    private snackBar: MatSnackBar,
+    private route: ActivatedRoute,
+    private afs: AngularFirestore,
+    private service: DataService,
+    private contentService: ContentService
+  ) { }
+
+  ngOnInit() {
+    this.route.parent.params.switchMap(bar => {
+      this.contentService.getFileList(bar['client'])
+      return this.service.getFeaturedCollection(bar['client'])
+    }).subscribe(vals => this.featuredList = vals)
   }
+
   //WHEN SCREEN IS BLANK, ADD FEATURE BUTTON ACTION
   addFeature() {
-    this.featureService.selectedFeature = {
-      key: null,
-      order: 1,
-      header: '',
-      caption: '',
-      subcaption: '',
-      url: '',
-      active: false,
-      startDate: '',
-      endDate: '',
-      child: false,
-      lastModified: '',
-      layout: 'right',
+    const dialogRef = this.dialog.open(FeatureForm2Component, {
+      width: '500px',
+      disableClose: true,
+      data: {}
+    });
+    dialogRef.afterClosed().subscribe((result: FeaturedItem) => {
+      if (result) {
+        //console.log(result)
+        if (!result.img)
+          result.active = false
+        this.route.parent.params.subscribe(bar => {
+          //console.log("Bar: " + bar['client'])
+          this.afs.collection('clients').doc(bar['client']).update({
+            featuresList: firestore.FieldValue.arrayUnion(result)
+          })
+        })
+        this.snackBar.open(result.pageTitle + " Added", "OK", {
+          duration: 3000,
+        })
+      }
+    });
+  }
+
+  onClick(featureNum: number) {
+    //console.log('CLICKED: ' + featureNum)
+    this.isSelected(featureNum) ? this.selected = null : this.selected = featureNum
+    //console.log('SAVED:' + this.selected)
+    this.saveContent('test')
+  }
+
+  isSelected(featureNum: number) {
+    if (this.selected != null)
+      return this.selected == featureNum
+    return false
+  }
+
+  deleteFeature() {
+    if (confirm("Are you sure you want to delete this Featured Item?") == true) {
+      let obj = Object.assign({}, this.featuredList[this.selected])
+      this.service.localFirestoreList.update({
+        featuresList: firestore.FieldValue.arrayRemove(obj)
+      })
+      this.selected = null
     }
-    this.featureService.editMode = true
   }
 
-  insertParent(obj: { feature: FeaturedItem }) {
-    this.featureService.selectedFeature = {
-      key: null,
-      order: obj.feature.order + 1,
-      header: '',
-      caption: '',
-      subcaption: '',
-      url: '',
-      active: true,
-      startDate: '',
-      endDate: '',
-      child: false,
-      lastModified: '',
-      layout: 'right',
-    }
-    this.featureService.editMode = true
+  drop(event: CdkDragDrop<string[]>) {
+    moveItemInArray(this.featuredList, event.previousIndex, event.currentIndex);
+    let modList = this.featuredList
+    this.service.localFirestoreList.update({
+      featuresList: modList
+    })
   }
 
-  insertChild(obj: { feature: FeaturedItem }) {
-    this.featureService.selectedFeature = {
-      key: null,
-      order: obj.feature.order + 1,
-      header: '',
-      caption: '',
-      subcaption: '',
-      url: '',
-      active: true,
-      startDate: '',
-      endDate: '',
-      child: true,
-      lastModified: '',
-      layout: 'right'
-    }
-    this.featureService.editMode = true
+
+  editFeature() {
+    console.log('EDIT - ' + this.featuredList[this.selected].pageTitle)
+    // this.service.selectedLocal = this.featuredList[this.selected]
+    let input = this.featuredList[this.selected]
+    console.log(input)
+    const dialogRef = this.dialog.open(FeatureForm2Component, {
+      width: '550px',
+      disableClose: true,
+      data: input
+    });
+
+    dialogRef.afterClosed()
+      .subscribe((result: FeaturedItem) => {
+        if (result) {
+          let output = Object.assign({}, result)
+          this.featuredList[this.selected] = output
+          this.service.localFirestoreList.update({
+            featuresList: this.featuredList
+          })
+            .then(ref => {
+              this.snackBar.open(result.pageTitle + " has been edited", "OK", {
+                duration: 3000,
+              })
+            })
+          this.onClick(this.selected)
+        }
+      })
   }
 
-  onRemove(obj: { feature: FeaturedItem }) {
-    this.featureService.featureList = this.featuredList
-    this.featureService.removeFeatured(obj.feature)
-  }
+  saveContent(url: string) {
 
-  onShiftUp(obj: { feature: FeaturedItem }) {
-    this.featureService.featureList = this.featuredList
-    this.featureService.shiftUp(obj.feature)
-  }
+    // this.contentService.getFileList('knotty').valueChanges()
 
-  onShiftDown(obj: { feature: FeaturedItem }) {
-    this.featureService.featureList = this.featuredList
-    this.featureService.shiftDown(obj.feature)
-  }
 
-  onClose() {
-    this.featureService.editMode = false
-  }
-
-  onInsertComplete(obj: any) {
-    this.featureService.featureList = this.featuredList
-    this.featureService.insertFeatured(obj.featured)
-    this.onClose()
+    // .map((x: { content: any[] }) => x.content)
+    // .map((vals: any[]) => {
+    //   return vals.forEach((val: { fileName: string, url: string }) => {
+    //     if (url != val.fileName)
+    //       console.log('ADD')
+    //     else console.log('MATCH - SAVE WITH' + val.url)
+    //   })
+    // }).subscribe(console.log)
   }
 }

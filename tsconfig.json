@@ -1,6 +1,7 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "importHelpers": true,
     "outDir": "./dist/out-tsc",
     "sourceMap": true,
     "declaration": false,
@@ -61,6 +62,9 @@
       ],
       "@edit/*": [
         "app/nav-bar/*"
+      ],
+      "@assets/*": [
+        "assets/*"
       ],
     },
     "module": "es2015"

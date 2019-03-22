@@ -8,6 +8,9 @@ import { SharedModule } from '@shared/shared.module';
 import { DisplayComponent } from './display.component';
 import { StaticComponent } from '@static/static.component';
 import { TriviaModule } from '@trivia/trivia.module';
+import { FeaturePageComponent } from '@features/feature-page/feature-page.component';
+import { FeaturesService } from '@shared/services/features.service';
+import { ItemsDisplayPageVertComponent } from '@item/items-display-page-vert/items-display-page-vert.component';
 
 @NgModule({
   imports: [
@@ -18,11 +21,16 @@ import { TriviaModule } from '@trivia/trivia.module';
   ],
   declarations: [
     ItemsDisplayPage2Component,
+    ItemsDisplayPageVertComponent,
+    FeaturePageComponent,
     DisplayComponent,
     StaticComponent,
     // SlideDirective,
     SinglePageComponent,
     DemoComponent,
+  ],
+  providers: [
+    FeaturesService
   ]
 })
 export class DisplayModule { }

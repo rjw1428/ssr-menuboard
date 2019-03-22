@@ -1,13 +1,13 @@
 <div class="main">
   <div class="side left">
     <div *ngFor="let item of leftList | async">
-      <app-item2 [item]="item"></app-item2>
+      <app-item2 [item]="item" [displayProperties]="properties"></app-item2>
       <!-- <app-item class="item" [item]="item" [editMode]="editMode"></app-item> -->
     </div>
   </div>
   <div class="side right">
     <div *ngFor="let item of rightList | async">
-      <app-item2 [item]="item"></app-item2>
+      <app-item2 [item]="item" [displayProperties]="properties"></app-item2>
       <!-- <app-item [item]="item" [editMode]="editMode"></app-item> -->
     </div>
   </div>

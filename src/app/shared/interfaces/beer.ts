@@ -14,5 +14,7 @@ export interface Beer {
     icon?: string;
     iconLoc?: string;
     active: boolean;
+    createdBy?: string;
+    modifiedBy?: string;
     //searchName: string;
 }

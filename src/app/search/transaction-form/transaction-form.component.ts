@@ -16,25 +16,28 @@ import { combineLatest, map, switchMap } from 'rxjs/operators';
 
 export class TransactionFormComponent implements OnInit {
   localBeerList: Observable<Localbeer[]>
-  beerList: Localbeer[] = []
+  // beerList: Localbeer[] = []
   selected: Localbeer
   swap: boolean
   addingBeerName: string
-  constructor(public dialog: MatDialog,
+  constructor(
+    public dialog: MatDialog,
     public dialogRef: MatDialogRef<DialogAddBeerDialog>,
     @Inject(MAT_DIALOG_DATA)
-    public input: Beer[], private service: DataService,
+    public input: Beer, 
+    public service: DataService,
     private afs: AngularFirestore) { }
 
   ngOnInit() {
-    this.addingBeerName = this.service.selectedBeer.withBrewery ? this.service.selectedBeer.brewery.name + " " + this.service.selectedBeer.name : this.service.selectedBeer.name
-    this.localBeerList = this.service.localCollection.map(vals => vals.sort((a, b) => {
-      let t1 = a.beer.withBrewery ? a.beer.brewery.name + " " + a.beer.name : a.beer.name
-      let t2 = b.beer.withBrewery ? b.beer.brewery.name + " " + b.beer.name : b.beer.name
-      if (t1 > t2) return 1
-      if (t1 < t2) return -1
-      return 0
-    }))
+    this.addingBeerName = this.input.withBrewery ? this.input.brewery.name + " " + this.input.name : this.input.name
+    this.localBeerList = this.service.localCollection
+    // .map(vals => vals.sort((a, b) => {
+    //   let t1 = a.beer.withBrewery ? a.beer.brewery.name + " " + a.beer.name : a.beer.name
+    //   let t2 = b.beer.withBrewery ? b.beer.brewery.name + " " + b.beer.name : b.beer.name
+    //   if (t1 > t2) return 1
+    //   if (t1 < t2) return -1
+    //   return 0
+    // }))
     this.initializeForm()
   }
   initializeForm() {
@@ -49,45 +52,40 @@ export class TransactionFormComponent implements OnInit {
   }
   onAdd() {
     let obj = {
-      action: 'add',
-      beerID: this.service.selectedBeer.id,
+      beerID: this.input.id,
       price: this.selected.price,
       local_description: this.selected.local_description,
       onDeck: this.selected.onDeck,
       onSpecial: this.selected.onSpecial,
+      soldOut: false
     }
     return obj
   }
 
-  showMenuBeers() {
-    let x
-    this.localBeerList.subscribe(vals => {
-      x = vals.length
-    })
-    return x > 0
-  }
-
-  onSelect(b) {
+  onSelect(b: Localbeer, index: number) {
+    // this.selected = b
+    // if (!this.selected.onDeck)
+    //   this.selected.onDeck = false
+    // if (!this.selected.onSpecial)
+    //   this.selected.onSpecial = false
+    // if (!this.selected.local_description)
+    //   this.selected.local_description = ''
+    // this.swap = true;
+    // console.log(this.selected)
+    this.swap = true
     this.selected = b
-    if (!this.selected.onDeck)
-      this.selected.onDeck = false
-    if (!this.selected.onSpecial)
-      this.selected.onSpecial = false
-    if (!this.selected.local_description)
-      this.selected.local_description = ''
-    this.swap = true;
-    console.log(this.selected)
+    this.service.selectedIndex = index;
   }
 
   onSwap() {
+    this.service.selectedLocal = this.selected
     let obj = {
-      action: 'swap',
-      id: this.selected.id,
-      beerID: this.service.selectedBeer.id,
+      beerID: this.input.id,
       price: this.selected.price,
       local_description: this.selected.local_description,
       onDeck: this.selected.onDeck,
       onSpecial: this.selected.onSpecial,
+      soldOut: false
     }
     return obj
   }

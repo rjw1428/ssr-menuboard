@@ -24,8 +24,13 @@ export class DialogAddBreweryDialog {
   filteredBreweries: Observable<Brewery[]>
   brewList: Brewery[]
   constructor(
-    public dialogRef: MatDialogRef<DialogAddBreweryDialog>, private fb: FormBuilder,
-    @Inject(MAT_DIALOG_DATA) public input: Brewery, private afs: AngularFirestore, public service: DataService) {
+    public dialogRef: MatDialogRef<DialogAddBreweryDialog>, 
+    private fb: FormBuilder,
+    @Inject(MAT_DIALOG_DATA) public input: Brewery, 
+    private afs: AngularFirestore, 
+    public service: DataService
+    ) {
+
     this.buildForm()
     this.countries.sort((a, b) => this.stringSort(a, b))
     this.states.sort((a, b) => this.stringSort(a, b))
@@ -56,14 +61,14 @@ export class DialogAddBreweryDialog {
   private buildForm() {
     if (this.input)
       this.breweryForm = this.fb.group({
-        name: [this.input ? this.input : '', [Validators.required]],
+        name: [this.input ? this.input : null, [Validators.required]],
         city: this.input.city ? this.input.city : '',
         state: this.input.state ? this.input.state : '',
         country: this.input.country ? this.input.country : ''
       })
     else
       this.breweryForm = this.fb.group({
-        name: ['', [Validators.required]],
+        name: [null, [Validators.required]],
         city: '',
         state: '',
         country: ''

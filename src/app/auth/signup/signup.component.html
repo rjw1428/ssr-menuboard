@@ -1,28 +1,39 @@
-<div class="row popout">
-  <div class="col-xs-12 col-sm-10 col-md-8 col-sm-offset-1 col-md-offset-2">
-    <h1>Enroll New User</h1>
-    <form [formGroup]="form" (ngSubmit)="onSubmit()">
-      <div class="form-group">
-        <label for="email">Email</label>
-        <input type="email" class="form-control" id="email" name="email" formControlName="email" [formGroup]="form" (focus)="clearNameError()">
-        <div class="alert alert-danger" *ngIf="showEmailError">Email already in use</div>
-      </div>
-      <div class="form-group">
-        <label for="password">Password</label>
-        <input type="password" id="password" class="form-control" formControlName="password" form builder [formGroup]="form">
-      </div>
-      <div class="form-group">
-        <label for="confirmPassword">Conform Password</label>
-        <input type="password" class="form-control" id="confirmPassword" formControlName="confirmPassword" [formGroup]="form"
-          (focus)="clearError()">
-        <div class="alert alert-danger" *ngIf="showPasswordError">Password not match</div>
-      </div>
-      <div class="form-group">
-        <label for="role">Role</label>
-        <input type="text" class="form-control" id="role" name="role" formControlName="role" [formGroup]="form">
-      </div>
-      <input type="submit" class="btn btn-primary" value="submit">
-      <button class="btn btn-danger" (click)="onCancel()">Cancel</button>
-    </form>
-  </div>
+<h1 mat-dialog-title>Enroll New User</h1>
+<div mat-dialog-content [formGroup]="form">
+  <mat-form-field>
+    <input matInput formControlName="name" placeholder="First Name...">
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput class="form-control" formControlName="email" (focus)="clearNameError()"
+      placeholder="Email Address...">
+    <div class="alert alert-danger" *ngIf="showEmailError">Email already in use</div>
+  </mat-form-field>
+
+
+  <mat-form-field>
+    <input matInput formControlName="password" placeholder="Password...">
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput formControlName="confirmPassword" placeholder="Confirm Password..." (focus)="clearError()">
+    <div class="alert alert-danger" *ngIf="showPasswordError">Password not match</div>
+  </mat-form-field>
+
+  <mat-form-field>
+    <input matInput formControlName="role" placeholder="Account Role...">
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput formControlName="phoneNum" placeholder="Phone Number...">
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput formControlName="client" placeholder="Client...">
+  </mat-form-field>
 </div>
+<div mat-dialog-actions>
+    <button mat-button (click)="onNoClick()">Cancel</button>
+  <button mat-raised-button color="primary" [disabled]="!form.valid" [mat-dialog-close]="onAdd()">Submit</button>
+</div>
+
+<!-- <div class="row popout">
+    <div class="col-xs-12 col-sm-10 col-md-8 col-sm-offset-1 col-md-offset-2">
+</div>
+</div> -->

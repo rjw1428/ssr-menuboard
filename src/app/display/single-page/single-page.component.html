@@ -1,47 +1,38 @@
-<div class="main">
-  <ngb-carousel class="page" (slide)="onSlide($event)">
+<div [ngClass]="{'alt-bg':client=='pointlomaseafood'}"></div>
+<div [ngClass]="{'main':client!='pointlomaseafood'}" (click)="onClick()">
+  <div *ngIf="pause">
+    <h1 style="position: absolute; top: 10px; right: 10px; color: white;">P</h1>
+  </div>
+  <img class="logo" [src]="logoUrl" *ngIf="logoUrl">
+  <ngb-carousel class="page" (slide)="onSlide($event)" #carousel>
     <ng-template ngbSlide>
-      <div class="wrapper">
-        <app-items-display-page2></app-items-display-page2>
+      <div class="carousel-item active wrapper">
+        <div *ngIf="vertical; else horizontal">
+          <app-items-display-page-vert></app-items-display-page-vert>
+        </div>
+        <ng-template #horizontal>
+          <app-items-display-page2></app-items-display-page2>
+        </ng-template>
       </div>
     </ng-template>
-    <!-- <ng-template ngbSlide *ngFor="let feature of featuredList; let i=index;">
-      <div class="wrapper" *ngIf="i==activeFeature[0]">
-        <app-feature2 [feature]="feature"></app-feature2>
-      </div>
-    </ng-template> -->
-    
-    <!-- <ng-template ngbSlide>
-      <div *ngFor="let feature of featuredList; let i=index;">
-        <div class="wrapper" *ngIf="i==activeFeature[0]">
-          <app-feature2 [feature]="feature"></app-feature2>
+    <div *ngIf="featuredList.length>0">
+      <ng-template ngbSlide *ngFor="let slide of activeFeature; let n=index">
+        <div *ngFor="let feature of featuredList; let i=index;">
+          <div class="carousel-item active wrapper" *ngIf="i==activeFeature[n]">
+            <app-feature2 [feature]="feature" [edit]="false"></app-feature2>
+          </div>
         </div>
-      </div>
-    </ng-template>
-    <ng-template ngbSlide>
-      <div *ngFor="let feature of featuredList; let i=index;">
-        <div class="wrapper" *ngIf="i==activeFeature[1]">
-          <app-feature2 [feature]="feature"></app-feature2>
-        </div>
-      </div>
-    </ng-template> -->
+      </ng-template>
+    </div>
   </ngb-carousel>
 </div>
 
 
-<!-- <div class="wrapper">
-        <app-demo [value]="'A'"></app-demo>
-      </div> -->
-
-<!--
-<div class="main">
+<!-- <div class="main">
   <div id="demo" class="carousel slide" data-ride="carousel">
     <ol class="carousel-indicators">
-
       <li data-target="#demo" data-slide-to="0" class="active"></li>
-      <li data-target="#demo" data-slide-to="1"></li>
-      <li data-target="#demo" data-slide-to="2"></li>
-      <li data-target="#demo" data-slide-to="3"></li>
+      <li data-target="#demo" data-slide-to="(i+1)" *ngFor="let slide of activeFeature; let i=index;"></li>
     </ol>
 
     <div class="carousel-inner box">
@@ -52,26 +43,13 @@
           <app-items-display-page2></app-items-display-page2>
         </div>
       </div>
-      <div class="carousel-item page">
-        <div class="wrapper">
-          <app-feature2 [start]=0 [step]=2 [currentPos]=1 [active]="iteration"></app-feature2>
-        </div>
-      </div>
-      <div class="carousel-item page">
-        <div class="wrapper">
-          <app-feature2 [start]=1 [step]=2 [currentPos]=2 [active]="iteration"></app-feature2>
-        </div>
-      </div>
-      <div class="carousel-item page">
-        <div class="wrapper">
+      <div class="carousel-item page" *ngFor="let slide of activeFeature; let n=index">
+        <div *ngFor="let feature of featuredList; let i=index;">
+          <div class="wrapper" *ngIf="i==activeFeature[n]">
+            <app-feature2 [feature]="feature" [edit]="false"></app-feature2>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
-
--->
-<!-- <li *ngFor="let s of slides; let i=index" data-target="#demo" data-slide-to="i" [class.active]="i==activeSlide"></li> -->
-<!-- <div *ngFor="let slide of slides; let i=index" class="carousel-item page" [class.active]="i==activeSlide">
-        <div class="wrapper" [appSlide]="slide"></div>
-      </div> -->
+</div> -->

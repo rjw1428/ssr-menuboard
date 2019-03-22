@@ -1,0 +1,55 @@
+.bg {
+    background-color: maroon;
+
+    // position: absolute;
+    // top: 0;
+    // left: calc(-100vw / 4);
+    // height: 100%;
+    // width: 100vw;
+    // //MAIN COLOR
+    // background-color: rgb(7, 61, 19);
+    // background-image:
+    // //BACKSLASH LINE
+    // repeating-linear-gradient(120deg, rgba(255,255,255,.15), rgba(255,255,255,.15) 1px, transparent 1px, transparent 60px),
+    // //FORWARD SLASH LINE
+    // repeating-linear-gradient(60deg, rgba(255,255,255,.15), rgba(255,255,255,.15) 1px, transparent 1px, transparent 60px),
+    // linear-gradient(60deg, rgba(0,0,0,.1) 25%, transparent 25%, transparent 75%, rgba(0,0,0,.1) 75%, rgba(0,0,0,.1)),
+    // linear-gradient(120deg, rgba(0,0,0,.1) 25%, transparent 25%, transparent 75%, rgba(0,0,0,.1) 75%, rgba(0,0,0,.1));
+    // background-size: 70px 120px;
+    // overflow-x: hidden;
+    // z-index: -1;
+}
+
+
+.main {
+    position: fixed;
+    z-index: 5;
+    overflow: hidden;
+}
+
+.bottom {
+    bottom: 5vh;
+}
+
+.top {
+    top: 10vh;
+}
+
+button {
+    margin-bottom: 10px;
+}
+
+.left {
+    left: 10vw;
+}
+
+.right {
+    float:right;
+    right: 10vw;
+}
+
+// @media screen and (max-width: 750px) {
+//     .right {
+//         left: 75vw;
+//     }
+// }

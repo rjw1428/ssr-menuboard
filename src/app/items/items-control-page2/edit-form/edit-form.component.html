@@ -1,4 +1,4 @@
-<h1 mat-dialog-title>Edit Beer: {{beerName}}</h1>
+<h1 mat-dialog-title>Edit Beer: <br>{{beerName}}</h1>
 <hr>
 <div mat-dialog-content>
 
@@ -6,24 +6,25 @@
     <div class="row">
 
       <mat-form-field class="col-sm-12">
-        <input matInput formControlName="beerID" placeholder="Beer Name..." [matAutocomplete]="auto_beer">
-        <!-- <img matPrefix *ngIf="isSelectedValue(searchForm.get('keyword'))" class="example-option-img" aria-hidden
-          [src]="parseSelectionForIcon(searchForm.get('keyword'))" height="40"> -->
-        <!-- <button mat-button *ngIf="searchForm.get('keyword').value" matSuffix mat-icon-button aria-label="Clear"
-          (click)="resetKeyword()">
+        <input matInput formControlName="beer" placeholder="Beer Name..." [matAutocomplete]="auto_beer">
+        <!-- <img matPrefix *ngIf="isSelectedValue(searchForm.get(beer'))" class="example-option-img" aria-hidden
+          [src]="parseSelectionForIcon(searchForm.get('beer'))" height="40"> -->
+        <button mat-button *ngIf="editForm.get('beer').value" matSuffix mat-icon-button aria-label="Clear"
+          (click)="resetBeer()">
           <mat-icon>close</mat-icon>
-        </button> -->
+        </button>
       </mat-form-field>
 
       <mat-autocomplete #auto_beer="matAutocomplete" [displayWith]="displayName">
         <!-- (optionSelected)="filterBeer()" -->
-        <!-- <mat-option *ngFor="let b of filteredBreweries" [value]="b">
-          <img class="example-option-img" aria-hidden [src]="b.iconLoc" height="40">
-          <span>{{b.name }}</span> |
-          <small>{{b.city}},{{b.state}}</small>
-        </mat-option> -->
+        <mat-option *ngFor="let b of filteredBeers | async" [value]="b">
+          <!-- <img class="example-option-img" aria-hidden [src]="b.iconLoc" height="40"> -->
+          <span>{{ displayName(b) }}</span>
+        </mat-option>
       </mat-autocomplete>
 
+      <!-- <input type="text" formControlName="beerID" [matAutocomplete]="auto_beer"> -->
+    
     </div>
     <div class="row">
       <div class="col-sm-6">
@@ -38,7 +39,7 @@
     </div>
     <div class="row">
       <div class="col-sm-6">
-        <mat-checkbox formControlName="onDeck" labelPosition="after">On Deck
+        <mat-checkbox formControlName="onDeck" labelPosition="after">Coming Soon
         </mat-checkbox>
       </div>
       <div class="col-sm-6">
@@ -58,5 +59,5 @@
 </div>
 <div mat-dialog-actions>
   <button mat-button (click)="onNoClick()">Cancel</button>
-  <button mat-raised-button color="primary" [mat-dialog-close]="onAdd()" cdkFocusInitial>Add</button>
+  <button mat-raised-button color="primary" [disabled]="!editForm.valid" [mat-dialog-close]="onAdd()">Save</button>
 </div>

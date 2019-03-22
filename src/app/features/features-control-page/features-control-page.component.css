@@ -1,3 +1,27 @@
 .main {
-    /* float: left; */
+    position: fixed;
+    z-index: 5;
 }
+
+.bottom {
+    bottom: 5vh;
+}
+
+.top {
+    top: 10vh;
+}
+
+button {
+    margin-bottom: 10px;
+}
+
+.left {
+    left: 10vw;
+}
+
+.right {
+    float:right;
+    right: 10vw;
+}
+
+

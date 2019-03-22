@@ -1,39 +1,23 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
-
-import { FeaturePageComponent } from '@features/feature-page/feature-page.component'
-import { FeatureComponent } from '@features/feature/feature.component';
-import { FeatureFormComponent } from '@features/feature-form/feature-form.component';
 import { FeaturesControlPageComponent } from '@features/features-control-page/features-control-page.component';
-import { FeaturesService } from '@shared/services/features.service';
-import { FormsModule } from "@angular/forms";
-import { FeatureTitlePipe } from "@shared/pipes/feature-title.pipe";
-import { FeatureMainPipe } from "@shared/pipes/feature-main.pipe";
-import { Feature2Component } from './feature2/feature2.component';
+import { FeatureForm2Component } from './feature-form2/feature-form2.component';
+import { SharedModule } from '@shared/shared.module';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 @NgModule({
     imports: [
         CommonModule, //ACCEPT PUBLICLY AVAILABLE COMPONENTS
-        FormsModule,
+        SharedModule,
+        DragDropModule
     ],
     declarations: [ //PRIVATE TO THIS MODULE
-        FeaturePageComponent,
-        FeatureComponent,
-        FeatureFormComponent,
         FeaturesControlPageComponent,
-        FeatureTitlePipe,
-        FeatureMainPipe,
-        Feature2Component
+        FeatureForm2Component,
     ],
     providers: [
-        FeaturesService
     ],
     exports: [        
-        FeaturePageComponent,
-        FeatureComponent,
-        FeatureFormComponent,
-        FeaturesControlPageComponent,
-        Feature2Component
     ],//PUBLICLY AVAILABLE
     bootstrap: [] //BASE COMPONENT
 })

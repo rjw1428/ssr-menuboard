@@ -10,6 +10,7 @@ import * as $ from 'jquery';
 })
 
 export class HomeComponent implements OnInit {
+  imgBasePath: string = 'website-images'
   imageList: string[] = []
   priceList = []
   quoteList = []
@@ -79,7 +80,7 @@ export class HomeComponent implements OnInit {
 
   getImageList() {
     let imageMetaData: AngularFirestoreCollection<any>
-    imageMetaData = this.firestore.collection('images', ref => {
+    imageMetaData = this.firestore.collection('website').doc('content').collection('images', ref => {
       return ref
         .where("active", "==", true)
     })
@@ -87,7 +88,7 @@ export class HomeComponent implements OnInit {
   }
 
   getImageUrl(name: string) {
-    const ref = this.storage.ref(name);
+    const ref = this.storage.ref(`${this.imgBasePath}/${name}`);
     ref.getDownloadURL()
       .toPromise()
       .then(value => {
@@ -98,7 +99,7 @@ export class HomeComponent implements OnInit {
 
   getPriceData() {
     let priceData: AngularFirestoreCollection<any>
-    priceData = this.firestore.collection('price', ref => {
+    priceData = this.firestore.collection('website').doc('content').collection('price', ref => {
       return ref
         .orderBy("order")
     })
@@ -107,7 +108,7 @@ export class HomeComponent implements OnInit {
 
   getQuoteData() {
     let quoteData: AngularFirestoreCollection<any>
-    quoteData = this.firestore.collection('quotes', ref => {
+    quoteData = this.firestore.collection('website').doc('content').collection('quotes', ref => {
       return ref
     })
     return quoteData

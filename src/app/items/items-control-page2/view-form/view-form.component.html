@@ -1,0 +1,28 @@
+<h1 mat-dialog-title>View Properties:</h1>
+<div mat-dialog-content [formGroup]="viewForm">
+  <!-- <div class="container"> -->
+    <div class="row">
+      <div class="col-sm-12">
+        <mat-checkbox class="row check" formControlName="location" labelPosition="before">Show City & State
+        </mat-checkbox>
+        <mat-checkbox class="row check" formControlName="description" labelPosition="before">Show Description
+        </mat-checkbox>
+        <mat-checkbox class="row check" formControlName="local_description" labelPosition="before">Show Custom Description
+        </mat-checkbox>
+        <mat-checkbox class="row check" formControlName="type" labelPosition="before">Show Type
+        </mat-checkbox>
+        <mat-checkbox class="row check" formControlName="abv" labelPosition="before">Show ABV
+        </mat-checkbox>
+        <mat-checkbox class="row check" formControlName="ibu" labelPosition="before">Show IBU
+        </mat-checkbox>
+        <mat-checkbox class="row check" formControlName="price" labelPosition="before">Show Price
+        </mat-checkbox>
+        <hr>
+      <!-- </div> -->
+    </div>
+  </div>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">Cancel</button>
+  <button mat-raised-button color="primary" [mat-dialog-close]="onSave()">Save</button>
+</div>

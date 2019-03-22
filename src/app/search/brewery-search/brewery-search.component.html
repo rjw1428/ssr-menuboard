@@ -1,12 +1,14 @@
+
 <div class="container search-box">
   <h3>Brewery Search:</h3>
   <div class="form-group row" [formGroup]="searchForm">
     <div class="col-sm-6">
       <mat-form-field class="example-full-width col-sm-10">
         <input matInput placeholder="Name..." formControlName="name" [matAutocomplete]="auto_name">
-        <img matPrefix *ngIf="isSelectedValue(searchForm.get('name'))" class="example-option-img" aria-hidden [src]="parseSelectionForIcon(searchForm.get('name'))"
-          height="40">
-        <button mat-button *ngIf="searchForm.get('name').value" matSuffix mat-icon-button aria-label="Clear" (click)="resetName()">
+        <img matPrefix *ngIf="isSelectedValue(searchForm.get('name'))" class="example-option-img" aria-hidden
+          [src]="parseSelectionForIcon(searchForm.get('name'))" height="40">
+        <button mat-button *ngIf="searchForm.get('name').value" matSuffix mat-icon-button aria-label="Clear"
+          (click)="resetName()">
           <mat-icon>close</mat-icon>
         </button>
       </mat-form-field>
@@ -23,7 +25,8 @@
     <div class="col-sm-4">
       <mat-form-field class="example-full-width col-sm-10">
         <input matInput placeholder="State..." formControlName="state" [matAutocomplete]="auto_state">
-        <button mat-button *ngIf="searchForm.get('state').value" matSuffix mat-icon-button aria-label="Clear" (click)="resetState()">
+        <button mat-button *ngIf="searchForm.get('state').value" matSuffix mat-icon-button aria-label="Clear"
+          (click)="resetState()">
           <mat-icon>close</mat-icon>
         </button>
       </mat-form-field>
@@ -51,6 +54,8 @@
 
 <div class="container">
   <div class="row" *ngFor="let brew of mainFilteredList">
-    <app-brewery class="col-sm-8 offset-sm-2" [brewery]="brew" [selected]="isSelected(brew)" (click)="onClick(brew)"></app-brewery>
+    <div class="col-sm-2" (click)="clearSelected()"></div>
+    <app-brewery class="col-sm-8" [brewery]="brew" [selected]="isSelected(brew)" (click)="onClick(brew)"></app-brewery>
+    <div class="col-sm-2" (click)="clearSelected()"></div>
   </div>
 </div>

@@ -1,10 +1,10 @@
-export class FeaturedItem {
-  key: string;
-  order: number;
-  header: string;
-  caption?: string;
-  subcaption?: string;
-  url: string;
+import { Upload } from './upload';
+
+export interface FeaturedItem {
+  pageTitle: string;
+  itemTitle?: string;
+  itemCaption?: string;
+  img: Upload;
   active: boolean;
   child: boolean;
   startDate?: string;

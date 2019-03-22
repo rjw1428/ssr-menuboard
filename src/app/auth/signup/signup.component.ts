@@ -1,15 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { NgForm, AbstractControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { AuthService } from '@shared/services/auth.service';
 import { Router } from '@angular/router';
 import { AngularFireDatabase } from '@angular/fire/database';
-import { UsernamePipe } from '@shared/pipes/username.pipe'
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 export class PasswordValidation {
   static MatchPassword(AC: AbstractControl) {
     let password = AC.get('password').value; // to get value in input tag
     let confirmPassword = AC.get('confirmPassword').value; // to get value in input tag
     if (password != confirmPassword) {
+      // console.log(password)
+      // console.log(confirmPassword)
       AC.get('confirmPassword').setErrors({ MatchPassword: true })
     } else {
       return null
@@ -26,42 +28,29 @@ export class SignupComponent implements OnInit {
   form: FormGroup
   showPasswordError: boolean = false;
   showEmailError: boolean = false;
-  constructor(public authService: AuthService, private router: Router, private fb: FormBuilder, private db: AngularFireDatabase) {
+  constructor(
+    public authService: AuthService, 
+    private router: Router, 
+    private fb: FormBuilder, 
+    private db: AngularFireDatabase,
+    public dialogRef: MatDialogRef<SignupComponent>,
+    @Inject(MAT_DIALOG_DATA)
+    public input: any,
+    ) {
     this.form = fb.group({
       email: ['', Validators.required],
-      password: ['', Validators.compose([Validators.required, Validators.minLength(5), Validators.maxLength(10)])],
+      password: ['', Validators.compose([Validators.required, Validators.minLength(5), Validators.maxLength(20)])],
       confirmPassword: ['', Validators.required],
       role: ['', Validators.required],
+      name: ['', Validators.required],
+      phoneNum: ['', Validators.required],
+      client: ['', Validators.required],
     }, {
         validator: PasswordValidation.MatchPassword
       })
   }
 
   ngOnInit() {
-  }
-
-  onSubmit() {
-    if (this.form.controls.confirmPassword.status == 'INVALID')
-      this.showPasswordError = true
-    else {
-      const email = this.form.value.email;
-      const password = this.form.value.password;
-      const role = this.form.value.role;
-
-      this.db.database.ref('/users/' + new UsernamePipe().transform(email)).transaction(currentValue => {
-        if (currentValue === null) {
-          this.form.reset()
-          this.authService.signupUser(email, password, role)
-          return {
-            'email': email,
-            'role': role,
-            'dateCreated': this.timestamp()
-          };
-        } else {
-          this.showEmailError = true
-        }
-      })
-    }
   }
 
   clearNameError() {
@@ -72,12 +61,18 @@ export class SignupComponent implements OnInit {
     this.showPasswordError = false;
   }
 
-  onCancel() {
-    this.router.navigate(["/edit/items"])
+  onNoClick() {
+    this.dialogRef.close()
+  }
+
+  onAdd() {
+    let result=this.form.value
+    delete result.confirmPassword
+    return result
   }
 
   getUserName(email: string) {
-
+    return this.form.value
   }
 
   timestamp() {

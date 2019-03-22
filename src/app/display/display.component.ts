@@ -35,9 +35,13 @@ export class DisplayComponent implements OnInit {
   onResize(event?) {
     this.screenWidth = window.innerWidth;
     this.screenHeight = window.innerHeight;
+    if (this.screenWidth>this.screenHeight)
+      this.isVertical=false
+    else this.isVertical=true;
   }
   screenWidth: number
   screenHeight: number
+  isVertical: boolean = false;
   consecFeatureNum: number = 2;
   screenKey: string;
   pageNum: number = 1;

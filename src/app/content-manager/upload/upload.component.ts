@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Upload } from '@shared/interfaces/upload';
 import { ContentService } from '@shared/services/content.service';
+import { Content } from '@shared/interfaces/content';
 
 @Component({
   selector: 'app-upload',
@@ -9,15 +10,21 @@ import { ContentService } from '@shared/services/content.service';
 })
 export class UploadComponent implements OnInit {
   @Input() file: Upload
-  constructor(public contentService: ContentService) { }
+  @Input() selected: boolean
+  constructor(
+    // public contentService: ContentService
+  ) { }
 
   ngOnInit() {
   }
 
-  removeFile(key: string, name: string) {
-    if (confirm("Are you sure you want to delete this stored file?") == true) {
-      this.contentService.deleteFileStorage(name)
-      this.contentService.deleteFileData(key)
-    }
+  onClick() {
+    console.log(this.file.id)
   }
+  // removeFile(key: string, name: string) {
+  //   if (confirm("Are you sure you want to delete this stored file?") == true) {
+  //     this.contentService.deleteFileStorage(name)
+  //     this.contentService.deleteFileData(key)
+  //   }
+  // }
 }

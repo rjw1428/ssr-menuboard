@@ -21,6 +21,9 @@ import { DataService } from '@shared/services/data.service';
 import { TransactionFormComponent } from '../transaction-form/transaction-form.component';
 import { Transaction } from '@shared/interfaces/transaction';
 import { ActivatedRoute } from '@angular/router';
+import { Localbeer } from '@shared/interfaces/localbeer';
+import { firestore } from 'firebase/app';
+import { AuthService } from '@shared/services/auth.service';
 
 @Component({
   selector: 'app-beer-search',
@@ -37,17 +40,25 @@ export class SearchComponent implements OnInit {
   filteredBreweries: Brewery[] = []
   typeList: string[] = []
   filteredTypes: Observable<string[]>
+  filteredBeers: Observable<Beer[]>
+  stateList: string[] = []
+  filteredStates: Observable<string[]>
   filters = {}
   searchForm: FormGroup
   selectedBeer: Beer
   client: string
+  localMenu: Localbeer[] = []
+  searchMode: boolean = true;
+  advancedSearch: boolean;
   constructor(private afs: AngularFirestore,
     public dialog: MatDialog,
     private snackBar: MatSnackBar,
     private fb: FormBuilder,
     public service: DataService,
     public route: ActivatedRoute,
-    private storage: AngularFireStorage) { }
+    private storage: AngularFireStorage,
+    private authService: AuthService
+  ) { }
 
   ngOnInit() {
     this.buildForm()
@@ -56,9 +67,13 @@ export class SearchComponent implements OnInit {
         this.beerList = []
         beers.forEach((val) => {
           let temp = val
-          temp['type'] = new TitlecasePipe().transform(val.type)
+          if (val.type != null) {
+            temp['type'] = new TitlecasePipe().transform(val.type)
+            this.typeList.push(val.type.toLowerCase())
+          }
           this.beerList.push(temp)
-          this.typeList.push(val.type.toLowerCase())
+          if (val.brewery.state != null)
+            this.stateList.push(val.brewery.state.substr(5).toLowerCase())
         })
         this.typeList = this.typeList.filter((val, index, self) => self.indexOf(val) === index).sort((a, b) => {
           if (a > b) return 1
@@ -70,8 +85,31 @@ export class SearchComponent implements OnInit {
             if (value)
               return this.typeList.filter(type => type.includes(value.toLowerCase()))
           })
+
+        this.stateList = this.stateList.filter((val, index, self) => self.indexOf(val) === index).sort((a, b) => {
+          if (a > b) return 1
+          if (a < b) return -1
+          return 0
+        })
+        this.filteredStates = this.searchForm.get('state').valueChanges
+          .map(value => {
+            if (value)
+              return this.stateList.filter(state => state.includes(value.toLowerCase()))
+          })
+
+        this.filteredBeers = this.searchForm.get('beer').valueChanges
+          .map(value => {
+            let filterword = typeof value === 'object' ? value.id : value
+            if (filterword.length == 0) {
+              return null
+            }
+            return this.beerList.filter(beer => beer.id.includes(filterword.toLowerCase()))
+          })
         this.applyFilters()
       })
+    this.route.parent.params.switchMap(val => {
+      return this.service.getLocalCollection(val['client'])
+    }).subscribe(val => this.localMenu = val)
 
 
     //GET BREWERY LIST
@@ -79,7 +117,7 @@ export class SearchComponent implements OnInit {
       .subscribe((breweries) => {
         this.breweryList = breweries
       })
-    this.searchForm.get('keyword').valueChanges
+    this.searchForm.get('brewery').valueChanges
       .subscribe(value => {
         let filterword = typeof value === 'object' ? value.name : value
         this.filteredBreweries = this._instafilter(filterword)
@@ -87,31 +125,61 @@ export class SearchComponent implements OnInit {
   }
 
   private _instafilter(value: string): Brewery[] {
+    if (value.length == 0) {
+      // this.resetKeyword()
+      return this.breweryList
+    }
     if (value)
       return this.breweryList.filter((brew: Brewery) => brew.name.toLowerCase().indexOf(value.toLowerCase()) === 0)
   }
 
   buildForm() {
     this.searchForm = this.fb.group({
-      keyword: '',
-      type: ''
+      brewery: '',
+      type: '',
+      beer: '',
+      state: ''
     })
   }
 
-  resetKeyword() {
+  resetBrewery() {
     this.searchForm.setValue({
-      'keyword': '',
-      'type': this.searchForm.get('type').value
+      'brewery': '',
+      'type': this.searchForm.get('type').value,
+      'beer': this.searchForm.get('beer').value,
+      'state': this.searchForm.get('state').value,
     })
-    this.removeFilter('masterBreweryKey')
+    this.removeFilter('brewery')
   }
 
   resetType() {
     this.searchForm.setValue({
-      'keyword': this.searchForm.get('keyword').value,
-      'type': ''
+      'brewery': this.searchForm.get('brewery').value,
+      'type': '',
+      'beer': this.searchForm.get('beer').value,
+      'state': this.searchForm.get('state').value,
     })
     this.removeFilter('type')
+  }
+
+  resetBeer() {
+    this.searchForm.setValue({
+      'brewery': this.searchForm.get('brewery').value,
+      'type': this.searchForm.get('type').value,
+      'beer': '',
+      'state': this.searchForm.get('state').value,
+    })
+    this.removeFilter('id')
+  }
+
+  resetState() {
+    this.searchForm.setValue({
+      'brewery': this.searchForm.get('brewery').value,
+      'type': this.searchForm.get('type').value,
+      'beer': this.searchForm.get('beer').value,
+      'state': ''
+    })
+    this.removeFilter('brewery')
   }
 
   applyFilters() {
@@ -126,14 +194,26 @@ export class SearchComponent implements OnInit {
   }
 
   filterBrewery() {
-    let b = this.searchForm.get('keyword').value as Brewery
-    this.filters['masterBreweryKey'] = val => val == b.id
+    let b = this.searchForm.get('brewery').value as Brewery
+    this.filters['brewery'] = (val: Brewery) => val.name == b.name
     this.applyFilters()
   }
 
   filterType() {
     let t = this.searchForm.get('type').value
     this.filters['type'] = val => val.toLowerCase() == t
+    this.applyFilters()
+  }
+
+  filterBeer() {
+    let beer = this.searchForm.get('beer').value as Beer
+    this.filters['id'] = val => val == beer.id
+    this.applyFilters()
+  }
+
+  filterState() {
+    let s = this.searchForm.get('state').value
+    this.filters['brewery'] = (val: Brewery) => val.state.toLowerCase().substr(5) == s
     this.applyFilters()
   }
 
@@ -150,6 +230,15 @@ export class SearchComponent implements OnInit {
   displayType(t: string) {
     let x = new TitlecasePipe().transform(t)
     return x
+  }
+
+  displayState(t: string) {
+    let x = new TitlecasePipe().transform(t)
+    return x
+  }
+
+  displayTitle(beer: Beer) {
+    return beer.withBrewery ? beer.brewery.name + " " + beer.name : beer.name
   }
 
   isSelectedValue(b: any) {
@@ -170,24 +259,24 @@ export class SearchComponent implements OnInit {
     //SET BEER DATA FROM FORM
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        console.log(result)
         let beer = Object.assign({ 'active': true }, result)
-        let key = beer.brewery.name.toLowerCase() + " " + beer.name.toLowerCase()
         let brewname = typeof beer.brewery === 'string' ? beer.brewery : beer.brewery.name
-        delete beer.brewery
-        delete beer.id
-        delete beer.iconLoc
         if (result.brewery.id) {
+          let key = beer.brewery.name.toLowerCase() + " " + beer.name.toLowerCase()
+          delete beer.brewery
+          delete beer.id
+          delete beer.iconLoc
           beer['masterBreweryKey'] = result.brewery.id
+          beer['createdBy'] = this.authService.username
           this.service.beerFirestoreList.doc(key).set(beer)
             .then(ref => {
               this.snackBar.open(brewname + " " + beer.name + " Added", "OK", {
-                duration: 2000,
+                duration: 3000,
               })
             })
         } else this.snackBar.open(beer.name + " was not added! - You need to add " + brewname + " to the Brewery List first.", "OK")
       }
-      this.service.selectedBeer = null
+      this.selectedBeer = null
     });
   }
 
@@ -195,7 +284,7 @@ export class SearchComponent implements OnInit {
     const dialogRef = this.dialog.open(DialogAddBeerDialog, {
       width: '500px',
       disableClose: true,
-      data: this.service.selectedBeer
+      data: this.selectedBeer
     });
 
     //SET BEER DATA FROM FORM
@@ -203,19 +292,23 @@ export class SearchComponent implements OnInit {
       if (result) {
         let beer = Object.assign({ 'active': true }, result)
         let brewname = typeof beer.brewery === 'string' ? beer.brewery : beer.brewery.name
-        delete beer.brewery
-        delete beer.id
-        delete beer.iconLoc
-        if (this.service.selectedBeer && result.masterBreweryKey) {
-          beer['masterBreweryKey'] = result.masterBreweryKey
-          this.service.beerFirestoreList.doc(this.service.selectedBeer.id).update(beer)
-            .then(ref => {
-              this.snackBar.open(brewname + " " + beer.name + " has been edited", "OK", {
-                duration: 2000,
+        if (beer.brewery.id) {
+          let breweryID = beer.brewery.id
+          delete beer.brewery
+          delete beer.id
+          delete beer.iconLoc
+          if (this.selectedBeer) {
+            beer['masterBreweryKey'] = breweryID
+            beer['modifiedBy'] = this.authService.username
+            this.service.beerFirestoreList.doc(this.selectedBeer.id).update(beer)
+              .then(ref => {
+                this.snackBar.open(brewname + " " + beer.name + " has been edited", "OK", {
+                  duration: 3000,
+                })
               })
-            })
-          this.service.selectedBeer = null
-        } else this.snackBar.open(beer.name + " was not added! - You need to add " + brewname + "to the Brewery List first.", "OK")
+          }
+          this.selectedBeer = null
+        } else this.snackBar.open(beer.name + " was not updated! - You need to add " + brewname + " to the Brewery List first.", "OK")
       }
     });
   }
@@ -228,87 +321,91 @@ export class SearchComponent implements OnInit {
     });
 
     //BREWERY INFORMATION FROM FORM
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        let brewery = Object.assign({ 'icon': new IconNamePipe().transform(result.name), 'active': true }, result)
-        let key = brewery.name.toLowerCase()
-        this.service.breweryFirestoreList.doc(key).set(brewery)
-          .then(ref => {
-            this.snackBar.open(brewery.name + " Added", "OK", {
-              duration: 2000,
+    dialogRef.afterClosed()
+      .subscribe(result => {
+        if (result) {
+          let brewery = Object.assign({ 'icon': new IconNamePipe().transform(result.name), 'active': true, 'createdBy': this.authService.username }, result)
+          let key = brewery.name.toLowerCase()
+          console.log(brewery)
+          this.service.breweryFirestoreList.doc(key).set(brewery)
+            .then(ref => {
+              this.snackBar.open(brewery.name + " Added", "OK", {
+                duration: 3000,
+              })
             })
-          })
-      }
-    });
+        }
+      });
   }
 
   removeBeer() {
     if (confirm("Are you sure you want to delete this Beer?")) {
-      this.service.beerFirestoreList.doc(this.service.selectedBeer.id).update({
+      this.service.beerFirestoreList.doc(this.selectedBeer.id).update({
         'active': false
       })
     }
-    this.service.selectedBeer = null
+    this.selectedBeer = null
   }
 
 
   openTransactionDialog() {
-    this.service.selectedBeer = this.selectedBeer
-    let localBeerList = this.service.localFirestoreList
+    this.service.selectedIndex = null
+    this.service.selectedLocal = null
     const dialogRef = this.dialog.open(TransactionFormComponent, {
       width: '500px',
       height: '75vh',
       disableClose: true,
-      data: {}
+      data: this.selectedBeer
     });
 
 
     //SET BEER DATA FROM FORM
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
+    dialogRef.afterClosed()
+      .subscribe(result => {
+        if (result) {
+          console.log(this.service.selectedIndex)
+          let brewname = this.selectedBeer.withBrewery ? this.selectedBeer.brewery.name + " " + this.selectedBeer.name : this.selectedBeer.name
+          if (this.service.selectedIndex != null) {
+            let swapMenu = this.localMenu
+            swapMenu[this.service.selectedIndex] = result
+            swapMenu.forEach(beerItem => {
+              delete beerItem.beer
+            })
+            this.service.localFirestoreList.update({
+              beerList: swapMenu
+            })
+              .then(ref => {
+                this.snackBar.open(brewname + " has been swapped into your menu", "OK", {
+                  duration: 3000,
+                })
+              })
+          }
+          else {
+            delete result.beer
+            this.service.localFirestoreList.update({
+              beerList: firestore.FieldValue.arrayUnion(result)
+            })
+              .then(ref => {
+                this.snackBar.open(brewname + " has been added to your menu", "OK", {
+                  duration: 3000,
+                })
+              })
+            // console.log(result)
+          }
 
-        let brewname = this.service.selectedBeer.withBrewery ? this.service.selectedBeer.brewery.name + " " + this.service.selectedBeer.name : this.service.selectedBeer.name
-        if (result.action == 'swap') {
-          delete result.action
-          console.log(result)
-          result['soldOut'] = false
-          localBeerList.doc(result.id).update(result)
-            .then(ref => {
-              this.snackBar.open(brewname + " has been swapped into your menu", "OK", {
-                duration: 2000,
-              })
-            }).then(ref => {
-              this.route.parent.params.subscribe(bar => {
-                let trans: Transaction = {
-                  client: bar['client'],
-                  itemIn: this.service.selectedBeer.id,
-                  itemOut: result.beerID,
-                  timestamp: this.service.timestamp()
-                }
-                this.afs.collection('masterBeerTransactions').add(trans)
-              })
-            })
-        } else {
-          delete result.action
-          result['soldOut'] = false
-          localBeerList.add(result)
-            .then(ref => {
-              this.route.parent.params.subscribe(bar => {
-                let trans: Transaction = {
-                  client: bar['client'],
-                  itemIn: this.service.selectedBeer.id,
-                  timestamp: this.service.timestamp()
-                }
-                this.afs.collection('masterBeerTransactions').add(trans)
-              })
-              this.snackBar.open(brewname + " has been added to your menu", "OK", {
-                duration: 2000,
-              })
-            })
+          // .then(ref => {
+          //   this.route.parent.params.subscribe(bar => {
+          //     let trans: Transaction = {
+          //       client: bar['client'],
+          //       itemIn: (this.selectedBeer ? this.selectedBeer.id : ''),
+          //       itemOut: (this.service.selectedLocal ? this.service.selectedLocal.id : ''),
+          //       timestamp: this.service.timestamp()
+          //     }
+          //     this.afs.collection('masterBeerTransactions').add(trans)
+          //   })
+          // })
         }
-        this.onClick(this.selectedBeer)
-      }
-    })
+      })
+    // this.onClick(this.selectedBeer)
   }
 
   getRoute() {
@@ -331,6 +428,25 @@ export class SearchComponent implements OnInit {
     if (this.selectedBeer)
       return this.selectedBeer.id == beer.id
     return false
+  }
+
+  clearSelect(b: Beer) {
+    if (!b)
+      this.selectedBeer = null
+    if (this.selectedBeer)
+      if (b.id != this.selectedBeer.id)
+        this.selectedBeer = null
+  }
+
+  toggleSearch() {
+    this.searchMode = !this.searchMode
+  }
+
+  toggleAdvanced() {
+    this.advancedSearch = !this.advancedSearch
+    this.resetType()
+    this.resetBrewery()
+    this.resetState()
   }
 }
 

@@ -12,6 +12,7 @@ import { RedirectComponent } from './routing/redirect/redirect.component';
 import { RoutingService } from './routing/redirect/routing.service';
 import { RoutingModule } from './routing/routing.module';
 import { SharedModule } from '@shared/shared.module';
+import { Routes, RouterModule } from '@angular/router';
 
 @NgModule({
   imports: [
@@ -29,6 +30,9 @@ import { SharedModule } from '@shared/shared.module';
     FooterComponent,
     HomeComponent,
     RedirectComponent
+  ],
+  exports: [
+    RouterModule
   ],
   providers: [RoutingService],
 })

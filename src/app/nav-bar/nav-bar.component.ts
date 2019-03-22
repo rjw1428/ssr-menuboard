@@ -3,8 +3,13 @@ import { environment } from 'environments/environment'
 import { ManagementService } from '@shared/services/management.service';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { AuthService } from '@shared/services/auth.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import * as $ from 'jquery';
+import { AngularFirestore, DocumentChangeAction } from '@angular/fire/firestore';
+import { Observable } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
+import { MatDialog, MatSnackBar } from '@angular/material';
+import { SignupComponent } from '@auth/signup/signup.component';
 @Component({
   selector: 'app-menu',
   templateUrl: './nav-bar.component.html',
@@ -21,16 +26,32 @@ export class NavBarComponent implements OnInit {
   isPaused: boolean
   isSlideshow: boolean
   isTrivia: boolean
-  barName: string;
+  barName: Observable<string>;
   userRole: string;
 
 
-  constructor(private service: ManagementService, private authService: AuthService, private db: AngularFireDatabase, private router: Router) {
+  constructor(private service: ManagementService,
+    private authService: AuthService,
+    private db: AngularFireDatabase,
+    private router: Router,
+    private route: ActivatedRoute,
+    private afs: AngularFirestore,
+    public dialog: MatDialog,
+    private snackBar: MatSnackBar) {
     this.onResize();
-    this.barName = environment.barName;
   }
 
   ngOnInit() {
+    this.barName = this.route.params.pipe(
+      switchMap(val => {
+        let client = val['client'] as string
+        return this.afs.collection('clients').doc(client).snapshotChanges().map(vals => {
+          let obj = vals.payload.data() as { name: string }
+          return obj.name
+        })
+      })
+    )
+
     this.service.setLastRefreshData('edit');
     this.getStatus()
     let username = this.authService.username
@@ -92,6 +113,42 @@ export class NavBarComponent implements OnInit {
       this.service.setTrivia();
     }
   }
+
+  onRequest() {
+    if (confirm("You are requesting support. Are you sure you want to submit this request?"))
+      this.authService.user.switchMap(user => {
+        let info = this.db.object(`users/${user.uid}`).snapshotChanges().map(el => {
+          return el.payload.toJSON()
+        })
+        return info
+      }).subscribe((user: { name: string, phoneNum: string, client: string, active: boolean, agent: string, lastConnected: string, role: string, username: string }) => {
+        delete user.username
+        delete user.role
+        delete user.lastConnected
+        delete user.agent
+        this.afs.collection('error').add(user).then(ref => {
+          console.log(ref.id)
+        })
+      })
+  }
+
+  openSignUpDialog() {
+    const dialogRef = this.dialog.open(SignupComponent, {
+      width: '500px',
+      height: '75vh',
+      disableClose: true,
+      data: {}
+    });
+
+
+    //SET BEER DATA FROM FORM
+    dialogRef.afterClosed()
+      .subscribe(result => {
+        if (result) {
+          this.authService.signupUser(result)
+        }
+      })
+    }
 
   onForceRefresh() {
     this.service.forceRefresh()

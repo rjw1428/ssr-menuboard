@@ -7,4 +7,6 @@ export interface Brewery {
     iconLoc?: string
     icon: string;
     active: boolean;
+    createdBy?: string;
+    modifiedBy?: string;
 }

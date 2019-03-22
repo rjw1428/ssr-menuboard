@@ -1,12 +1,13 @@
 export class Upload {
-    key: string
-    file: File
-    progress: number
-    name: string
+    id?: string
+    file?: File
+    progress?: number
+    displayName: string
     dateAdded: string = new Date().toLocaleString('en-US', { timeZone: 'America/New_York' })
-    url: string
+    fbUrl?: string
+    sourceUrl: string
 
-    constructor (file: File) {
+    constructor(file: File) {
         this.file = file
     }
 }

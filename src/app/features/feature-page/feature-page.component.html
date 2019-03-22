@@ -2,7 +2,7 @@
   <div class="bg">
     <div [@fade]="featuredList.length">
       <div *ngFor="let featured of featuredList; let i=index">
-        <app-feature [feature]="featured" *ngIf="i==featureService.activeFeatureNum"></app-feature>
+        <!-- <app-feature2 [feature]="featured"></app-feature2> -->
       </div>
     </div>
   </div>

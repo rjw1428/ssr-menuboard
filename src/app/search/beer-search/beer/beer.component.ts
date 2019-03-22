@@ -24,22 +24,18 @@ export class BeerComponent implements OnInit {
     this.getIcon()
   }
   getIcon() {
+    let refPath: string
     if (this.beer.icon)
-      this.storage.ref(environment.itemIconRootAddress + this.beer.icon).getDownloadURL().toPromise()
-        .then(value => {
-          this.displayIcon = value
-        })
-        .catch(e => {
-          this.displayIcon = '../../../assets/404icon.png'
-        })
-    else
-      this.storage.ref(environment.itemIconRootAddress + this.beer.brewery.icon).getDownloadURL().toPromise()
-        .then(value => {
-          this.displayIcon = value
-        })
-        .catch(e => {
-          this.displayIcon = '../../../assets/404icon.png'
-        })
+      refPath = environment.itemIconRootAddress + this.beer.icon
+    else refPath = environment.itemIconRootAddress + this.beer.brewery.icon
+    this.storage.ref(refPath).getDownloadURL().toPromise()
+      .then(value => {
+        this.displayIcon = value
+      })
+      .catch(e => {
+        this.displayIcon = '../../../assets/404icon.png'
+        this.service.logImageError(this.beer.brewery.icon)
+      })
   }
   buildLocation() {
     if (this.beer.brewery.city && this.beer.brewery.state)

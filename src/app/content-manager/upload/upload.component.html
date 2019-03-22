@@ -1,13 +1,51 @@
-<div class="container block">
+<!-- <div class="container block">
   <div class="row">
     <div class="col-sm-6">
       <p><button class="btn btn-danger" (click)="removeFile(file.key, file.name)">X</button>{{file.name}} </p>
-      <p>{{file.url}} </p>
+      <p>{{file.name}} </p>
 
     </div>
     <div class="col-sm-6 float-left">
-      <img [src]="file.url">
+      <img [src]="file.fbUrl">
     </div>
   </div>
   <hr>
+</div> -->
+
+<div class="containter" [ngClass]="{'selected':selected, 'not-selected':!selected}" (click)="onClick()">
+  <div class="row">
+    <div class="col-sm-6">
+      <div class="row">
+        <div class="col-12">
+          <h3>{{file.displayName}}</h3>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <p>Source Path: {{file.sourceUrl}}</p>
+        </div>
+        <div class="col-12">
+          <p>Date Added: {{file.dateAdded}}</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6">
+      <div class="row">
+        <div class="col-12 text-center">
+          <h4>Preview:</h4>
+        </div>
+        <div class="col-12">
+          <img class="img-thumbnail img-fluid mx-auto d-block" [src]="file.fbUrl"
+            *ngIf="file.sourceUrl.substring(file.sourceUrl.length-4)!='.mp4'; else videoThumbnail">
+          <ng-template #videoThumbnail>
+            <div class="col-12">
+              <video #video autoplay loop [muted]="true" class="img-thumbnail img-fluid mx-auto d-block">
+                <source [src]="file.fbUrl" type="video/mp4" (error)="loadError($event)">
+              </video>
+            </div>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

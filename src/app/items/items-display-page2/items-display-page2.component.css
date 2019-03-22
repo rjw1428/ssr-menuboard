@@ -9,6 +9,7 @@
     display: block;
     position: relative;
     width: 50%;
+    padding-right: 10px;
     /* transform: translate(-50%,0) */
     /* overflow: hidden; */
 }

@@ -1,22 +1,23 @@
 import { Injectable } from '@angular/core';
-import * as firebase from 'firebase/app';
 import 'firebase/auth'
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { Observable, BehaviorSubject } from 'rxjs/Rx';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { environment } from '@environments/environment.prod';
 import { AngularFireDatabase } from '@angular/fire/database';
-import { UsernamePipe } from '@shared/pipes/username.pipe'
 import { AngularFirestore } from '@angular/fire/firestore';
 import { first, switchMap, map } from 'rxjs/operators';
+import { database } from 'firebase/app';
+import { UsernamePipe } from '@shared/pipes/username.pipe';
 
 export interface User {
-  active: boolean;
-  agent: string;
   client: string;
-  lastConnected: string;
   name: string;
-  username: string;
+  phoneNum: string;
+  email: string;
+  password: string;
+  role: string;
+  id?: string
 }
 @Injectable()
 export class AuthService {
@@ -32,10 +33,12 @@ export class AuthService {
     this.user = firebaseAuth.authState;
   }
 
-  signupUser(email: string, password: string, role: string) {
-    this.firebaseAuth.auth.createUserWithEmailAndPassword(email, password)
+  signupUser(newUser: User) {
+    this.firebaseAuth.auth.createUserWithEmailAndPassword(newUser.email, newUser.password)
       .then(response => {
-        this.signinUser(email, password, role)
+        delete newUser.password
+        this.firebaseData.list('users/').set(response.user.uid, newUser)
+        this.signinUser(newUser)
       })
       .then(() => {
         var actionCodeSettings = {
@@ -44,7 +47,7 @@ export class AuthService {
         };
         this.firebaseAuth.auth.currentUser.sendEmailVerification(actionCodeSettings)
           .then(function () {
-            alert("Authentication Email sent to: " + email)
+            alert("Authentication Email sent to: " + newUser.email)
           }).catch(function (error) {
             alert("Error occured while sending email verification.")
           });
@@ -56,12 +59,12 @@ export class AuthService {
 
   defaultLogin() {
     this.firebaseAuth.auth.signInAnonymously().then((response) => {
-      console.log(firebase.auth().currentUser.uid + ": CONNECTED")
+      console.log(this.firebaseAuth.auth.currentUser.uid + ": CONNECTED")
     })
   }
 
   disconnectUser(screenKey: string) {
-    firebase.database().ref().child('status/' + screenKey).onDisconnect().update({
+    database().ref().child('status/' + screenKey).onDisconnect().update({
       active: false
     })
     // if (this.firebaseAuth.auth.currentUser.isAnonymous)
@@ -69,12 +72,13 @@ export class AuthService {
     this.firebaseAuth.auth.signOut();
   }
 
-  signinUser(email: string, password: string, role?: string) {
+  signinUser(user: User) {
     this.firebaseAuth
       .auth
-      .signInWithEmailAndPassword(email, password)
+      .signInWithEmailAndPassword(user.email, user.password)
       .then(response => {
-        firebase.auth().currentUser.getIdToken()
+        this.username = new UsernamePipe().transform(user.email)
+        this.firebaseAuth.auth.currentUser.getIdToken()
           .then((token: string) => this.token = token)
           .then(() => { this.updateUser(response.user) })
         this.firebaseData.object(`users/${response.user.uid}/client`).valueChanges().pipe(
@@ -96,7 +100,7 @@ export class AuthService {
   }
 
   getToken() {
-    firebase.auth().currentUser.getIdToken()
+    this.firebaseAuth.auth.currentUser.getIdToken()
       .then((token: string) => this.token = token)
     return this.token;
   }
@@ -106,12 +110,12 @@ export class AuthService {
       lastConnected: this.timestamp(),
       agent: navigator.userAgent,
       active: 'true',
-      username: user.email
+      //username: user.email
     })
     this.firebaseData.list('status/edit/').update('lastUpdate', {
       user: user.email
     }).then(() => {
-      firebase.database().ref().child('users/' + user.uid).onDisconnect().update({
+      database().ref().child('users/' + user.uid).onDisconnect().update({
         active: 'false'
       })
     })

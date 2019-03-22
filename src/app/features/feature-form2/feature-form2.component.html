@@ -1,0 +1,98 @@
+<h1 mat-dialog-title *ngIf="!input.pageTitle; else edit">Add Featured Item</h1>
+<ng-template #edit>
+  <h1 mat-dialog-title>Edit Featured Items</h1>
+</ng-template>
+<div mat-dialog-content [formGroup]="featureForm">
+  <div class="containter">
+    <div class="row d-100">
+      <div class="col-6">
+        <div class="row">
+          <div class="col-12">
+            <mat-form-field>
+              <input matInput formControlName="pageTitle" placeholder="Page Title...">
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <mat-form-field>
+              <input matInput formControlName="itemTitle" placeholder="Item Title...">
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <mat-form-field>
+              <textarea matInput rows=5 formControlName="itemCaption" placeholder="Item Description..."></textarea>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+      <div class="col-6">
+        <img [src]="getPreviewSource()" *ngIf="isSourceImage(); else videoThumbnail">
+        <ng-template #videoThumbnail>
+          <video #video autoplay loop [muted]="true" style="width: 100%">
+            <source [src]="getPreviewSource()" type="video/mp4" (error)="loadError($event)">
+          </video>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-6">
+      <mat-form-field>
+        <mat-select formControlName="img" placeholder="Select Image...">
+          <mat-option *ngFor="let img of contentList | async" [value]="img">
+            {{img.displayName}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="col-6">
+      <button mat-raised-button color="basic" (click)="openContentDialog()">
+        <i class="fas fa-plus fa-lg"></i>
+      </button>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <mat-form-field>
+        <mat-label>Select Layout</mat-label>
+        <mat-select formControlName="layout" placeholder="Layout">
+          <mat-option *ngFor="let layout of layouts" [value]="layout.value">
+            {{layout.name}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-6">
+      <mat-form-field>
+        <mat-label>Set Start Date (Optional)</mat-label>
+        <input matInput formControlName="startDate" placeholder="MM/DD/YYYY">
+      </mat-form-field>
+    </div>
+    <div class="col-6">
+      <mat-form-field>
+        <mat-label>Set End Date (Optional)</mat-label>
+        <input matInput formControlName="endDate" placeholder="MM/DD/YYYY">
+      </mat-form-field>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-6">
+      <mat-checkbox formControlName="active" labelPosition="before">Active: </mat-checkbox>
+    </div>
+  </div>
+  <hr>
+</div>
+
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">Cancel</button>
+  <button *ngIf="!input.pageTitle; else save" mat-raised-button color="primary" [mat-dialog-close]="onAdd()"
+    [disabled]="!featureForm.valid">Add</button>
+  <ng-template #save>
+    <button mat-raised-button color="primary" [disabled]="!featureForm.valid" [mat-dialog-close]="onAdd()">Save</button>
+  </ng-template>
+</div>

@@ -6,27 +6,18 @@
 <!-- PAGES -->
 <div (click)="onClick()">
   <div [ngSwitch]="mode">
-    <div *ngSwitchCase="'none'">
-      
-      <!-- <app-items-display-page2 [delay]="delay" (displayComplete)="nextPage()" (columnComplete)="toggleTimer()" *ngIf="pageNum==1"></app-items-display-page2>
-      <app-items-display-page [delay]="delay" (displayComplete)="nextPage()" (columnComplete)="toggleTimer()" *ngIf="pageNum==1"></app-items-display-page>
-      <app-specials-page [delay]="delay" (displayStarted)="logoAnimation()" (displayComplete)="resetLogo()" *ngIf="pageNum==2"></app-specials-page>
-      <app-feature-page [delay]="delay" [numberOfConsecutiveFeatures]="consecFeatureNum" (featureComplete)="toggleTimer()"
-        (displayComplete)="nextPage()" *ngIf="pageNum==3"></app-feature-page>
-      <app-static [delay]="delay" (displayComplete)="nextPage()" *ngIf="pageNum==4"></app-static>
-      <app-timer [delay]="delay" *ngIf="startTimer"></app-timer> -->
-    <app-single-page></app-single-page>
-    
+    <div *ngSwitchCase="'none'" appScreenOrientation>
+      <app-single-page [vertical]="isVertical"></app-single-page>
     </div>
     <div *ngSwitchCase="'static'">
       <app-static></app-static>
     </div>
     <div *ngSwitchCase="'slideshow'">
-      <app-feature-page [delay]="delay"></app-feature-page>
+      <!-- <app-feature2-page ></app-feature2-page>  -->
+      <!-- [delay]="delay" -->
     </div>
     <div *ngSwitchCase="'trivia'">
       <app-trivia-display></app-trivia-display>
     </div>
   </div>
 </div>
-

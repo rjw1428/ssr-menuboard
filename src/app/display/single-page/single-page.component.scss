@@ -3,6 +3,7 @@
     --height: 100vh;
     --border-padding-width: 2.5vw;
     --border-padding-height: 2.5vh;
+    
 }
 
 .main {
@@ -10,16 +11,30 @@
     height: 100vh;
     width: 100vw;
     //MAIN COLOR
-    background-color: rgb(7, 61, 19);
+    //background-color: rgb(119, 0, 0);
+    background-color: rgb(0,0,0);
     background-image:
     //BACKSLASH LINE
     repeating-linear-gradient(120deg, rgba(255,255,255,.15), rgba(255,255,255,.15) 1px, transparent 1px, transparent 60px),
     //FORWARD SLASH LINE
     repeating-linear-gradient(60deg, rgba(255,255,255,.15), rgba(255,255,255,.15) 1px, transparent 1px, transparent 60px),
-    linear-gradient(60deg, rgba(0,0,0,.1) 25%, transparent 25%, transparent 75%, rgba(0,0,0,.1) 75%, rgba(0,0,0,.1)),
-    linear-gradient(120deg, rgba(0,0,0,.1) 25%, transparent 25%, transparent 75%, rgba(0,0,0,.1) 75%, rgba(0,0,0,.1));
+    
+    linear-gradient(60deg, rgba(25, 25, 25, 0.5) 25%, transparent 25%, transparent 75%, rgba(25,25,25,.5) 75%, rgba(25,25,25,.5)),
+    linear-gradient(120deg, rgba(25,25,25,.5) 25%, transparent 25%, transparent 75%, rgba(25,25,25,.5) 75%, rgba(25,25,25,.5));
     background-size: 70px 120px;
     overflow: hidden;
+}
+
+.alt-bg{
+    position: absolute;
+    width:100vw;
+    height: 100vh;
+    z-index: 0;
+  background: url("https://firebasestorage.googleapis.com/v0/b/ssrwebsite-1428.appspot.com/o/content%2Fpointlomaseafood%2FIMG_326705.jpg?alt=media&token=256afd80-3abb-421b-b3ce-ca973b67f19f");
+  background-repeat: no-repeat;
+  background-size: auto;
+  opacity: 1;
+  overflow: hidden;
 }
 
 .box {
@@ -42,7 +57,7 @@
     margin-bottom: var(--border-padding-height);
     width: calc(var(--width) - 2 * var(--border-padding-width));
     height: calc(var(--height) - 2 * var(--border-padding-height));
-    // border: 5px solid white;
+    border: 5px solid rgba(170, 145, 0, 0.753);
     border-radius: 10px;
     background-color: rgba(0,0,0, .5);
     box-shadow: 10px 10px 10px black;
@@ -59,4 +74,5 @@
     left: 50%;
     top: 50%;
     z-index: 0;
+    opacity: .4;
 }

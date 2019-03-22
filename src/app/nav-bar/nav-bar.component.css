@@ -12,3 +12,13 @@ li {
 .sub-option {
     margin-left: 10px;
 }
+
+.navbar-toggler {
+    /* display: inline-block */
+}
+
+.outlet {
+    position: relative;
+    margin-top: 50px;
+    
+}

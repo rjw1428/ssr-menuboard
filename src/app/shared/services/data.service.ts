@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore, AngularFirestoreCollection, DocumentChangeAction } from '@angular/fire/firestore'
+import { AngularFirestore, AngularFirestoreCollection, DocumentChangeAction, AngularFirestoreDocument } from '@angular/fire/firestore'
 import { Beer } from '@shared/interfaces/beer';
 import { Brewery } from '@shared/interfaces/brewery';
 import { Observable, defer, combineLatest } from 'rxjs';
@@ -11,6 +11,7 @@ import { MatDialog, MatSnackBar } from '@angular/material';
 import { AuthService } from './auth.service';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { ActivatedRoute, Params } from '@angular/router';
+import { FeaturedItem } from '@shared/interfaces/featured-item';
 
 
 export const buildBeer = (
@@ -18,60 +19,47 @@ export const buildBeer = (
 ) => {
   return source =>
     defer(() => {
-      let rawData: DocumentChangeAction<Localbeer>[]
-      let beerAppendedData: { bulk: DocumentChangeAction<Localbeer>, beerHold: Beer }[]
-      let breweryAppendedData: { bulk: DocumentChangeAction<Localbeer>, beerHold: Beer, breweryHold: Brewery }[]
+      let rawData: Observable<Localbeer[]>
+      let beerAppendedData: Localbeer[]
       return source.pipe(
-        switchMap((data: DocumentChangeAction<Localbeer>[]) => {
-
-          //Save the parent data state
-          rawData = data;
+        switchMap((data: Observable<Localbeer[]>) => {
+          rawData = data
           const beers = [];
-
-          rawData.forEach(localBeer => {
-            let obj = localBeer.payload.doc.data() as Localbeer
-            beers.push(afs.doc('masterBeerList/' + obj['beerID'])
-              .valueChanges()
+          rawData.forEach(local => {
+            beers.push(afs.doc('masterBeerList/' + local['beerID'])
+              .snapshotChanges().map((rawBeer) => {
+                let buildBeer=rawBeer.payload.data()
+                buildBeer['id']=rawBeer.payload.id
+                return buildBeer
+              })
             );
           })
           return combineLatest(beers)
         }),
         map(joins => {
           return rawData.map((v, i) => {
-            let obj = { ['bulk']: rawData[i], ['beerHold']: joins[i] }
+            let obj = { ...rawData[i], ['beer']: joins[i] }
             return obj
           })
         }),
-        switchMap((data: { bulk: DocumentChangeAction<Localbeer>, beerHold: Beer }[]) => {
-          //Save the parent data state
+        switchMap((data: Localbeer[]) => {
           beerAppendedData = data;
           const brews = [];
-
-          beerAppendedData.forEach(bulkData => {
-            let brewID = bulkData.beerHold.masterBreweryKey
+          beerAppendedData.forEach((item, i) => {
+            let brewID = item.beer.masterBreweryKey
             brews.push(afs.doc('masterBreweryList/' + brewID)
               .valueChanges()
             );
           })
           return combineLatest(brews)
         }),
-        //Takes result of switchmap and joins to parent
-        map(joins => {
-          return beerAppendedData.map((v, i) => {
-            return { ['bulk']: beerAppendedData[i].bulk, ['beerHold']: beerAppendedData[i].beerHold, ['breweryHold']: joins[i] }
+        map((joins: Brewery) => {
+          return beerAppendedData.map((val, i) => {
+            let x = val.beer
+            x['brewery'] = joins[i]
+            return { ...val, ['beer']: x }
           })
         }),
-        map((vals: { bulk: DocumentChangeAction<Localbeer>, beerHold: Beer, breweryHold: Brewery }[]) => {
-          return vals.map((val) => {
-            let constructedBeer = val.beerHold as Beer
-            constructedBeer['brewery'] = val.breweryHold as Brewery
-
-            let obj = val.bulk.payload.doc.data()
-            obj['id'] = val.bulk.payload.doc.id
-            obj['beer'] = constructedBeer
-            return obj as Localbeer
-          })
-        })
       )
     })
 }
@@ -101,7 +89,7 @@ export const docJoin = (
               .valueChanges()
             );
             // if (obj.icon)
-              // imgs$.push(storage.ref(environment.itemIconRootAddress + obj.icon).getDownloadURL())
+            // imgs$.push(storage.ref(environment.itemIconRootAddress + obj.icon).getDownloadURL())
             // else imgs$.push(Observable.of(100))
           })
           //console.log(imgs$)
@@ -145,18 +133,21 @@ export const docJoin = (
 export class DataService {
   beerFirestoreList: AngularFirestoreCollection
   breweryFirestoreList: AngularFirestoreCollection
-  localFirestoreList: AngularFirestoreCollection
+  localFirestoreList: AngularFirestoreDocument
   beerCollection: Observable<Beer[]>
   breweryCollection: Observable<Brewery[]>
   localCollection: Observable<Localbeer[]>
+  propertiesFirestoreList: AngularFirestoreDocument
   selectedBeer: Beer = null
   selectedBrewery: Brewery = null
   selectedLocal: Localbeer;
+  selectedIndex: number;
+  FeaturedCollection: Observable<FeaturedItem[]>;
   constructor(private afs: AngularFirestore,
     private storage: AngularFireStorage) {
 
     this.beerFirestoreList = this.afs.collection('masterBeerList', ref => {
-      return ref.where('active', '==', true).limit(100).orderBy('name')
+      return ref.where('active', '==', true).orderBy('name') //.limit(100)
     })
     this.beerCollection = this.beerFirestoreList.snapshotChanges().pipe(
       tap(reads => console.log("BEERS: " + reads.length)),
@@ -202,18 +193,49 @@ export class DataService {
   }
 
   getLocalCollection(client: string) {
-    this.localFirestoreList = this.afs.collection('clients').doc(client).collection('beerList', ref => {
-      return ref.limit(100)
+    this.localFirestoreList = this.afs.collection('clients').doc(client)
+    if (this.localFirestoreList) {
+      this.localCollection = this.localFirestoreList.snapshotChanges().pipe(
+        map(val => {
+          let x = val.payload.data() as { beerList: Localbeer[], featuresList: FeaturedItem[] }
+          return x.beerList
+        }),
+        buildBeer(this.afs),
+        map((vals: Localbeer[]) => {
+          return vals
+        }),
+        shareReplay(1),
+      )
+      return this.localCollection
+    } else
+      return []
+  }
+
+  getBarProperties(client: string) {
+    this.propertiesFirestoreList = this.afs.collection('clients').doc(client)
+    return this.propertiesFirestoreList
+  }
+
+  getFeaturedCollection(client: string) {
+    this.localFirestoreList = this.afs.collection('clients').doc(client)
+    if (this.localFirestoreList) {
+      this.FeaturedCollection = this.localFirestoreList.snapshotChanges().pipe(
+        map(val => {
+          let x = val.payload.data() as { beerList: Localbeer[], featuresList: FeaturedItem[] }
+          return x.featuresList
+        }),
+        shareReplay(1),
+      )
+      return this.FeaturedCollection
+    } else
+      return []
+  }
+
+  logImageError(imageName: String) {
+    this.afs.collection('error').add({
+      icon: imageName,
+      date: this.timestamp()
     })
-    this.localCollection = this.localFirestoreList.snapshotChanges().pipe(
-      tap(reads => console.log("LOCAL: " + reads.length)),
-      buildBeer(this.afs),
-      map((vals: Localbeer[]) => {
-        return vals
-      }),
-      shareReplay(1),
-    )
-    return this.localCollection
   }
 
   timestamp() {

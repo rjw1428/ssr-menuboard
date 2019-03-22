@@ -1,14 +1,27 @@
-<div class="bg">
-  <div *ngIf="featuredList.length>0; else blank">
-    <div class="main" *ngFor="let featured of featuredList; let i=index">
-      <app-feature [feature]="featured" [editable]=true (addFeature)="insertParent($event)" (remove)="onRemove($event)" (addChild)="insertChild($event)"
-        (shiftUp)="onShiftUp($event)" (shiftDown)="onShiftDown($event)">
-      </app-feature>
+<div class="container">
+  <div class="row">
+    <div class="col-12" cdkDropList  (cdkDropListDropped)="drop($event)">
+      <div *ngFor="let featured of featuredList; let i=index" cdkDrag>
+        <div class="row">
+          <div style="color: grey;" class="col-1 float-right align-self-center" cdkDragHandle>
+            <!-- <i class="fas fa-grip-horizontal fa-3x"></i> -->
+            <i class="fas fa-grip-vertical fa-3x"></i>
+          </div>
+          <div class="col-11">
+            <app-feature2 [feature]="featured" [selected]="isSelected(i)" [edit]="true" (click)="onClick(i)"></app-feature2>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
-  <ng-template #blank>
-    <button class="btn btn-success btn-lg" (click)="addFeature()">Add Feature</button>
-  </ng-template>
-  <app-feature-form *ngIf="featureService.editMode==true" (formSubmitted)="onInsertComplete($event)" (formClosed)="onClose()"></app-feature-form>
+</div>
+<div class="main bottom right">
+  <button type="button" mat-raised-button color="primary" (click)="addFeature()">Add Feature</button>
+  <br>
+  <button type="button" mat-raised-button color="warn" (click)="editFeature()" *ngIf="selected!=null">Edit
+    Feature</button>
+  <br>
+  <button type="button" mat-raised-button color="accent" (click)="deleteFeature()" *ngIf="selected!=null">Delete
+    Feature</button>
 </div>

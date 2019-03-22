@@ -13,6 +13,9 @@ import { Item2Component } from '@item/item2/item2.component';
 import { DataService } from './services/data.service';
 import { RoutingModule } from 'app/routing/routing.module';
 import { BrowserModule } from '@angular/platform-browser';
+import { Feature2Component } from '@features/feature2/feature2.component';
+import { ImgOrientationDirective } from './directives/img-orientation.directive';
+import { ScreenOrientationDirective } from './directives/screen-orientation.directive';
 
 @NgModule({
   imports: [
@@ -27,14 +30,11 @@ import { BrowserModule } from '@angular/platform-browser';
     MatSelectModule,
     MatAutocompleteModule,
     MatSnackBarModule,
-    MatAutocompleteModule,
     MatIconModule,
     MatCheckboxModule,
     ScrollDispatchModule,
-    FeaturesModule,
     RoutingModule,
     BrowserModule,
-
   ],
   declarations: [
     UsernamePipe,
@@ -42,7 +42,9 @@ import { BrowserModule } from '@angular/platform-browser';
     AbvPipe,
     TitlecasePipe,
     Item2Component,
-
+    Feature2Component,
+    ImgOrientationDirective,
+    ScreenOrientationDirective
   ],
   exports: [
     UsernamePipe,
@@ -50,7 +52,7 @@ import { BrowserModule } from '@angular/platform-browser';
     AbvPipe,
     TitlecasePipe,
     Item2Component,
-
+    Feature2Component,
     RoutingModule,
     CommonModule,
     FormsModule,
@@ -67,7 +69,6 @@ import { BrowserModule } from '@angular/platform-browser';
     MatIconModule,
     MatCheckboxModule,
     ScrollDispatchModule,
-    FeaturesModule,
   ],
   providers: [DataService]
 })

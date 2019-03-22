@@ -20,7 +20,7 @@ import { trigger, transition, query, animate, style } from '@angular/animations'
   ]
 })
 export class FeaturePageComponent implements OnInit {
-  @Input() delay: number;
+  @Input() delay: number=10;
   @Input() numberOfConsecutiveFeatures: number;
   @Input() activePage: number;
   @Output() displayComplete = new EventEmitter<{}>()
@@ -37,22 +37,22 @@ export class FeaturePageComponent implements OnInit {
 
   ngOnInit() {
     console.log("FEATURES START")
-    this.featureService.getFeaturedList(environment.featureRootAddress).snapshotChanges().forEach(featuredItems => {
-      this.featuredList = []
-      featuredItems.forEach(element => {
-        var y = element.payload.toJSON() as FeaturedItem;
-        y['key'] = element.key
-        if (this.setActiveByDate(y) && y.active) {
-          this.featuredList.push(y)
-        }
-      })
+    // this.featureService.getFeaturedList(environment.featureRootAddress).snapshotChanges().forEach(featuredItems => {
+    //   this.featuredList = []
+    //   featuredItems.forEach(element => {
+    //     var y = element.payload.toJSON() as FeaturedItem;
+    //     y['key'] = element.key
+    //     if (this.setActiveByDate(y) && y.active) {
+    //       this.featuredList.push(y)
+    //     }
+    //   })
       // console.log(this.featuredList.length)
       // console.log("ACTIVE FEATURE NUM: " + this.featureService.activeFeatureNum)
       // console.log("CONSEC NUM: " + this.numberOfConsecutiveFeatures)
       // console.log("PARENT COUNT: " + this.featureService.parentDisplayedCount)
-      this.featureService.parentDisplayedCount = 0
-      this.featuredList.sort((el1, el2) => el1.order - el2.order)
-    })
+      // this.featureService.parentDisplayedCount = 0
+      // this.featuredList.sort((el1, el2) => el1.order - el2.order)
+    //})
 
     //SET COMPLETION INTERVAL
     // console.log(this.featureService.activeFeatureNum)
@@ -73,25 +73,25 @@ export class FeaturePageComponent implements OnInit {
 
   setActiveByDate(feature: FeaturedItem): boolean {
     let isActive: boolean = true
-    let dateStore = feature.startDate.split("/")
-    let start = new Date(+dateStore[2], +dateStore[0] - 1, +dateStore[1], 4, 0, 0)
-    dateStore = feature.endDate.split("/")
-    let end = new Date(+dateStore[2], +dateStore[0] - 1, (+dateStore[1] + 1), 4, 0, 0)
-    let today = new Date()
-    if (feature.startDate != '') {
-      if (today >= start)
-        isActive = true
-      else
-        isActive = false
-    }
+    // let dateStore = feature.startDate.split("/")
+    // let start = new Date(+dateStore[2], +dateStore[0] - 1, +dateStore[1], 4, 0, 0)
+    // dateStore = feature.endDate.split("/")
+    // let end = new Date(+dateStore[2], +dateStore[0] - 1, (+dateStore[1] + 1), 4, 0, 0)
+    // let today = new Date()
+    // if (feature.startDate != '') {
+    //   if (today >= start)
+    //     isActive = true
+    //   else
+    //     isActive = false
+    // }
 
-    if (feature.endDate != '' && isActive)
-      if (today >= end)
-        isActive = false
+    // if (feature.endDate != '' && isActive)
+    //   if (today >= end)
+    //     isActive = false
 
-    if (feature.endDate != '' || feature.startDate != '')
-      if (feature.active != isActive)
-        this.featureService.setActive(feature.key, isActive)
+    // if (feature.endDate != '' || feature.startDate != '')
+    //   if (feature.active != isActive)
+    //     this.featureService.setActive(feature.key, isActive)
 
     if (isActive)
       return true

@@ -1,8 +1,8 @@
 @font-face {
     font-family: "American Typewriter";
-    src: url("../../../assets/American.ttf");
+    src: url("../../../assets/fonts/American.ttf");
     font-family: "Blackwood Castle";
-    src: url("../../../assets/Blackwood.ttf");
+    src: url("../../../assets/fonts/Blackwood.ttf");
 }
 
 ::ng-deep:root {

@@ -3,7 +3,7 @@
   <p>Beer Information:</p>
   <mat-form-field class="example-full-width">
     <input type="hidden" formControlName="id">
-    <input type="hidden" formControlName="masterBreweryKey">
+    <!-- <input type="hidden" formControlName="masterBreweryKey"> -->
     <input matInput formControlName="brewery" placeholder="Brewery Name..." [matAutocomplete]="auto">
     <img matPrefix *ngIf="beerForm.get('brewery').valid && isSelectedValue(beerForm.get('brewery'))" class="example-option-img"
       aria-hidden [src]="parseSelectionForIcon(beerForm.get('brewery'))" height="40">
@@ -56,5 +56,5 @@
 </div>
 <div mat-dialog-actions>
   <button mat-button (click)="onNoClick()">Cancel</button>
-  <button mat-raised-button color="primary" [mat-dialog-close]="onAdd()" cdkFocusInitial>Ok</button>
+  <button mat-raised-button color="primary" [disabled]="!beerForm.valid" [mat-dialog-close]="onAdd()">Ok</button>
 </div>

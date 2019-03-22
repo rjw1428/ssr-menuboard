@@ -1,53 +1,43 @@
-<!-- <div *ngIf="itemService.showItemForm">
-  <app-item-form></app-item-form>
+<!-- MAIN LIST -->
+<div class="container bg">
+  <!-- <div class="bg"></div> -->
+  <!-- <div class="col-3" (click)="clearSelect()"></div> -->
+  <div class="col-12" cdkDropList (cdkDropListDropped)="drop($event)">
+    <div *ngFor="let beer of itemsList; let i=index" cdkDrag>
+      <div class="row h-100">
+        <div style="color: grey;" class="col-1 float-right align-self-center" cdkDragHandle>
+          <!-- <i class="fas fa-grip-horizontal fa-3x"></i> -->
+          <i class="fas fa-grip-vertical fa-3x"></i>
+        </div>
+        <div class="col-11">
+          <app-item2 [item]="beer" (click)="onClick(i)" [edit]="true" [selected]="isSelected(i)"
+            [displayProperties]="properties">
+          </app-item2>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- <div class="col-3" (click)="clearSelect()"></div> -->
 </div>
 
-<div class="container">
-  <button class="btn btn-success float-right" (click)="saveSort()">Save Sort</button>
-  <div class="dropdown float-right">
-    <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
-      aria-haspopup="true" aria-expanded="false">
-      Sort
-    </button>
-    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-      <a class="dropdown-item" (click)="sortProperty('company', 'asc')">Sort By Name</a>
-      <a class="dropdown-item" (click)="sortProperty('lastModified', 'asc')">Sort By Date</a>
-      <a class="dropdown-item" (click)="sortProperty('lastModified', 'desc')">Sort By Date (Reverse)</a>
-      <a class="dropdown-item" (click)="sortProperty('order', 'asc')">Sort By Taps</a>
-    </div>
-  </div> -->
-<!-- <button class="btn btn-info" (click)="sortProperty('company')">Sort By Name</button>
-  <button class="btn btn-info" (click)="sortProperty('lastModified')">Sort By Date</button>
-  <button class="btn btn-danger" (click)="sortProperty('order')">Remove Sort</button> -->
 
-<!-- <div *ngFor="let item of filterList">
-    <app-item [item]="item" [movable]="sortable" [editMode]="editMode" (itemAdded)="onInsertBelow($event)" (itemEdited)="onEdit($event)"
-      (itemDeleted)="onDelete($event)" (itemShiftUp)="onShiftUp($event)" (itemShiftDown)="onShiftDown($event)"
-      (itemOut)="onOut($event)" (iconOff)="onIconOff($event)"></app-item>
-  </div>
-</div> -->
 
-<div class="container">
-  <div class="row justify-content-center" *ngFor="let beer of itemsList | async; let i=index ">
-    <div class="col-sm-6">
-      <app-item2 [item]="beer" (click)="onClick(beer)" [selected]="isSelected(beer)"></app-item2>
-    </div>
-  </div>
+<!-- BEER CONTROL BUTTONS -->
+<div class="main bottom right">
+  <button type="button" mat-raised-button color="primary" (click)="addBeer()">Add Beer</button>
+  <br>
+  <button type="button" mat-raised-button color="default" (click)="soldOutBeer()"
+    *ngIf="selected!=null">{{getSoldOutState()}}</button>
+  <br>
+  <button type="button" mat-raised-button color="warn" (click)="editBeer()" *ngIf="selected!=null">Edit
+    Beer</button>
+  <br>
+  <button type="button" mat-raised-button color="accent" (click)="removeBeer()" *ngIf="selected!=null">Delete
+    Beer</button>
 </div>
 
-<div class="container main">
-  <div class="row">
-    <div class="col-sm-1 float-right">
-      <button type="button" mat-raised-button color="default" (click)="soldOutBeer()" *ngIf="selected">{{getSoldOutState()}}</button>
-      <button type="button" mat-raised-button color="warn" (click)="editBeer()" *ngIf="selected">Edit
-        Beer</button>
-      <br>
-      <button type="button" mat-raised-button color="accent" (click)="removeBeer()" *ngIf="selected">Delete
-        Beer</button>
-    </div>
-    <div class="col-sm-10"></div>
-    <div class="col-sm-1 align-bottom">
-      <button type="button" mat-raised-button color="primary" (click)="addBeer()">Add Beer</button>
-    </div>
-  </div>
+<!-- PROPERTY BUTTON -->
+<div class="main top right">
+  <button type="button" mat-fab color="accent" (click)="changeViewProperties()"><i
+      class="fas fa-sliders-h fa-2x"></i></button>
 </div>

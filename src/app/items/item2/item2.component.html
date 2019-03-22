@@ -1,49 +1,96 @@
-<!-- <div class="container" [ngStyle]="setColumnStyle()" [ngClass]="{'selected':isSelected()}" (click)="onClick()"> -->
-<!-- <div class="container" [ngStyle]="{'background-color': service.itemSelected.id==item.id?rgba(100,100,100,1):rgba(100,100,100,.4)}" (click)="onClick()"> -->
-<!-- <div class="background" [ngStyle]="setElementStyle()"></div>
-  <div class="blank1"></div>
-  <div class="image-container" [ngStyle]="setIconStyle()"><img *ngIf="displayIcon" [src]="displayIcon"></div>
-  <div class="title-container" [ngStyle]="setTitleStyle()">{{ title |
-    uppercase}}</div>
-  <div class="description-container" [ngStyle]="setNoteStyle()">{{item.beer.description}}</div>
-  <div class="abv-container" [ngStyle]="setAbvStyle()">ABV: {{ item.beer.abv }}</div>
-  <div class="price-container" [ngStyle]="setAbvStyle()">IBU: {{ item.beer.ibu }}</div> -->
-<!-- <div class="price-container">$ 7<sup>00</sup></div> -->
-<!-- <div class="blank2"></div> -->
-<!-- <div class="button-row" *ngIf="editMode">
-    <div class="button-group btn-sm " *ngIf="menuToggle">
-      <button class="btn btn-success add" (click)="onAdd()">Insert</button>
-      <button class="btn btn-warning edit" (click)="onEdit()">Edit</button>
-      <button class="btn btn-danger delete" (click)="onDelete()">Delete</button>
-      <button class="btn btn-default setOut" (click)="onOut()">Out</button>
-      <button *ngIf="movable" class="btn btn-primary down" (click)="onShiftDown()">Shift Down</button>
-      <button *ngIf="movable" class="btn btn-primary up" (click)="onShiftUp()">Shift Up</button>
+<div *ngIf="edit; else display">
+  <h1 class="sold-out-text" *ngIf="item.soldOut">Sold Out</h1>
+  <h1 class="on-deck-text" *ngIf="item.onDeck">Coming Soon</h1>
+  <div class="row" [ngClass]="{'selected':selected, 'not-selected':!selected, 'display':true, 'sold-out':item.soldOut}"
+    (click)="test()">
+    <div class="col-2">
+      <img class="img-container" *ngIf="displayIcon" [src]="displayIcon">
     </div>
-  </div> -->
-<!-- </div> -->
-<div class="row" [ngClass]="{'selected':selected, 'not-selected':!selected, 'display':true, 'sold-out':item.soldOut}"
-  (click)="test()">
-  <div class="col-sm-2 float-left">
-    <img class="img-container" *ngIf="displayIcon" [src]="displayIcon">
-  </div>
-  <div class="col-sm-10">
-    <div class="row">
-      <div class="col-sm-12">
-        <h2 [ngStyle]="{'color':'white'}">{{title}}</h2>
+    <div class="col-10 float-left">
+      <div class="row">
+        <div class="col-10">
+          <h4>{{title}}</h4>
+        </div>
+        <div class="col-2" *ngIf="displayProperties.price">
+          <p>{{item.price}}</p>
+        </div>
       </div>
-    </div>
-    <div class="row">
-      <div class="col-sm-10">
-        <p [ngStyle]="{'color':'white'}">{{item.beer.description}}</p>
+      <div class="row" *ngIf="displayProperties.location">
+        <div class="col-10">
+          <p>{{location}}</p>
+        </div>
       </div>
-      <div class="col-sm-2">
-        <h2 [ngStyle]="{'color':'white'}">{{item.price}}</h2>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-sm-10">
-        <p [ngStyle]="{'color':'white', 'font-style':'italic'}">{{item.local_description}}</p>
+      <div *ngIf="selected">
+        <div class="row">
+          <div class="col-10" *ngIf="displayProperties.description && item.beer">
+            <p>{{item.beer.description}}</p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-10" *ngIf="displayProperties.local_description">
+            <p [ngStyle]="{'color':'white', 'font-style':'italic'}">{{item.local_description}}</p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-3" *ngIf="displayProperties.type && item.beer">
+            <p>Type: {{item.beer.type}}</p>
+          </div>
+          <div class="col-3" *ngIf="displayProperties.abv && item.beer">
+            <p>ABV: {{item.beer.abv}}</p>
+          </div>
+          <div class="col-3" *ngIf="displayProperties.ibu && item.beer">
+            <p>IBU: {{item.beer.ibu}}</p>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </div>
+
+<ng-template #display>
+  <div class="sold-out-text" *ngIf="item.soldOut">Sold Out</div>
+  <h1 class="on-deck-text" *ngIf="item.onDeck">Coming Soon</h1>
+  <div class="container" [ngClass]="{'sold-out':item.soldOut, 'background':true}">
+    <div class="row">
+      <div class="col-2">
+        <img class="img-container" *ngIf="displayIcon" [src]="displayIcon">
+      </div>
+      <div class="col-10">
+        <div class="row">
+          <div class="col-10"
+            *ngIf="displayProperties.price || displayProperties.abv || displayProperties.ibu; else wide">
+            <h3 style="font-size: 3vh">{{title | uppercase}}</h3>
+            <p style="font-size: 2vh" *ngIf="displayProperties.location">{{location}}</p>
+            <p style="font-size: 2vh" *ngIf="displayProperties.description && item.beer">{{item.beer.description}}</p>
+            <p style="font-size: 2vh" *ngIf="displayProperties.local_description"
+              [ngStyle]="{'color':'white', 'font-style':'italic'}">{{item.local_description}}</p>
+            <p style="font-size: 2vh" *ngIf="displayProperties.type && item.beer">Type: {{item.beer.type}}</p>
+            <p style="font-size: 2vh" *ngIf="!item.onSpecial">***Not Included In Happy Hour</p>
+          </div>
+          <div class="col-2">
+            <div class="row">
+              <p style="font-size: 3vh" *ngIf="displayProperties.price" class="font-weight-bold">{{item.price}}</p>
+            </div>
+            <div class="row">
+              <p style="font-size: 2vh" *ngIf="displayProperties.abv && item.beer">ABV: {{item.beer.abv}}</p>
+            </div>
+            <div class="row">
+              <p style="font-size: 2vh" *ngIf="displayProperties.ibu && item.beer">IBU: {{item.beer.ibu}}</p>
+            </div>
+          </div>
+          <ng-template #wide>
+            <div class="col-12">
+              <h3 style="font-size: 3vh">{{title | uppercase}}</h3>
+              <p style="font-size: 2vh" *ngIf="displayProperties.location">{{location}}</p>
+              <p style="font-size: 2vh" *ngIf="displayProperties.description && item.beer">{{item.beer.description}}</p>
+              <p style="font-size: 2vh" *ngIf="displayProperties.local_description"
+                [ngStyle]="{'color':'white', 'font-style':'italic'}">{{item.local_description}}</p>
+              <p style="font-size: 2vh" *ngIf="displayProperties.type && item.beer">Type: {{item.beer.type}}</p>
+              <p style="font-size: 2vh" *ngIf="!item.onSpecial">*** Not Included In Happy Hour ***</p>
+            </div>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>

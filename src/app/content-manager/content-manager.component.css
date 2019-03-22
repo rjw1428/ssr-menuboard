@@ -5,3 +5,30 @@
 .progress {
     margin-bottom: 10px;
 }
+
+.main {
+    position: fixed;
+    z-index: 5;
+    overflow: hidden;
+}
+
+.bottom {
+    bottom: 10vh;
+}
+
+.top {
+    top: 10vh;
+}
+
+button {
+    margin-bottom: 10px;
+}
+
+.left {
+    left: 10vw;
+}
+
+.right {
+    float:right;
+    right: 10vw;
+}

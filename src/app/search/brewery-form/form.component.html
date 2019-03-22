@@ -39,5 +39,5 @@
 </div>
 <div mat-dialog-actions>
   <button mat-button (click)="onNoClick()">Cancel</button>
-  <button mat-raised-button color="primary" [mat-dialog-close]="onAdd()" cdkFocusInitial>Ok</button>
+  <button mat-raised-button color="primary" [disabled]="!breweryForm.valid" [mat-dialog-close]="onAdd()">Ok</button>
 </div>

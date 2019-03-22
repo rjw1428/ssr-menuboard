@@ -11,6 +11,7 @@ import { startWith, map } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 import * as _ from "lodash";
 import { DataService } from '@shared/services/data.service';
+import { AuthService } from '@shared/services/auth.service';
 
 @Component({
   selector: 'app-brewery-search',
@@ -33,7 +34,8 @@ export class BrewerySearchComponent implements OnInit {
     private snackBar: MatSnackBar,
     private fb: FormBuilder,
     private storage: AngularFireStorage,
-    public service: DataService) { }
+    public service: DataService,
+    private authService: AuthService) { }
 
   ngOnInit() {
     this.buildForm()
@@ -153,10 +155,11 @@ export class BrewerySearchComponent implements OnInit {
       if (result) {
         let brewery = Object.assign({ 'icon': new IconNamePipe().transform(result.name), 'active': true }, result)
         let key = brewery.name.toLowerCase()
+        brewery['createdBy'] = this.authService.username
         this.service.breweryFirestoreList.doc(key).set(brewery)
           .then(ref => {
             this.snackBar.open(brewery.name + " Added", "OK", {
-              duration: 2000,
+              duration: 3000,
             })
           })
         this.onClick(this.selectedBrewery)
@@ -182,16 +185,17 @@ export class BrewerySearchComponent implements OnInit {
           let key = brewery.name.id
           delete brewery.name
           brewery['name'] = x
+          brewery['modifiedBy'] = this.authService.username
           console.log(brewery)
           this.service.breweryFirestoreList.doc(key).update(brewery)
             .then(ref => {
               this.snackBar.open(brewery.name + " has been edited", "OK", {
-                duration: 2000,
+                duration: 3000,
               })
             })
           this.service.selectedBrewery = null
         } else this.snackBar.open("An error has occurred while editing " + result.name + " has been edited", "OK", {
-          duration: 2000,
+          duration: 3000,
         })
         this.onClick(this.selectedBrewery)
       }
@@ -209,6 +213,9 @@ export class BrewerySearchComponent implements OnInit {
     return false
   }
 
+  clearSelected() {
+    this.selectedBrewery ? this.selectedBrewery = null : null
+  }
   // checkClick() {
   //   this.listItemSelected = true
   // }

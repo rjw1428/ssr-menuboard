@@ -1,4 +1,4 @@
-<div class="bg">
+<!-- <div class="bg">
   <div *ngIf="currentUpload">
     <div class="progress">
       <div class="progress-bar" role="progressbar" [style.width]="currentUpload?.progress + '%'" aria-valuenow="25"
@@ -19,4 +19,18 @@
       <app-upload [file]="file"></app-upload>
     </div>
   </div>
+</div> -->
+<div class="container">
+  <div class="row" *ngFor="let file of fileList | async">
+    <div class="col-12">
+      <app-upload [file]="file" (click)="onClick(file)" [selected]="isSelected(file)"></app-upload>
+    </div>
+  </div>
+</div>
+
+<div class="main bottom right">
+  <button type="button" mat-raised-button color="primary" (click)="add()">Store Image</button>
+  <br>
+  <button type="button" mat-raised-button color="accent" (click)="remove()" *ngIf="selected!=null">Delete
+    Image</button>
 </div>

@@ -27,10 +27,10 @@ const appRoutes: Routes = [
   { path: 'edit/:client', component: NavBarComponent, canActivate: [ AuthGaurdService],
   children: [
     { path: 'items', component: ItemsControlPage2Component},  //
-    // { path: 'features', component: FeaturesControlPageComponent, loadChildren: '@features/features.module#FeaturesModule'},
+    { path: 'features', component: FeaturesControlPageComponent},
     // { path: 'events', component: SpecialsControlPageComponent},
-    // { path: 'properties', component: PropertiesEditComponent},
-    // { path: 'content', component: ContentManagerComponent},
+    { path: 'properties', component: PropertiesEditComponent},
+    { path: 'content', component: ContentManagerComponent},
     // { path: 'trivia', component: TriviaControlComponent},
     { path: 'beers', component: SearchComponent},
     { path: 'breweries', component: BrewerySearchComponent},

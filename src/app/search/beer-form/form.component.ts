@@ -34,7 +34,9 @@ export class DialogAddBeerDialog {
     private afs: AngularFirestore,
     private storage: AngularFireStorage,
     private fb: FormBuilder,
-    private service: DataService) {
+    private service: DataService,
+    private authService: AuthService
+    ) {
     this.buildForm()
     this.service.beerCollection.subscribe(vals => {
       vals.forEach(val => {
@@ -68,7 +70,7 @@ export class DialogAddBeerDialog {
       this.beerForm = this.fb.group({
         id: this.input.id ? this.input.id : '',
         brewery: [this.input.brewery ? this.input.brewery : '', [Validators.required]],
-        masterBreweryKey: this.input.masterBreweryKey ? this.input.masterBreweryKey : '',
+        // masterBreweryKey: this.input.masterBreweryKey ? this.input.masterBreweryKey : '',
         name: this.input.name ? this.input.name : '',
         abv: this.input.abv ? this.input.abv : ['', [Validators.pattern("^[0-9]*\.?\[0-9]$"), Validators.maxLength(3)]],
         ibu: this.input.ibu ? this.input.ibu : ['', [Validators.pattern("^[0-9]*$"), Validators.maxLength(3)]],
@@ -81,7 +83,7 @@ export class DialogAddBeerDialog {
       this.beerForm = this.fb.group({
         id: '',
         brewery: ['', [Validators.required]],
-        masterBreweryKey: '',
+        // masterBreweryKey: '',
         name: '',
         abv: ['', [Validators.pattern("^[0-9]*\.?\[0-9]$"), Validators.maxLength(3)]],
         ibu: ['', [Validators.pattern("^[0-9]*$"), Validators.maxLength(3)]],
@@ -110,14 +112,16 @@ export class DialogAddBeerDialog {
     //BREWERY INFORMATION FROM FORM
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        let brewery = Object.assign({ 'icon': new IconNamePipe().transform(result.name) }, result)
-        this.breweryCollection.add(brewery)
+        console.log(this.authService.username)
+        let brewery = Object.assign({ 'icon': new IconNamePipe().transform(result.name), 'active': true, 'createdBy': this.authService.username}, result)
+        let key = brewery.name.toLowerCase()
+        brewery['id']=key
+        this.service.breweryFirestoreList.doc(key).set(brewery)
           .then(ref => {
             this.snackBar.open(brewery.name + " Added", "OK", {
-              duration: 2000,
+              duration: 3000,
             })
             //SET NEW BREWERY ON BEER FORM
-            brewery.masterBreweryKey = ref.id
             let addnew = Object.assign({}, this.beerForm.value)
             addnew['brewery'] = brewery
             this.beerForm.setValue(addnew)

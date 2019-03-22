@@ -1,64 +1,135 @@
-<div class="container search-box">
+
+<div class="container search-box" *ngIf="searchMode">
   <h3>Beer Search:</h3>
-  <div class="form-group row" [formGroup]="searchForm">
-    <div class="col-sm-6">
-      <mat-form-field class="example-full-width col-sm-10">
-        <input matInput formControlName="keyword" placeholder="Brewery Name..." [matAutocomplete]="auto_brew">
-        <img matPrefix *ngIf="isSelectedValue(searchForm.get('keyword'))" class="example-option-img" aria-hidden [src]="parseSelectionForIcon(searchForm.get('keyword'))"
-          height="40">
-        <button mat-button *ngIf="searchForm.get('keyword').value" matSuffix mat-icon-button aria-label="Clear" (click)="resetKeyword()">
+  <div class="form-group" [formGroup]="searchForm">
+    <div class="row">
+      <mat-form-field class="col-12">
+        <input class="search" matInput formControlName="beer" placeholder="Search..." [matAutocomplete]="auto_keyword">
+
+        <!-- <img matPrefix *ngIf="isSelectedValue(searchForm.get('keyword'))" class="example-option-img" aria-hidden
+        [src]="parseSelectionForIcon(searchForm.get('keyword'))" height="40"> -->
+        <button mat-button *ngIf="searchForm.get('beer').value" matSuffix mat-icon-button aria-label="Clear"
+          (click)="resetBeer()">
           <mat-icon>close</mat-icon>
         </button>
       </mat-form-field>
-      <button class="example-button-width col-sm-2" mat-raised-button color="basic" (click)="openBrewDialog()"><i class="fas fa-plus fa-lg"></i></button>
-
-      <mat-autocomplete #auto_brew="matAutocomplete" [displayWith]="displayName" (optionSelected)="filterBrewery()">
-        <mat-option *ngFor="let b of filteredBreweries" [value]="b">
-          <img class="example-option-img" aria-hidden [src]="b.iconLoc" height="40">
-          <span>{{b.name }}</span> |
-          <small>{{b.city}},{{b.state}}</small>
+      <mat-autocomplete #auto_keyword="matAutocomplete" [displayWith]="displayTitle" (optionSelected)="filterBeer()">
+        <mat-option *ngFor="let beer of filteredBeers | async" [value]="beer">
+          <!-- <img class="example-option-img" aria-hidden [src]="beer.brewery.iconLoc" height="40"> -->
+          <span *ngIf="beer.withBrewery; else nameOnly">{{beer.brewery.name}} {{beer.name}}</span>
+          <ng-template #nameOnly>
+            <span>{{ beer.name | titlecase }}</span>
+          </ng-template>
         </mat-option>
       </mat-autocomplete>
     </div>
-
-    <div class="col-sm-4">
-      <mat-form-field class="example-full-width col-sm-10">
-        <input matInput formControlName="type" placeholder="Type..." [matAutocomplete]="auto_type">
-        <button mat-button *ngIf="searchForm.get('type').value" matSuffix mat-icon-button aria-label="Clear" (click)="resetType()">
-          <mat-icon>close</mat-icon>
-        </button>
-      </mat-form-field>
-
-      <mat-autocomplete #auto_type="matAutocomplete" [displayWith]="displayType" (optionSelected)="filterType()">
-        <mat-option *ngFor="let type of filteredTypes | async" [value]="type">
-          <span>{{ type | titlecase }}</span>
-        </mat-option>
-      </mat-autocomplete>
+    <div class="row">
+      <p class="col-12" (click)="toggleAdvanced()">Advanced Search</p>
     </div>
 
-    <div class="col-sm-12">
-      <div class="new">
-        <button type="button" class="control" mat-raised-button color="primary" (click)="openBeerDialog()">New Beer</button>
-        <br>
-        <button type="button" class="control" mat-raised-button color="warn" (click)="editBeerDialog()" *ngIf="service.selectedBeer">Edit
-          Beer</button>
-        <br>
-        <button type="button" class="control" mat-raised-button color="accent" (click)="removeBeer()" *ngIf="service.selectedBeer">Delete
-          Beer</button>
+    <!-- ADVANCED FILTER -->
+    <div *ngIf="advancedSearch">
+      <div class="row">
+        <mat-form-field class="col-12">
+          <input class="search" matInput formControlName="brewery" placeholder="Brewery Name..."
+            [matAutocomplete]="auto_brew">
+          <img matPrefix *ngIf="isSelectedValue(searchForm.get('brewery'))" class="example-option-img" aria-hidden
+            [src]="parseSelectionForIcon(searchForm.get('brewery'))" height="40">
+          <button mat-button *ngIf="searchForm.get('brewery').value" matSuffix mat-icon-button aria-label="Clear"
+            (click)="resetBrewery()">
+            <mat-icon>close</mat-icon>
+          </button>
+        </mat-form-field>
+        <!-- <button class="col-2" mat-raised-button color="basic" (click)="openBrewDialog()">
+              <i class="fas fa-plus fa-lg"></i>
+            </button> -->
+        <mat-autocomplete #auto_brew="matAutocomplete" [displayWith]="displayName" (optionSelected)="filterBrewery()">
+          <mat-option *ngFor="let b of filteredBreweries" [value]="b">
+            <img class="example-option-img" aria-hidden [src]="b.iconLoc" height="40">
+            <span>{{b.name }}</span> |
+            <small>{{b.city}},{{b.state}}</small>
+          </mat-option>
+        </mat-autocomplete>
+      </div>
+      <div class="row">
+        <div class="col-6">
+          <mat-form-field class="example-full-width ">
+            <input matInput formControlName="type" placeholder="Type..." [matAutocomplete]="auto_type">
+            <button mat-button *ngIf="searchForm.get('type').value" matSuffix mat-icon-button aria-label="Clear"
+              (click)="resetType()">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+
+          <mat-autocomplete #auto_type="matAutocomplete" [displayWith]="displayType" (optionSelected)="filterType()">
+            <mat-option *ngFor="let type of filteredTypes | async" [value]="type">
+              <span>{{ type | titlecase }}</span>
+            </mat-option>
+          </mat-autocomplete>
+        </div>
+        <div class="col-6">
+          <mat-form-field class="example-full-width">
+            <input matInput formControlName="state" placeholder="State..." [matAutocomplete]="auto_state">
+            <button mat-button *ngIf="searchForm.get('state').value" matSuffix mat-icon-button aria-label="Clear"
+              (click)="resetState()">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+
+          <mat-autocomplete #auto_state="matAutocomplete" (optionSelected)="filterState()" [displayWith]="displayState">
+            <mat-option *ngFor="let state of filteredStates | async" [value]="state">
+              <span>{{ state | titlecase }}</span>
+            </mat-option>
+          </mat-autocomplete>
+        </div>
       </div>
     </div>
   </div>
 </div>
 
+
+<!-- BEER LIST -->
 <div class="container">
   <div class="row" *ngFor="let beer of filteredBeerList; let i=index ">
-    <div class="col-sm-1"></div>
-    <div class="col-sm-10">
-      <app-beer [beer]="beer" [selected]="isSelected(beer)" (click)="onClick(beer)"></app-beer>
+    <!-- <div class="col-sm-1" (click)="clearSelect()"></div> -->
+    <div class="col-sm-12">
+      <div class="row">
+        <div class="col-sm-11">
+          <app-beer [beer]="beer" [selected]="isSelected(beer)" (click)="onClick(beer)"></app-beer>
+        </div>
+        <div class="col-sm-1 add-button" (click)="clearSelect(beer)">
+          <button class="float-right" mat-fab color="default" (click)="openTransactionDialog()"
+            *ngIf="showButton(beer)"><i class="fas fa-external-link-alt fa-2x"></i></button>
+        </div>
+      </div>
     </div>
-    <div class="col-sm-1 add-button">
-      <button class="float-right" mat-fab color="default" (click)="openTransactionDialog()" *ngIf="showButton(beer)"><i
-          class="fas fa-external-link-alt fa-2x"></i></button>
-    </div>
+    <!-- <div class="col-sm-1" (click)="clearSelect()"></div> -->
   </div>
 </div>
+
+
+<!-- BEER CONTROL BUTTONS -->
+<div class="col-sm-12">
+  <div class="main bottom">
+    <button type="button" class="control" mat-raised-button color="primary" (click)="openBeerDialog()">New
+      Beer</button>
+    <br>
+    <button type="button" class="control" mat-raised-button color="warn" (click)="editBeerDialog()"
+      *ngIf="selectedBeer">Edit
+      Beer</button>
+    <br>
+    <button type="button" class="control" mat-raised-button color="accent" (click)="removeBeer()"
+      *ngIf="selectedBeer">Delete
+      Beer</button>
+  </div>
+</div>
+
+<!-- SEARCH BUTTON -->
+<!-- <div class="main top">
+  <button type="button" mat-fab color="defalut" (click)="toggleSearch()">
+    <i *ngIf="!searchMode; else close" class="fas fa-search fa-2x"></i>
+    <ng-template #close>
+      <i class="fas fa-times fa-2x"></i>
+    </ng-template>
+  </button>
+</div> -->

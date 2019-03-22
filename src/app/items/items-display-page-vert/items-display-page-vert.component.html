@@ -1,0 +1,5 @@
+<div class="main">
+  <div *ngFor="let item of itemsList | async">
+    <app-item2 [item]="item" [displayProperties]="properties"></app-item2>
+  </div>
+</div>
