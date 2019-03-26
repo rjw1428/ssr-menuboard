@@ -12,6 +12,7 @@ import { AuthService } from './auth.service';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { ActivatedRoute, Params } from '@angular/router';
 import { FeaturedItem } from '@shared/interfaces/featured-item';
+import { ScreenInfo } from '@shared/interfaces/screen';
 
 
 export const buildBeer = (
@@ -28,8 +29,8 @@ export const buildBeer = (
           rawData.forEach(local => {
             beers.push(afs.doc('masterBeerList/' + local['beerID'])
               .snapshotChanges().map((rawBeer) => {
-                let buildBeer=rawBeer.payload.data()
-                buildBeer['id']=rawBeer.payload.id
+                let buildBeer = rawBeer.payload.data()
+                buildBeer['id'] = rawBeer.payload.id
                 return buildBeer
               })
             );
@@ -137,12 +138,14 @@ export class DataService {
   beerCollection: Observable<Beer[]>
   breweryCollection: Observable<Brewery[]>
   localCollection: Observable<Localbeer[]>
+  screenInfo: Observable<ScreenInfo[]>
   propertiesFirestoreList: AngularFirestoreDocument
   selectedBeer: Beer = null
   selectedBrewery: Brewery = null
   selectedLocal: Localbeer;
   selectedIndex: number;
   FeaturedCollection: Observable<FeaturedItem[]>;
+  client: string;
   constructor(private afs: AngularFirestore,
     private storage: AngularFireStorage) {
 
@@ -221,7 +224,8 @@ export class DataService {
     if (this.localFirestoreList) {
       this.FeaturedCollection = this.localFirestoreList.snapshotChanges().pipe(
         map(val => {
-          let x = val.payload.data() as { beerList: Localbeer[], featuresList: FeaturedItem[] }
+          let x = val.payload.data() as { featuresList: FeaturedItem[] }
+          console.log(x.featuresList)
           return x.featuresList
         }),
         shareReplay(1),
@@ -235,6 +239,86 @@ export class DataService {
     this.afs.collection('error').add({
       icon: imageName,
       date: this.timestamp()
+    })
+  }
+
+
+  getScreenInfo(client: string) {
+    this.client = client
+    this.screenInfo = this.afs.collection('clients').doc(client).collection('screens').snapshotChanges().map(screens => {
+      return screens.map(screen => {
+        let s = screen.payload.doc.data() as ScreenInfo
+        s['id'] = screen.payload.doc.id
+        return s
+      })
+    })
+    return this.screenInfo
+  }
+
+  getScreenRefreshCommand(screenNum: string) {
+    this.afs.collection('clients').doc(this.client).collection('screens').doc(screenNum).snapshotChanges().map(screen => {
+      return screen.payload.get('refresh')
+    })
+  }
+
+  setScreenStatus(client: string, screenNum: string, status: string) {
+    this.afs.collection('clients').doc(client).collection('screens').doc(screenNum).update({
+      status: status
+    })
+  }
+
+  setScreenStaticProperty(screenNum, newVal) {
+    this.afs.collection('clients').doc(this.client).collection('screens').doc(screenNum).update({
+      static: newVal
+    })
+  }
+
+  setScreenDraftListProperty(screenNum, newVal) {
+    this.afs.collection('clients').doc(this.client).collection('screens').doc(screenNum).update({
+      draftList: newVal
+    })
+  }
+
+  setScreenFeaturesProperty(screenNum, newVal) {
+    this.afs.collection('clients').doc(this.client).collection('screens').doc(screenNum).update({
+      features: newVal
+    })
+  }
+
+  setScreenPauseProperty(screenNum, newVal) {
+    this.afs.collection('clients').doc(this.client).collection('screens').doc(screenNum).update({
+      pause: newVal
+    })
+  }
+
+  setRefresh(screenNum) {
+    return this.afs.collection('clients').doc(this.client).collection('screens').doc(screenNum).update({
+      refresh: true
+    })
+  }
+
+  checkRefresh(client, screenNum) {
+    return this.afs.collection('clients').doc(client).collection('screens').doc(screenNum).valueChanges()
+  }
+
+  resetRefresh(client, screenNum) {
+    console.log("REFRESH")
+    return this.afs.collection('clients').doc(client).collection('screens').doc(screenNum).update({
+      refresh: false
+    })
+  }
+
+  addScreen(client: string, screenNum: string) {
+    console.log(client)
+    console.log(screenNum)
+    return this.afs.collection('clients').doc(client).collection('screens').doc(screenNum).set({
+      name: "Screen ".concat(screenNum),
+      refresh: false,
+      static: true,
+      draftList: true,
+      features: true,
+      pause: false,
+      status: "N/A"
     })
   }
 

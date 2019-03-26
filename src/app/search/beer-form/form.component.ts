@@ -112,7 +112,6 @@ export class DialogAddBeerDialog {
     //BREWERY INFORMATION FROM FORM
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        console.log(this.authService.username)
         let brewery = Object.assign({ 'icon': new IconNamePipe().transform(result.name), 'active': true, 'createdBy': this.authService.username}, result)
         let key = brewery.name.toLowerCase()
         brewery['id']=key

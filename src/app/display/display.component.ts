@@ -5,6 +5,9 @@ import { trigger, state, style, transition, animate, query, stagger } from '@ang
 import { ManagementService } from '@shared/services/management.service';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { AuthService } from '@shared/services/auth.service';
+import { DataService } from '@shared/services/data.service';
+import { ScreenInfo } from '@shared/interfaces/screen';
+import { AngularFirestore } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-display',
@@ -35,9 +38,9 @@ export class DisplayComponent implements OnInit {
   onResize(event?) {
     this.screenWidth = window.innerWidth;
     this.screenHeight = window.innerHeight;
-    if (this.screenWidth>this.screenHeight)
-      this.isVertical=false
-    else this.isVertical=true;
+    if (this.screenWidth > this.screenHeight)
+      this.isVertical = false
+    else this.isVertical = true;
   }
   screenWidth: number
   screenHeight: number
@@ -53,20 +56,37 @@ export class DisplayComponent implements OnInit {
   logoUrl: string;
   logoState = "normal"
   startTimer: boolean = false
-  constructor(public ms: ManagementService,
+  paused: boolean = false;
+  constructor(
+    // public ms: ManagementService,
+    public service: DataService,
     private route: ActivatedRoute,
     public storage: AngularFireStorage,
-    public userManagement: AuthService) {
+    public userManagement: AuthService,
+    public afs: AngularFirestore
+  ) {
 
     this.userManagement.defaultLogin()
     this.onResize();
   }
 
   ngOnInit() {
-    let displayNum: number;
-    this.route.params.subscribe((params: Params) => {
+    let displayNum: string;
+    let client: string
+    this.route.params.switchMap(params => {
       displayNum = params['screen']
-    });
+      client = params['client']
+      // this.service.setScreenStatus(client, displayNum, "Active")
+      return this.service.checkRefresh(client, displayNum)
+    }).subscribe((screenInfo: ScreenInfo) => {
+      if (screenInfo.refresh) {
+        this.service.resetRefresh(client, displayNum).then(ref => {
+          window.location.reload(true)
+        })
+      }
+      this.paused = screenInfo.pause
+      setTimeout(() => this.listenForClose(client, displayNum), 500)
+    })
 
     // this.screenKey = this.ms.setScreenName(displayNum);
     // this.ms.resetRefreshOnLoad(this.screenKey);
@@ -110,36 +130,36 @@ export class DisplayComponent implements OnInit {
     // }, 500)
   }
 
-  nextPage() {
-    if (this.pageNum == 2 || this.pageNum == 1) {
-      setTimeout(() => {
-        if (this.pageNum < this.maxPages) {
-          this.pageNum++
-        } else {
-          this.pageNum = 1
-        }
-      }, 900)
-    } else {
-      if (this.pageNum < this.maxPages) {
-        this.pageNum++
-      } else {
-        this.pageNum = 1
-      }
-    }
-    this.toggleTimer()
-  }
+  // nextPage() {
+  //   if (this.pageNum == 2 || this.pageNum == 1) {
+  //     setTimeout(() => {
+  //       if (this.pageNum < this.maxPages) {
+  //         this.pageNum++
+  //       } else {
+  //         this.pageNum = 1
+  //       }
+  //     }, 900)
+  //   } else {
+  //     if (this.pageNum < this.maxPages) {
+  //       this.pageNum++
+  //     } else {
+  //       this.pageNum = 1
+  //     }
+  //   }
+  //   this.toggleTimer()
+  // }
 
-  logoAnimation() {
-    this.logoState = "highlighted"
-  }
+  // logoAnimation() {
+  //   this.logoState = "highlighted"
+  // }
 
-  resetLogo() {
-    this.logoState = "normal"
-    this.nextPage()
-  }
+  // resetLogo() {
+  //   this.logoState = "normal"
+  //   this.nextPage()
+  // }
 
-  listenForClose() {
-    this.userManagement.disconnectUser(this.screenKey)
+  listenForClose(client, screenNum) {
+    this.userManagement.disconnectUser(client, screenNum)
   }
 
   onClick() {

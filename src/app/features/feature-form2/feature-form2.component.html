@@ -29,12 +29,14 @@
         </div>
       </div>
       <div class="col-6">
-        <img [src]="getPreviewSource()" *ngIf="isSourceImage(); else videoThumbnail">
-        <ng-template #videoThumbnail>
-          <video #video autoplay loop [muted]="true" style="width: 100%">
-            <source [src]="getPreviewSource()" type="video/mp4" (error)="loadError($event)">
-          </video>
-        </ng-template>
+        <div *ngIf="featureForm.get('img').value">
+          <img [src]="getPreviewSource()" *ngIf="isSourceImage(); else videoThumbnail">
+          <ng-template #videoThumbnail>
+            <video #video autoplay loop [muted]="true" style="width: 100%">
+              <source [src]="getPreviewSource()" type="video/mp4" (error)="loadError($event)">
+            </video>
+          </ng-template>
+        </div>
       </div>
     </div>
   </div>

@@ -1,4 +1,5 @@
 import { Directive, Input, HostBinding, ElementRef, HostListener, Output, AfterViewInit, Renderer2, EventEmitter } from '@angular/core';
+import { Upload } from '@shared/interfaces/upload';
 
 @Directive({
   selector: '[sizeImg]',
@@ -7,14 +8,14 @@ import { Directive, Input, HostBinding, ElementRef, HostListener, Output, AfterV
   }
 })
 export class ImgOrientationDirective {
-  @Input() source: string;
+  @Input() source: Upload;
   constructor(private el: ElementRef, private renderer: Renderer2) {
   }
 
   @HostListener('load') setOrientation() {
-    if (this.source.substring(this.source.length - 4) != '.mp4') {
+    if (this.source.sourceUrl.substring(this.source.sourceUrl.length - 4) != '.mp4') {
       var img = new Image()
-      img.src = this.source
+      img.src = this.source.fbUrl
       if (img.width > img.height) {
         //LANDSCAPE
         this.renderer.addClass(this.el.nativeElement, 'full-width')

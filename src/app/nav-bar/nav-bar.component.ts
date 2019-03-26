@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit, HostListener, ElementRef, ViewChild, OnChanges } from '@angular/core';
 import { environment } from 'environments/environment'
 import { ManagementService } from '@shared/services/management.service';
 import { AngularFireDatabase } from '@angular/fire/database';
@@ -23,21 +23,22 @@ export class NavBarComponent implements OnInit {
   }
   toggleMenu = false;
   screenWidth: number
-  isPaused: boolean
-  isSlideshow: boolean
-  isTrivia: boolean
+  // isPaused: boolean
+  // isSlideshow: boolean
+  // isTrivia: boolean
   barName: Observable<string>;
   userRole: string;
 
-
-  constructor(private service: ManagementService,
+  constructor(
+    //private service: ManagementService,
     private authService: AuthService,
     private db: AngularFireDatabase,
     private router: Router,
     private route: ActivatedRoute,
     private afs: AngularFirestore,
     public dialog: MatDialog,
-    private snackBar: MatSnackBar) {
+    private snackBar: MatSnackBar,
+    ) {
     this.onResize();
   }
 
@@ -45,15 +46,16 @@ export class NavBarComponent implements OnInit {
     this.barName = this.route.params.pipe(
       switchMap(val => {
         let client = val['client'] as string
-        return this.afs.collection('clients').doc(client).snapshotChanges().map(vals => {
+        return this.afs.collection('clients').doc(client).snapshotChanges()
+        .map(vals => {
           let obj = vals.payload.data() as { name: string }
           return obj.name
         })
       })
     )
-
-    this.service.setLastRefreshData('edit');
-    this.getStatus()
+    
+    //this.service.setLastRefreshData('edit');
+    //this.getStatus()
     let username = this.authService.username
     this.db.list('users/' + username).snapshotChanges().subscribe(val => {
       val.forEach(user => {
@@ -66,53 +68,53 @@ export class NavBarComponent implements OnInit {
     })
   }
 
-  getStatus() {
-    //GET SCREEN PAUSE STATUS
-    this.service.getState('main').snapshotChanges().subscribe(val => {
-      val.map(prop => {
-        if (prop.key == "static") {
-          this.isPaused = prop.payload.val() as boolean;
-        } else if (prop.key == "slideshow") {
-          this.isSlideshow = prop.payload.val() as boolean;
-        } else if (prop.key == "trivia") {
-          this.isTrivia = prop.payload.val() as boolean;
-        }
-      })
-    })
-  }
+  // getStatus() {
+  //   //GET SCREEN PAUSE STATUS
+  //   this.service.getState('main').snapshotChanges().subscribe(val => {
+  //     val.map(prop => {
+  //       if (prop.key == "static") {
+  //         this.isPaused = prop.payload.val() as boolean;
+  //       } else if (prop.key == "slideshow") {
+  //         this.isSlideshow = prop.payload.val() as boolean;
+  //       } else if (prop.key == "trivia") {
+  //         this.isTrivia = prop.payload.val() as boolean;
+  //       }
+  //     })
+  //   })
+  // }
 
-  pauseScreen() {
-    console.log("PAUSE")
-    if (this.isPaused == true) {
-      this.isPaused = false
-      this.service.stopStatic();
-    } else {
-      this.isPaused = true
-      this.service.setStatic();
-    }
-  }
+  // pauseScreen() {
+  //   console.log("PAUSE")
+  //   if (this.isPaused == true) {
+  //     this.isPaused = false
+  //     this.service.stopStatic();
+  //   } else {
+  //     this.isPaused = true
+  //     this.service.setStatic();
+  //   }
+  // }
 
-  slideshowOnly() {
-    console.log("SLIDESHOW")
-    if (this.isSlideshow == true) {
-      this.isSlideshow = false
-      this.service.stopSlideshow();
-    } else {
-      this.isSlideshow = true
-      this.service.setSlideshow();
-    }
-  }
+  // slideshowOnly() {
+  //   console.log("SLIDESHOW")
+  //   if (this.isSlideshow == true) {
+  //     this.isSlideshow = false
+  //     this.service.stopSlideshow();
+  //   } else {
+  //     this.isSlideshow = true
+  //     this.service.setSlideshow();
+  //   }
+  // }
 
-  triviaOnly() {
-    console.log("TRIVIA")
-    if (this.isTrivia == true) {
-      this.isTrivia = false
-      this.service.stopTrivia();
-    } else {
-      this.isTrivia = true
-      this.service.setTrivia();
-    }
-  }
+  // triviaOnly() {
+  //   console.log("TRIVIA")
+  //   if (this.isTrivia == true) {
+  //     this.isTrivia = false
+  //     this.service.stopTrivia();
+  //   } else {
+  //     this.isTrivia = true
+  //     this.service.setTrivia();
+  //   }
+  // }
 
   onRequest() {
     if (confirm("You are requesting support. Are you sure you want to submit this request?"))
@@ -150,13 +152,13 @@ export class NavBarComponent implements OnInit {
       })
     }
 
-  onForceRefresh() {
-    this.service.forceRefresh()
-    alert("Refresh Command Sent")
-  }
+  // onForceRefresh() {
+  //   this.service.forceRefresh()
+  //   alert("Refresh Command Sent")
+  // }
 
-  onClick() {
-    console.log("OH YEA")
-    $('#navbarNav').collapse('hide');
-  }
+  // onClick() {
+  //   console.log("OH YEA")
+  //   $('#navbarNav').collapse('hide');
+  // }
 }

@@ -19,6 +19,7 @@ import { SearchComponent } from 'app/search/beer-search/search.component';
 import { BrewerySearchComponent } from 'app/search/brewery-search/brewery-search.component';
 import { Auth2Service } from '@shared/services/auth2.service';
 import { WebsiteComponent } from 'app/website/website.component';
+import { ScreenControlComponent } from 'app/screen-control/screen-control.component';
 
 const appRoutes: Routes = [
   { path: '', component: WebsiteComponent},// loadChildren: '@website/website.module#WebsiteModule' },
@@ -34,6 +35,7 @@ const appRoutes: Routes = [
     // { path: 'trivia', component: TriviaControlComponent},
     { path: 'beers', component: SearchComponent},
     { path: 'breweries', component: BrewerySearchComponent},
+    { path: 'screens', component: ScreenControlComponent},
   ]},
   { path: 'signup', component: SignupComponent, canActivate: [AuthGaurdService] },
 ]

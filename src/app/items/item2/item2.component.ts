@@ -52,6 +52,10 @@ export class Item2Component implements OnInit {
 
     this.storage.ref(refPath).getDownloadURL().toPromise()
       .then(value => {
+        console.log("GETTING ICON")
+        return value
+      })
+      .then(value => {
         this.displayIcon = value
       })
       .catch(e => {

@@ -15,6 +15,7 @@ import { SearchComponent } from 'app/search/beer-search/search.component';
 import { BrewerySearchComponent } from 'app/search/brewery-search/brewery-search.component';
 import { Routes, RouterModule } from '@angular/router';
 import { SignupComponent } from '../auth/signup/signup.component';
+import { ScreenComponent } from 'app/screen-control/screen/screen.component';
 
 @NgModule({
   imports: [
@@ -30,6 +31,7 @@ import { SignupComponent } from '../auth/signup/signup.component';
     UploadComponent,
     UploadFormComponent,
     ScreenControlComponent,
+    ScreenComponent,
     SignupComponent
   ],
   entryComponents: [

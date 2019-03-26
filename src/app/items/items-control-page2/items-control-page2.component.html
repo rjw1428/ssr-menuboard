@@ -1,23 +1,22 @@
 <!-- MAIN LIST -->
-<div class="container bg">
-  <!-- <div class="bg"></div> -->
-  <!-- <div class="col-3" (click)="clearSelect()"></div> -->
-  <div class="col-12" cdkDropList (cdkDropListDropped)="drop($event)">
-    <div *ngFor="let beer of itemsList; let i=index" cdkDrag>
-      <div class="row h-100">
-        <div style="color: grey;" class="col-1 float-right align-self-center" cdkDragHandle>
-          <!-- <i class="fas fa-grip-horizontal fa-3x"></i> -->
-          <i class="fas fa-grip-vertical fa-3x"></i>
-        </div>
-        <div class="col-11">
-          <app-item2 [item]="beer" (click)="onClick(i)" [edit]="true" [selected]="isSelected(i)"
-            [displayProperties]="properties">
-          </app-item2>
+<div class="container-fluid bg">
+  <div class="row">
+    <div class="col-12" cdkDropList (cdkDropListDropped)="drop($event)">
+      <div *ngFor="let beer of itemsList; let i=index" cdkDrag>
+        <div class="row h-100">
+          <div style="color: grey;" class="col-1 float-right align-self-center" cdkDragHandle>
+            <!-- <i class="fas fa-grip-horizontal fa-3x"></i> -->
+            <i class="fas fa-grip-vertical fa-3x"></i>
+          </div>
+          <div class="col-11">
+            <app-item2 [item]="beer" (click)="onClick(i)" [edit]="true" [selected]="isSelected(i)"
+              [displayProperties]="properties">
+            </app-item2>
+          </div>
         </div>
       </div>
     </div>
   </div>
-  <!-- <div class="col-3" (click)="clearSelect()"></div> -->
 </div>
 
 

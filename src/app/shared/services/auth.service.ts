@@ -63,10 +63,15 @@ export class AuthService {
     })
   }
 
-  disconnectUser(screenKey: string) {
-    database().ref().child('status/' + screenKey).onDisconnect().update({
-      active: false
-    })
+  disconnectUser(client: string, screenNum: string) {
+    // database().ref().child('status/' + screenKey).onDisconnect().update({
+    //   active: false
+    // })
+
+    // this.firestore.collection('clients').doc(client).collection('screens').doc(screenNum).update({
+    //   status: "Off"
+    // })
+
     // if (this.firebaseAuth.auth.currentUser.isAnonymous)
     //   this.firebaseAuth.auth.currentUser.delete()
     this.firebaseAuth.auth.signOut();

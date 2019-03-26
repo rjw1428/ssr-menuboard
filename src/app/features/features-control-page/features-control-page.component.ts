@@ -35,7 +35,10 @@ export class FeaturesControlPageComponent implements OnInit {
     this.route.parent.params.switchMap(bar => {
       this.contentService.getFileList(bar['client'])
       return this.service.getFeaturedCollection(bar['client'])
-    }).subscribe(vals => this.featuredList = vals)
+    }).subscribe(vals => {
+      console.log(vals)
+      this.featuredList = vals
+    })
   }
 
   //WHEN SCREEN IS BLANK, ADD FEATURE BUTTON ACTION

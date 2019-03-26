@@ -7,7 +7,7 @@
 <div (click)="onClick()">
   <div [ngSwitch]="mode">
     <div *ngSwitchCase="'none'" appScreenOrientation>
-      <app-single-page [vertical]="isVertical"></app-single-page>
+      <app-single-page [vertical]="isVertical" [pause]="paused"></app-single-page>
     </div>
     <div *ngSwitchCase="'static'">
       <app-static></app-static>

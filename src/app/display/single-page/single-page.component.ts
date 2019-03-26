@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, ViewChild, Input, } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, Input, OnChanges, } from '@angular/core';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { FeaturesService } from '@shared/services/features.service';
 import { NgbCarouselConfig, NgbCarousel } from '@ng-bootstrap/ng-bootstrap';
@@ -11,6 +11,7 @@ import { map } from 'rxjs/operators';
 import { filter } from 'rxjs-compat/operator/filter';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { trigger, transition, style, animate } from '@angular/animations';
+import { ProtractorBrowser } from 'protractor';
 declare var $: any;
 
 @Component({
@@ -19,19 +20,33 @@ declare var $: any;
   styleUrls: ['./single-page.component.scss'],
   providers: [NgbCarouselConfig],
 })
-export class SinglePageComponent implements OnInit {
+export class SinglePageComponent implements OnInit, OnChanges {
   @Input('vertical') vertical: boolean = false
-  delay: number = 15
-  numFeatureSlides: number = 2
+  delay: number = 10
+  numFeatureSlides: number=2;
   activeSlide = 0;
   logoUrl: string
   featuredList: FeaturedItem[] = []
+  prevLength: number = 0
+  count: number = 0
   //featuredList: Observable<FeaturedItem[]>
   @ViewChild('carousel') carousel: NgbCarousel;
-  pause: boolean = false;
-
-  activeFeature: number[] = Array.from(new Array(this.numFeatureSlides), (val, index) => index)
+  @Input() pause: boolean = false;
+  activeFeature: number[] = []
   client: string;
+  screenNum: string;
+  background = {
+    //Default
+    'background-color': "rgb(0,0,0)",
+    'background-image': ''
+  }
+
+  border = {
+    'border': '',
+    'border-radius': '10px',
+    'background-color': 'rgba(0,0,0, .5)',
+    'box-shadow': '10px 10px 10px black'
+  }
   constructor(public storage: AngularFireStorage,
     private route: ActivatedRoute,
     public featureService: FeaturesService,
@@ -39,28 +54,9 @@ export class SinglePageComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.carousel.interval = 1000 * this.delay;
-    this.carousel.wrap = true;
-    this.carousel.pauseOnHover = false;
-    this.carousel.keyboard = true;
-    this.carousel.showNavigationArrows = false;
-    this.carousel.showNavigationIndicators = true;
-    // $('.carousel').carousel({
-    //   interval: 1000 * this.delay,
-    //   keyboard: true,
-    //   pause: false,
-    //   wrap: true
-    // })
-    // var self = this;
-    // $('.carousel').on('slid.bs.carousel', function () {
-    //   var currentIndex = $('div.active').index() - 1
-    //   if (currentIndex == 0) {
-    //     console.log("TRIGGER")
-    //     this.activeFeature=self.getNextFeature()
-    //     console.log(this.activeFeature)
-    //   }
-    // })
     this.route.params.switchMap(bar => {
+      this.client = bar['client'] as string
+      this.screenNum = bar['screen'] as string
       return this.featureService.getFeatureList(bar['client'])
         .snapshotChanges().pipe(
           map(val => {
@@ -73,7 +69,8 @@ export class SinglePageComponent implements OnInit {
         )
     }).subscribe(vals => {
       this.featuredList = vals
-      console.log("LEN: "+this.featuredList.length)
+      this.getNextFeature()
+      // console.log("LEN: " + this.featuredList.length)
     })
 
     this.route.params
@@ -87,16 +84,51 @@ export class SinglePageComponent implements OnInit {
         this.logoUrl = val
       })
 
-    this.route.params.subscribe(val => {
-      this.client = val['client'] as string
+    // GET BACKEND PROPERTIES
+    this.route.params.switchMap(val => {
+      let client = val['client'] as string
+      return this.afs.collection('clients').doc(client).collection('properties').snapshotChanges().map(vals => {
+        return vals.map(val => {
+          let obj = val.payload.doc.data()
+          obj['id'] = val.payload.doc.id
+          return obj
+        })
+      })
+    }).subscribe((props) => {
+      props.forEach((prop: { id: string, size: string, color: string, radius: string, image: string, value: string }) => {
+        if (prop.id == "border") {
+          this.border['border'] = prop.size + " solid " + prop.color
+          this.border['border-radius'] = prop.radius
+        }
+        if (prop.id == "background") {
+          this.background['background-color'] = prop.color
+          this.background['background-image'] = prop.image
+        }
+        if (prop.id == "delay") {
+          this.delay = +prop.value
+          this.carousel.interval = 1000 * this.delay;
+        }
+        if (prop.id == "features") {
+          this.numFeatureSlides= +prop.value
+          this.activeFeature=Array.from(new Array(this.numFeatureSlides), (val, index) => index)
+        }
+      })
     })
+    this.carousel.wrap = true;
+    this.carousel.pauseOnHover = false;
+    this.carousel.keyboard = true;
+    this.carousel.showNavigationArrows = false;
+    this.carousel.showNavigationIndicators = true;
+  }
+
+  ngOnChanges() {
+    this.onPause();
   }
 
   onSlide(slideData: { current: string; }) {
-    //console.log("TRIGGER")
     let current_raw = slideData.current
     let x = current_raw.split('-')
-    this.activeSlide = +x[this.numFeatureSlides]
+    this.activeSlide = +x[2]
     if (this.activeSlide == 0) {
       this.getNextFeature()
     }
@@ -104,21 +136,21 @@ export class SinglePageComponent implements OnInit {
 
   getNextFeature() {
     let newFeatureOrder = []
-    this.activeFeature.forEach(slide => {
-      let next = slide + this.numFeatureSlides
-      // if (next >= length)
-      //   next = next - length
-      // newFeatureOrder.push(next)
-      if (next >= this.featuredList.length)
-        next = next - this.featuredList.length
-      newFeatureOrder.push(next)
+    this.activeFeature.forEach((slide, index) => {
+      newFeatureOrder.push((this.numFeatureSlides * this.count + index) % this.featuredList.length)
     })
+    // console.log(newFeatureOrder)
+    // console.log(this.count)
+    this.count = (this.count + 1) % this.featuredList.length
     this.activeFeature = newFeatureOrder
-    return newFeatureOrder
   }
 
   getBackgroundLogo() {
     this.storage.ref('logo.png').getDownloadURL().toPromise()
+      .then(value => {
+        console.log("GETTING BG LOGO")
+        return value
+      })
       .then(value => {
         this.logoUrl = value;
       })
@@ -127,13 +159,21 @@ export class SinglePageComponent implements OnInit {
 
   onClick() {
     if (this.pause) {
-      console.log("PLAY")
-      this.carousel.cycle();
       this.pause = false
     } else {
-      console.log("PAUSE")
-      this.carousel.pause();
       this.pause = true
+    }
+    this.afs.collection('clients').doc(this.client).collection('screens').doc(this.screenNum).update({
+      pause: this.pause
+    })
+    this.onPause()
+  }
+
+  onPause() {
+    if (!this.pause) {
+      this.carousel.cycle();
+    } else {
+      this.carousel.pause();
     }
   }
 

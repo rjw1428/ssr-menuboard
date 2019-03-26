@@ -44,7 +44,7 @@
 
     <div class="main bg" *ngSwitchCase="'notext'">
       <img class="blur" [src]="feature.img.fbUrl">
-      <img sizeImg class="center" [source]="feature.img.sourceUrl" [src]="feature.img.fbUrl"
+      <img sizeImg class="center" [source]="feature.img" [src]="feature.img.fbUrl"
         *ngIf="feature.img.sourceUrl.substring(feature.img.sourceUrl.length-4)!='.mp4'; else videoFull">
       <ng-template #videoFull>
         <video #video autoplay loop [muted]="true" class="center">
@@ -57,7 +57,7 @@
       <div class="main left-left"
         *ngIf="feature.img.sourceUrl.substring(feature.img.sourceUrl.length-4)!='.mp4'; else videoLeft">
         <img class="blur" [src]="feature.img.fbUrl">
-        <img sizeImg class="top center" [source]="feature.img.sourceUrl" [src]="feature.img.fbUrl">
+        <img sizeImg class="top center" [source]="feature.img" [src]="feature.img.fbUrl">
       </div>
       <ng-template #videoLeft>
         <video #video autoplay loop [muted]="true" class="main left-left">
@@ -94,7 +94,7 @@
       <div class="main right-right"
         *ngIf="feature.img.sourceUrl.substring(feature.img.sourceUrl.length-4)!='.mp4'; else videoRight">
         <img class="blur" [src]="feature.img.fbUrl">
-        <img sizeImg class="top center" [source]="feature.img.sourceUrl" [src]="feature.img.fbUrl">
+        <img sizeImg class="top center" [source]="feature.img" [src]="feature.img.fbUrl">
       </div>
       <ng-template #videoRight>
         <video #video autoplay loop [muted]="true" class="main right-right">
@@ -132,7 +132,7 @@
       <h3 class="display-text over" style="font-size: 3vh; top: 65vh; left: 7vw; width: 40%">{{feature.itemCaption}}
       </h3>
       <img class="blur" [src]="feature.img.fbUrl">
-      <img sizeImg class="center" [source]="feature.img.sourceUrl" [src]="feature.img.fbUrl"
+      <img sizeImg class="center" [source]="feature.img" [src]="feature.img.fbUrl"
         *ngIf="feature.img.sourceUrl.substring(feature.img.sourceUrl.length-4)!='.mp4'; else videoOver">
       <ng-template #videoOver>
         <video #video autoplay loop [muted]="true" class="center" [poster]="feature.img.fbUrl">

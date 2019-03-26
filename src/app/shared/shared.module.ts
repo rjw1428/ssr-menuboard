@@ -44,7 +44,7 @@ import { ScreenOrientationDirective } from './directives/screen-orientation.dire
     Item2Component,
     Feature2Component,
     ImgOrientationDirective,
-    ScreenOrientationDirective
+    ScreenOrientationDirective,
   ],
   exports: [
     UsernamePipe,

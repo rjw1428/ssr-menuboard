@@ -29,6 +29,10 @@ export class BeerComponent implements OnInit {
       refPath = environment.itemIconRootAddress + this.beer.icon
     else refPath = environment.itemIconRootAddress + this.beer.brewery.icon
     this.storage.ref(refPath).getDownloadURL().toPromise()
+      .then(value=>{
+        console.log("GETTING ICONS")
+        return value
+      })
       .then(value => {
         this.displayIcon = value
       })

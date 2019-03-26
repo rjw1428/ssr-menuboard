@@ -27,6 +27,7 @@ import { EditFormComponent } from '@item/items-control-page2/edit-form/edit-form
 import { ViewFormComponent } from '@item/items-control-page2/view-form/view-form.component';
 import { FeatureForm2Component } from '@features/feature-form2/feature-form2.component';
 import { FeaturesModule } from '@features/features.module';
+import { ScreenComponent } from './screen-control/screen/screen.component';
 
 @NgModule({
   declarations: [

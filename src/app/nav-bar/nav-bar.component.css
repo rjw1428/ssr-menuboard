@@ -20,5 +20,10 @@ li {
 .outlet {
     position: relative;
     margin-top: 50px;
-    
+
 }
+/* 
+.bg {
+    background-color: green;
+    min-height: calc(100vh - 50px);
+} */

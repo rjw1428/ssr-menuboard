@@ -1,66 +1,73 @@
 <nav class="navbar navbar-expand-md fixed-top navbar-light bg-light">
-  <div class="navbar-header">
+  <!-- <div class="navbar-header">
     <span class="float-left navbar-brand mb-0 h1">{{ barName | async }}</span>
 
     <button class="navbar-toggler float-right" type="button" data-toggle="collapse" data-target="#navbarNav">
       <span class="navbar-toggler-icon"></span>
     </button>
-  </div>
+  </div> -->
+  <div class="container-fluid">
 
+    <a class="navbar-brand">{{ barName | async }}</a>
 
-  <div class="collapse navbar-collapse" id="navbarNav">
-    <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-      <li class="nav-item" data-toggle="collapse" data-target="#navbarNav"><a class="nav-link"
-          [routerLink]="['./items']" routerLinkActive="active" *ngIf="userRole!='trivia'">Menu</a></li>
-      <!-- <li data-toggle="collapse" data-target="#navbarNav"><a class="nav-item nav-link" [routerLink]="['./events']"
-          routerLinkActive="active" *ngIf="userRole!='trivia'">Events</a></li> -->
-      <li class="nav-item" data-toggle="collapse" data-target="#navbarNav"><a class="nav-link"
-          [routerLink]="['./features']" routerLinkActive="active" *ngIf="userRole!='trivia'">Features</a></li>
-      <!-- <li data-toggle="collapse" data-target="#navbarNav"><a class="nav-item nav-link" [routerLink]="['./properties']"
-          routerLinkActive="active" *ngIf="userRole!='trivia'">Properties</a></li> -->
-      <li class="nav-item" data-toggle="collapse" data-target="#navbarNav"><a class="nav-link"
-          [routerLink]="['./trivia']" routerLinkActive="active"
-          *ngIf="userRole=='trivia' || userRole=='admin'">Trivia</a></li>
-    </ul>
-    <!-- <div class="navbar-nav" *ngIf="userRole=='admin'"> -->
-    <ul class="navbar-nav mr-auto">
-      <li class="nav-item" data-toggle="collapse" data-target="#navbarNav">
-        <a class="nav-item nav-link" [routerLink]="['./content']" routerLinkActive="active"
-          *ngIf="userRole!='trivia'">Content
-          Management</a>
-      </li>
-      <li class="nav-item" data-toggle="collapse" data-target="#navbarNav">
-        <a class="nav-link" [routerLink]="['./beers']" routerLinkActive="active" *ngIf="userRole!='trivia'">Beer
-          List</a>
-      </li>
-      <!-- <li data-toggle="collapse" data-target="#navbarNav">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+        <li class="nav-item" data-toggle="collapse" data-target="#navbarNav"><a class="nav-link"
+            [routerLink]="['./items']" routerLinkActive="active" *ngIf="userRole!='trivia'">Menu</a></li>
+
+        <li class="nav-item" data-toggle="collapse" data-target="#navbarNav"><a class="nav-link"
+            [routerLink]="['./features']" routerLinkActive="active" *ngIf="userRole!='trivia'">Features</a></li>
+        <!-- <li class="nav-item" data-toggle="collapse" data-target="#navbarNav"><a class="nav-link"
+            [routerLink]="['./trivia']" routerLinkActive="active"
+            *ngIf="userRole=='trivia' || userRole=='admin'">Trivia</a></li> -->
+        <!-- <li data-toggle="collapse" data-target="#navbarNav"><a class="nav-item nav-link" [routerLink]="['./properties']"
+              routerLinkActive="active" *ngIf="userRole!='trivia'">Properties</a></li> -->
+        <!-- <li data-toggle="collapse" data-target="#navbarNav"><a class="nav-item nav-link" [routerLink]="['./events']"
+              routerLinkActive="active" *ngIf="userRole!='trivia'">Events</a></li> -->
+      </ul>
+      <ul class="navbar-nav justify-content-end">
+        <li class="nav-item" data-toggle="collapse" data-target="#navbarNav">
+          <a class="nav-item nav-link" [routerLink]="['./content']" routerLinkActive="active"
+            *ngIf="userRole!='trivia'">Content
+            Management</a>
+        </li>
+        <li class="nav-item" data-toggle="collapse" data-target="#navbarNav">
+          <a class="nav-link" [routerLink]="['./beers']" routerLinkActive="active" *ngIf="userRole!='trivia'">Beer
+            List</a>
+        </li>
+        <li class="dropdown nav-link">
+          <a style="cursor: pointer;" class="dropdown-toggle" data-toggle="dropdown">Manage
+            <span class="caret"></span>
+          </a>
+          <ul class="dropdown-menu dropdown-menu-right" data-toggle="collapse" data-target=".navbar-collapse">
+            <li><a class="sub-option" style="cursor: pointer; color: black" [routerLink]="['./screens']">Screen Manager</a></li>
+            <li><a class="sub-option" style="cursor: pointer; color: black" (click)="openSignUpDialog()">Enroll
+                New
+                User</a></li>
+            <li><a class="sub-option" style="cursor: pointer; color: black" (click)="onRequest()">Request
+                Support</a>
+            </li>
+            <!-- <div class="navbar-nav" *ngIf="userRole=='admin'"> -->
+            <!-- <li data-toggle="collapse" data-target="#navbarNav">
         <a class="nav-item nav-link" [routerLink]="['./breweries']" routerLinkActive="active"
           *ngIf="userRole!='trivia'">Brewery
           List</a>
       </li> -->
-      <li class="dropdown nav-link">
-        <a style="cursor: pointer;" class="dropdown-toggle" data-toggle="dropdown">Manage
-          <span class="caret"></span>
-        </a>
-        <ul class="dropdown-menu dropdown-menu-right" data-toggle="collapse" data-target=".navbar-collapse">
-          <li><a class="sub-option" style="cursor: pointer;" (click)="onForceRefresh()">Force Refresh</a></li>
-          <li><a class="sub-option" style="cursor: pointer;" (click)="openSignUpDialog()" style="color: black">Enroll New
-              User</a></li>
-          <li><a class="sub-option" style="cursor: pointer;" (click)="onRequest()" style="color: black">Request Support</a></li>
-          <!-- <li><a class="sub-option" style="cursor: pointer;" (click)="pauseScreen()"><i class="fa fa-check"
-                *ngIf="isPaused"></i>Logo
-              Only</a></li>
-          <li><a class="sub-option" style="cursor: pointer;" (click)="slideshowOnly()"><i class="fa fa-check"
-                *ngIf="isSlideshow"></i>Slideshow
-              Only</a></li>
-          <li><a class="sub-option" style="cursor: pointer;" (click)="triviaOnly()"><i class="fa fa-check"
-                *ngIf="isTrivia"></i>Trivia
-              (Beta)</a></li> -->
-        </ul>
-      </li>
-    </ul>
+          </ul>
+        </li>
+      </ul>
+    </div>
   </div>
 </nav>
+
+
+
+
+
 <div class="outlet">
   <router-outlet></router-outlet>
 </div>

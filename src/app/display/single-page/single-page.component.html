@@ -1,12 +1,12 @@
-<div [ngClass]="{'alt-bg':client=='pointlomaseafood'}"></div>
-<div [ngClass]="{'main':client!='pointlomaseafood'}" (click)="onClick()">
+<!-- <div [ngClass]="{'alt-bg':client=='pointlomaseafood'}"></div> -->
+<div [ngClass]="{'main':client!='pointlomaseafood'}" [ngStyle]="background" (click)="onClick()">
   <div *ngIf="pause">
     <h1 style="position: absolute; top: 10px; right: 10px; color: white;">P</h1>
   </div>
   <img class="logo" [src]="logoUrl" *ngIf="logoUrl">
   <ngb-carousel class="page" (slide)="onSlide($event)" #carousel>
     <ng-template ngbSlide>
-      <div class="carousel-item active wrapper">
+      <div class="carousel-item active wrapper" [ngStyle]="border">
         <div *ngIf="vertical; else horizontal">
           <app-items-display-page-vert></app-items-display-page-vert>
         </div>
@@ -18,7 +18,7 @@
     <div *ngIf="featuredList.length>0">
       <ng-template ngbSlide *ngFor="let slide of activeFeature; let n=index">
         <div *ngFor="let feature of featuredList; let i=index;">
-          <div class="carousel-item active wrapper" *ngIf="i==activeFeature[n]">
+          <div class="carousel-item active wrapper" [ngStyle]="border" *ngIf="i==activeFeature[n]">
             <app-feature2 [feature]="feature" [edit]="false"></app-feature2>
           </div>
         </div>
