@@ -6,9 +6,13 @@
 }
 
 .side {
-    display: block;
-    position: relative;
+    /* display:flex;
+    flex-direction: column; */
+    display: table;
+    table-layout: fixed;
+    /* position: relative; */
     width: 50%;
+    height: 100%;
     padding-right: 10px;
     /* transform: translate(-50%,0) */
     /* overflow: hidden; */
@@ -20,4 +24,17 @@
 
 .right {
     float: right;
+}
+
+/* .list-row {
+    margin: auto;
+    width: 100%;
+    border: 2px solid green
+} */
+
+.list-cell {
+    display: table-row;
+    margin: auto;
+    width: 100%;
+    /* border: 2px solid blue */
 }

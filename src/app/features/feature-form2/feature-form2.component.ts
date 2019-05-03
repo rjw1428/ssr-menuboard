@@ -21,7 +21,9 @@ export class FeatureForm2Component implements OnInit {
     { name: 'Left', value: 'left' },
     { name: 'Right', value: 'right' },
     { name: 'No Text', value: 'notext' },
-    { name: 'Text Over', value: 'textover' },
+    { name: 'Text Over - Left', value: 'textover' },   
+    { name: 'Text Over - Right', value: 'textover2' },
+    { name: 'Bottom Line', value: 'oneline' }
   ]
   constructor(
     public dialog: MatDialog,

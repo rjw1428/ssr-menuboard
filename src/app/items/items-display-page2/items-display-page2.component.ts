@@ -7,6 +7,7 @@ import { Localbeer } from '@shared/interfaces/localbeer';
 import { DataService } from '@shared/services/data.service';
 import { ActivatedRoute } from '@angular/router';
 import { switchMap, map } from 'rxjs/operators';
+import { AngularFirestore } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-items-display-page2',
@@ -44,7 +45,26 @@ export class ItemsDisplayPage2Component implements OnInit {
   leftList: Observable<Localbeer[]>
   rightList: Observable<Localbeer[]>
   properties: any
-  constructor(private service: DataService, private route: ActivatedRoute) { }
+  background = {
+    'background-color': 'rgba(50,50,50,.5)',
+    'border-radius': '5px',
+    'box-shadow': '2px 2px 2px black'
+  }
+  bigFont = {
+    'font-size': '3vh'
+  }
+
+  smallFont = {
+    'font-size': '2vh'
+  }
+  iconSize= {
+    'width': '90%'
+  }
+  constructor(
+    private service: DataService,
+    private route: ActivatedRoute,
+    private afs: AngularFirestore
+  ) { }
 
   ngOnInit() {
     this.route.params.pipe(
@@ -84,6 +104,22 @@ export class ItemsDisplayPage2Component implements OnInit {
         return items.filter((v, i) => i >= max)
       })
     )
+
+
+    this.route.params.switchMap(val => {
+      let client = val['client'] as string
+      return this.afs.collection('clients').doc(client).collection('properties').doc('items').snapshotChanges().map(val => {
+        return val.payload.data()
+      })
+    }).subscribe((prop: { backgroundColor: string, backgroundRadius: string, backgroundShadow: string, 
+      fontBigSize: string, fontSmallSize: string, iconSize: string }) => {
+      this.background['background-color'] = prop.backgroundColor
+      this.background['border-radius'] = prop.backgroundRadius
+      this.background['box-shadow'] = prop.backgroundShadow
+      this.bigFont['font-size'] = `calc(10px + (${prop.fontBigSize} - 10) * ((100vw - 800px) / (1920 - 800)))` //prop.fontBigSize
+      this.smallFont['font-size'] = `calc(8px + (${prop.fontSmallSize} - 8) * ((100vw - 800px) / (1920 - 800)))` //prop.fontSmallSize
+      this.iconSize['width'] = prop.iconSize
+    })
     // this.itemsList = this.route.params.pipe(
     //   switchMap(val => {
     //     return this.service.getLocalCollection(val['client'])

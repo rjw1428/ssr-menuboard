@@ -6,7 +6,8 @@
         <h4>{{feature.itemTitle}}</h4>
         <p>{{feature.itemCaption}}</p>
       </div>
-      <div class="col-6" *ngIf="feature.img.sourceUrl && feature.img.sourceUrl.substring(feature.img.sourceUrl.length-4)!='.mp4'; else videoThumbnail">
+      <div class="col-6"
+        *ngIf="feature.img.sourceUrl && feature.img.sourceUrl.substring(feature.img.sourceUrl.length-4)!='.mp4'; else videoThumbnail">
         <img class="img-thumbnail img-fluid float-left edit-img" [src]="feature.img.fbUrl" *ngIf="feature.img.fbUrl">
       </div>
       <ng-template #videoThumbnail>
@@ -69,17 +70,23 @@
         <div class="container h-100 w-100">
           <div class="row main">
             <div class="col-12 h-100">
-              <div class="row page-title">
-                <h1 style="font-size: 5vh" class="display-text ">{{feature.pageTitle}}</h1>
+              <div class="row h-25">
+                <div class="col-12 page-title">
+                  <h1 style="font-size: 5vh" class="display-text ">{{feature.pageTitle}}</h1>
+                </div>
               </div>
-              <div class="row item-title">
-                <h2 style="font-size: 4vh" class="display-text">{{feature.itemTitle}}</h2>
+              <div class="row h-25">
+                <div class="col-12 item-title">
+                  <h2 style="font-size: 4vh" class="display-text">{{feature.itemTitle}}</h2>
+                </div>
               </div>
-              <div class="row item-desc">
-                <h3 style="font-size: 3vh" class="display-text">{{feature.itemCaption}}</h3>
+              <div class="row h-25">
+                <div class="item-desc">
+                  <h3 style="font-size: 3vh" class="display-text">{{feature.itemCaption}}</h3>
+                </div>
               </div>
-              <div class="row main">
-                <div class="col-12 test">
+              <div class="row h-25">
+                <div class="col-12">
                   <img class="logo" [src]="logo" *ngIf="logo!=null">
                 </div>
               </div>
@@ -106,17 +113,23 @@
         <div class="container h-100 w-100">
           <div class="row main">
             <div class="col-12 h-100">
-              <div class="row page-title">
-                <h1 style="font-size: 5vh" class="display-text ">{{feature.pageTitle}}</h1>
+              <div class="row h-25">
+                <div class="col-12 page-title">
+                  <h1 style="font-size: 5vh" class="display-text ">{{feature.pageTitle}}</h1>
+                </div>
               </div>
-              <div class="row item-title">
-                <h2 style="font-size: 4vh" class="display-text">{{feature.itemTitle}}</h2>
+              <div class="row h-25">
+                <div class="col-12 item-title">
+                  <h2 style="font-size: 4vh" class="display-text">{{feature.itemTitle}}</h2>
+                </div>
               </div>
-              <div class="row item-desc">
-                <h3 style="font-size: 3vh" class="display-text">{{feature.itemCaption}}</h3>
+              <div class="row h-25">
+                <div class="col-12 item-desc">
+                  <h3 style="font-size: 3vh" class="display-text">{{feature.itemCaption}}</h3>
+                </div>
               </div>
-              <div class="row main">
-                <div class="col-12 test">
+              <div class="row h-25">
+                <div class="col-12 h-100">
                   <img class="logo" [src]="logo" *ngIf="logo!=null">
                 </div>
               </div>
@@ -128,8 +141,9 @@
 
     <div class="main bg" *ngSwitchCase="'textover'">
       <h1 class="display-text over" style="font-size: 8vh; top: 15vh; left: 5vw;">{{feature.pageTitle}}</h1>
-      <h2 class="display-text over" style="font-size: 5vh; top: 47vh; left: 10vw; width: 30%">{{feature.itemTitle}}</h2>
-      <h3 class="display-text over" style="font-size: 3vh; top: 65vh; left: 7vw; width: 40%">{{feature.itemCaption}}
+      <h2 class="display-text over" style="font-size: 5vh; top: 47vh; left: 10vw; width: 30%">{{feature.itemTitle}}
+      </h2>
+      <h3 class="display-text2 over" style="font-size: 3vh; top: 65vh; left: 7vw; width: 40%" *ngIf="feature.itemCaption">{{feature.itemCaption}}
       </h3>
       <img class="blur" [src]="feature.img.fbUrl">
       <img sizeImg class="center" [source]="feature.img" [src]="feature.img.fbUrl"
@@ -139,6 +153,35 @@
           <source [src]="feature.img.fbUrl" type="video/mp4" (error)="loadError($event)">
         </video>
       </ng-template>
+    </div>
+
+    <div class="main bg" *ngSwitchCase="'textover2'">
+        <h1 class="display-text over" style="font-size: 8vh; top: 15vh; right: 5vw;">{{feature.pageTitle}}</h1>
+        <h2 class="display-text over" style="font-size: 5vh; top: 47vh; right: 10vw; width: 30%">{{feature.itemTitle}}
+        </h2>
+        <h3 class="display-text2 over" style="font-size: 3vh; top: 65vh; right: 7vw; width: 40%" *ngIf="feature.itemCaption">{{feature.itemCaption}}
+        </h3>
+        <img class="blur" [src]="feature.img.fbUrl">
+        <img sizeImg class="center" [source]="feature.img" [src]="feature.img.fbUrl"
+          *ngIf="feature.img.sourceUrl.substring(feature.img.sourceUrl.length-4)!='.mp4'; else videoOver">
+        <ng-template #videoOver>
+          <video #video autoplay loop [muted]="true" class="center" [poster]="feature.img.fbUrl">
+            <source [src]="feature.img.fbUrl" type="video/mp4" (error)="loadError($event)">
+          </video>
+        </ng-template>
+      </div>
+
+    <div class="main bg" *ngSwitchCase="'oneline'">
+      <h2 class="display-text over oneline-caption">{{feature.itemTitle | uppercase}}</h2>
+      <h2 class="display-text over oneline-subcaption">{{feature.itemCaption | lowercase}}</h2>
+      <img class="blur" [src]="feature.img.fbUrl">
+      <img sizeImg class="center" [source]="feature.img" [src]="feature.img.fbUrl"
+        *ngIf="feature.img.sourceUrl.substring(feature.img.sourceUrl.length-4)!='.mp4'; else videoOver">
+      <!-- <ng-template #videoOver>
+        <video #video autoplay loop [muted]="true" class="center" [poster]="feature.img.fbUrl">
+          <source [src]="feature.img.fbUrl" type="video/mp4" (error)="loadError($event)">
+        </video>
+      </ng-template> -->
     </div>
   </div>
 </ng-template>

@@ -9,6 +9,7 @@ import { Brewery } from '@shared/interfaces/brewery';
 import { Localbeer } from '@shared/interfaces/localbeer';
 import { ActivatedRoute } from '@angular/router';
 import { switchMap } from 'rxjs/operators';
+import { AngularFirestore } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-item2',
@@ -23,6 +24,10 @@ export class Item2Component implements OnInit {
   @Input() selected: boolean;
   @Input() displayProperties: any;
   @Input() edit: boolean = false;
+  @Input() background: any;
+  @Input() bigFont: any;
+  @Input() smallFont: any;
+  @Input() iconSize: any;
   @HostListener('window:resize', ['$event'])
   onResize(event?) {
     this.screenWidth = window.innerWidth;
@@ -33,7 +38,10 @@ export class Item2Component implements OnInit {
   title: string
   displayIcon: string
   location: string
-  constructor(private storage: AngularFireStorage, private ms: ManagementService, private service: DataService, private route: ActivatedRoute) {
+  constructor(
+    private storage: AngularFireStorage,
+    private service: DataService,
+  ) {
     this.onResize();
   }
 

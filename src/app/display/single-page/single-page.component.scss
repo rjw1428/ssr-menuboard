@@ -3,22 +3,99 @@
     --height: 100vh;
     --border-padding-width: 2.5vw;
     --border-padding-height: 2.5vh;
-    
+    // --logo-size: 100vh;
+    --angle: 2.08%;
+    --color1: white;
+    --color2: #00171f;
+    --color3: #003459;
+    --color4: #007ea7;
+    --color5: #00a8e8;
 }
 
 .main {
-    position: relative;
+    position: absolute;
     height: 100vh;
     width: 100vw;
     //MAIN COLOR
     //background-color: rgb(119, 0, 0);
 
     //background-color: rgb(0,0,0);
-    // background-image:
+    //background-image:
+    //linear-gradient(-45deg, #EE7752, #E73C7E, #23A6D5, #23D5AB);
 
-    background-size: 70px 120px;
+    //background-image: 
+// linear-gradient(30deg, #445 12%, transparent 12.5%, transparent 87%, #445 87.5%, #445),
+// linear-gradient(150deg, #445 12%, transparent 12.5%, transparent 87%, #445 87.5%, #445),
+// linear-gradient(30deg, #445 12%, transparent 12.5%, transparent 87%, #445 87.5%, #445),
+// linear-gradient(150deg, #445 12%, transparent 12.5%, transparent 87%, #445 87.5%, #445),
+// linear-gradient(60deg, #99a 25%, transparent 25.5%, transparent 75%, #99a 75%, #99a),
+// linear-gradient(60deg, #99a 25%, transparent 25.5%, transparent 75%, #99a 75%, #99a);
+//background-size: 100px 100px;
+//animation: slide 360s ease infinite;
+    
+//rotation 900s ease infinite
+
+    //background-size: 200% 200%;
+
+     
+    // background-color: #EC173A;
+
+    //background-size: 70px 120px;
+
     overflow: hidden;
 }
+
+.bg {
+    //width: 150vw;
+    //height: 150vw;
+    background-position: center; 
+    // background-size: 200% 200%;
+    position: relative;
+    width: 200vw;
+    height: 200vw;
+
+    //transform: translate(-50%, -50%);
+    //background: 
+    //conic-gradient(#F6F5E3 0%, #51CCC9 0 calc(1 * var(--angle)),#F6F5E3 0 calc(2 * var(--angle)), #FBB963 0 calc(3 * var(--angle)),#F6F5E3 0 calc(4 * var(--angle)),#F45573 0 calc(5 * var(--angle)),#F6F5E3 0 calc(6 * var(--angle)), #63556C 0 calc(7 * var(--angle)),#F6F5E3 0 calc(8 * var(--angle)), #51CCC9 0 calc(9 * var(--angle)),#F6F5E3 0 calc(10 * var(--angle)), #FBB963 0 calc(11 * var(--angle)),#F6F5E3 0 calc(12 * var(--angle)),#F45573 0 calc(13 * var(--angle)),#F6F5E3 0 calc(14 * var(--angle)), #63556C 0 calc(15 * var(--angle)),#F6F5E3 0 calc(16 * var(--angle)), #51CCC9 0 calc(17 * var(--angle)),#F6F5E3 0 calc(18 * var(--angle)), #FBB963 0 calc(19 * var(--angle)),#F6F5E3 0 calc(20 * var(--angle)),#F45573 0 calc(21 * var(--angle)),#F6F5E3 0 calc(22 * var(--angle)), #63556C 0 calc(23 * var(--angle)),#F6F5E3 0 calc(24 * var(--angle)), #51CCC9 0 calc(25 * var(--angle)),#F6F5E3 0 calc(26 * var(--angle)), #FBB963 0 calc(27 * var(--angle)),#F6F5E3 0 calc(28 * var(--angle)),#F45573 0 calc(29 * var(--angle)),#F6F5E3 0 calc(30 * var(--angle)), #63556C 0 calc(31 * var(--angle)),#F6F5E3 0 calc(32 * var(--angle)), #51CCC9 0 calc(33 * var(--angle)),#F6F5E3 0 calc(34 * var(--angle)), #FBB963 0 calc(35 * var(--angle)),#F6F5E3 0 calc(36 * var(--angle)),#F45573 0 calc(37 * var(--angle)),#F6F5E3 0 calc(38 * var(--angle)), #63556C 0 calc(39 * var(--angle)),#F6F5E3 0 calc(40 * var(--angle)), #51CCC9 0 calc(41 * var(--angle)),#F6F5E3 0 calc(42 * var(--angle)), #FBB963 0 calc(43 * var(--angle)),#F6F5E3 0 calc(44 * var(--angle)),#F45573 0 calc(45 * var(--angle)),#F6F5E3 0 calc(46 * var(--angle)), #63556C 0 calc(47 * var(--angle)),#F6F5E3 0% calc(48 * var(--angle)));
+    
+    //PASTEL
+    //repeating-conic-gradient(#F6F5E3 0 calc(1 * var(--angle)), #51CCC9 0 calc(2 * var(--angle)), #F6F5E3 0 calc(3 * var(--angle)), #FBB963 0 calc(4 * var(--angle)), #F6F5E3 0 calc(5 * var(--angle)), #F45573 0 calc(6 * var(--angle)), #F6F5E3 0 calc(7 * var(--angle)), #63556C 0 calc(8 * var(--angle)), #F6F5E3 0);
+    //url(https://firebasestorage.googleapis.com/v0/b/ssrwebsite-1428.appspot.com/o/content%2Frestfest%2Fbg1.png?alt=media&token=ddc6c4d1-368d-4848-bd26-a7ee9d876c66)
+    //BLUER
+    //repeating-conic-gradient(var(--color1) 0 calc(1 * var(--angle)), var(--color2) 0 calc(2 * var(--angle)), var(--color1) 0 calc(3 * var(--angle)), var(--color3) 0 calc(4 * var(--angle)), var(--color1) 0 calc(5 * var(--angle)), var(--color4) 0 calc(6 * var(--angle)), var(--color1) 0 calc(7 * var(--angle)), var(--color5) 0 calc(8 * var(--angle)), var(--color1) 0);
+    
+    //MONO-COLOR
+    //repeating-conic-gradient(var(--color2) 0 calc(0 * var(--angle)), var(--color3) 0 calc(1 * var(--angle)), var(--color4) 0 calc(2 * var(--angle)), var(--color5) 0 calc(3 * var(--angle)), var(--color2) 0);
+    
+    //background-size: 50vw 50vh;
+    //background-position: -25vw -25vh;
+    
+    //transform-origin: 25% 25%;
+    //animation: rotation 360s ease infinite;
+    //overflow: hidden;
+}
+
+@keyframes slide {
+	0% {
+		background-position: 0% 0%
+	}
+	50% {
+		background-position: 100% 100%
+	}
+	100% {
+		background-position: 0% 0%
+	}
+}
+
+@keyframes rotation {
+    from {
+            transform: rotate(0deg);
+    }
+    to {
+            transform: rotate(359deg);
+    }
+}
+
 
 .alt-bg{
     position: absolute;
@@ -52,13 +129,12 @@
     margin-bottom: var(--border-padding-height);
     width: calc(var(--width) - 2 * var(--border-padding-width));
     height: calc(var(--height) - 2 * var(--border-padding-height));
-
     overflow: hidden;
 }
 
 .logo {
-    width: var(--logo-size);
-    height: var(--logo-size);
+    // width: var(--logo-size);
+    // height: var(--logo-size);
     // animation: fadeIn;
     // animation-duration: 1s;
     transform: translate(-50%, -50%);
@@ -66,5 +142,16 @@
     left: 50%;
     top: 50%;
     z-index: 0;
-    opacity: .4;
+    // border: 1px solid red;
+}
+
+.logo-img {
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    opacity: .8;
+    margin: auto;
+    // border: 1px solid green;
 }

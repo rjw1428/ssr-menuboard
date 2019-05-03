@@ -352,7 +352,7 @@ export class SearchComponent implements OnInit {
     this.service.selectedLocal = null
     const dialogRef = this.dialog.open(TransactionFormComponent, {
       width: '500px',
-      height: '75vh',
+      height: '90vh',
       disableClose: true,
       data: this.selectedBeer
     });

@@ -1,10 +1,10 @@
 <!-- MAIN LIST -->
 <div class="container-fluid bg">
   <div class="row">
-    <div class="col-12" cdkDropList (cdkDropListDropped)="drop($event)">
+    <div class="col-12 list" cdkDropList (cdkDropListDropped)="drop($event)">
       <div *ngFor="let beer of itemsList; let i=index" cdkDrag>
         <div class="row h-100">
-          <div style="color: grey;" class="col-1 float-right align-self-center" cdkDragHandle>
+          <div style="color: grey;" class="col-1 float-right align-self-center example-box" cdkDragHandle>
             <!-- <i class="fas fa-grip-horizontal fa-3x"></i> -->
             <i class="fas fa-grip-vertical fa-3x"></i>
           </div>

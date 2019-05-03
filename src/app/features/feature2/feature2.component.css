@@ -183,26 +183,15 @@ h1 {
 }
 
 .page-title {
-    position: absolute;
-    width: 100%;
-    display: block;
+    position: relative;
 }
 
 .item-title {
-    position: absolute;
-    top: 25%;
-    transform: translateX(-50%);
-    left: 55%;
-    width:90%;
+    position: relative;
 }
 
 .item-desc { 
-    position: absolute;
-    top: 50%;
-    /* margin-right: 5px; */
-    transform: translateX(-50%);
-    left: 50%;
-    width:90%;
+    position: relative;
 }
 
 .display-text {
@@ -212,22 +201,24 @@ h1 {
     text-shadow: 3px 3px 3px black;
 }
 
+.display-text2 {
+    color: white;
+    text-align: center;
+    font-family: "American Typewriter";
+    text-shadow: 2px 2px 2px black;
+    background-color: rgba(0,0,0,.5);
+    padding: 10px;
+}
+
 .logo {
     position: relative;
     display: inline-block;
     height: auto; 
     width: 50%;
-    transform: translateX(-50%);
-    left: 50%
-}
-
-.test {
-    height: 15%;
-    width: 100%;
-    position: absolute;
-    /* top: 84%; */
-    bottom: 0;
-    /* border: 1px solid green; */
+    transform: translate(-50%, -100%);
+    left: 50%;
+    top: 100%;
+    /* border: 1px solid red; */
 }
 
 .over {
@@ -237,4 +228,22 @@ h1 {
 
 .not-active {
     opacity: .5;
+}
+
+.oneline-caption {
+    /* border: 1px solid red; */
+    width: 100%;
+    text-align: center;
+    bottom: 13vh;
+    font-family: 'Noto Sans', sans-serif;
+    font-style: italic;
+}
+
+.oneline-subcaption {
+    /* border: 1px solid red; */
+    width: 100%;
+    text-align: center;
+    bottom: 9vh;
+    font-family: 'Noto Sans', sans-serif;
+    font-style: italic;
 }

@@ -1,10 +1,12 @@
-<div *ngIf="edit; else display">
+<div class="container-fluid" *ngIf="edit; else display">
   <h1 class="sold-out-text" *ngIf="item.soldOut">Sold Out</h1>
   <h1 class="on-deck-text" *ngIf="item.onDeck">Coming Soon</h1>
-  <div class="row" [ngClass]="{'selected':selected, 'not-selected':!selected, 'display':true, 'sold-out':item.soldOut}"
+  <div class="row h-100" [ngClass]="{'selected':selected, 'not-selected':!selected, 'display':true, 'sold-out':item.soldOut}"
     (click)="test()">
     <div class="col-2">
-      <img class="img-container" *ngIf="displayIcon" [src]="displayIcon">
+      <div class="img-container">
+        <img class="img-logo-edit" *ngIf="displayIcon" [src]="displayIcon">
+      </div>
     </div>
     <div class="col-10 float-left">
       <div class="row">
@@ -50,43 +52,48 @@
 <ng-template #display>
   <div class="sold-out-text" *ngIf="item.soldOut">Sold Out</div>
   <h1 class="on-deck-text" *ngIf="item.onDeck">Coming Soon</h1>
-  <div class="container" [ngClass]="{'sold-out':item.soldOut, 'background':true}">
-    <div class="row">
-      <div class="col-2">
-        <img class="img-container" *ngIf="displayIcon" [src]="displayIcon">
+  <div class="container background" [ngClass]="{'sold-out': item.soldOut}" [ngStyle]="background">
+    <div class="row h-100">
+      <div class="col-2 px-0">
+        <div class="img-container">
+          <img class="img-logo" [ngStyle]="iconSize" *ngIf="displayIcon" [src]="displayIcon">
+        </div>
       </div>
       <div class="col-10">
-        <div class="row">
+        <div class="row h-100">
           <div class="col-10"
             *ngIf="displayProperties.price || displayProperties.abv || displayProperties.ibu; else wide">
-            <h3 style="font-size: 3vh">{{title | uppercase}}</h3>
-            <p style="font-size: 2vh" *ngIf="displayProperties.location">{{location}}</p>
-            <p style="font-size: 2vh" *ngIf="displayProperties.description && item.beer">{{item.beer.description}}</p>
-            <p style="font-size: 2vh" *ngIf="displayProperties.local_description"
-              [ngStyle]="{'color':'white', 'font-style':'italic'}">{{item.local_description}}</p>
-            <p style="font-size: 2vh" *ngIf="displayProperties.type && item.beer">Type: {{item.beer.type}}</p>
-            <p style="font-size: 2vh" *ngIf="!item.onSpecial">***Not Included In Happy Hour</p>
+            <h3 [ngStyle]="bigFont">{{title | uppercase}}</h3>
+            <p class="location" [ngStyle]="smallFont" *ngIf="displayProperties.location">{{location}}</p>
+            <p [ngStyle]="smallFont" *ngIf="displayProperties.type && item.beer">Type: {{item.beer.type}}</p>
+            <p [ngStyle]="smallFont" *ngIf="displayProperties.description && item.beer">{{item.beer.description}}</p>
+            <p class="local-desc" [ngStyle]="smallFont" *ngIf="displayProperties.local_description">
+              {{item.local_description}}</p>
+            <p [ngStyle]="smallFont" *ngIf="!item.onSpecial">***Not Included In Happy Hour</p>
           </div>
           <div class="col-2">
             <div class="row">
-              <p style="font-size: 3vh" *ngIf="displayProperties.price" class="font-weight-bold">{{item.price}}</p>
+              <p class="nowrap" [ngStyle]="smallFont" *ngIf="displayProperties.price" class="font-weight-bold">
+                {{item.price}}</p>
             </div>
             <div class="row">
-              <p style="font-size: 2vh" *ngIf="displayProperties.abv && item.beer">ABV: {{item.beer.abv}}</p>
+              <p class="nowrap" [ngStyle]="smallFont" *ngIf="displayProperties.abv && item.beer && item.beer.abv">ABV:
+                {{item.beer.abv | abv}}</p>
             </div>
             <div class="row">
-              <p style="font-size: 2vh" *ngIf="displayProperties.ibu && item.beer">IBU: {{item.beer.ibu}}</p>
+              <p class="nowrap" [ngStyle]="smallFont" *ngIf="displayProperties.ibu && item.beer && item.beer.ibu">IBU:
+                {{item.beer.ibu}}</p>
             </div>
           </div>
           <ng-template #wide>
             <div class="col-12">
-              <h3 style="font-size: 3vh">{{title | uppercase}}</h3>
-              <p style="font-size: 2vh" *ngIf="displayProperties.location">{{location}}</p>
-              <p style="font-size: 2vh" *ngIf="displayProperties.description && item.beer">{{item.beer.description}}</p>
-              <p style="font-size: 2vh" *ngIf="displayProperties.local_description"
-                [ngStyle]="{'color':'white', 'font-style':'italic'}">{{item.local_description}}</p>
-              <p style="font-size: 2vh" *ngIf="displayProperties.type && item.beer">Type: {{item.beer.type}}</p>
-              <p style="font-size: 2vh" *ngIf="!item.onSpecial">*** Not Included In Happy Hour ***</p>
+              <h3 [ngStyle]="bigFont">{{title | uppercase}}</h3>
+              <p [ngStyle]="smallFont" *ngIf="displayProperties.location">{{location}}</p>
+              <p [ngStyle]="smallFont" *ngIf="displayProperties.description && item.beer">{{item.beer.description}}</p>
+              <p [ngStyle]="smallFont" *ngIf="displayProperties.local_description" class="local-desc">
+                {{item.local_description}}</p>
+              <p [ngStyle]="smallFont" *ngIf="displayProperties.type && item.beer">Type: {{item.beer.type}}</p>
+              <p [ngStyle]="smallFont" *ngIf="!item.onSpecial">*** Not Included In Happy Hour ***</p>
             </div>
           </ng-template>
         </div>

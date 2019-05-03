@@ -23,6 +23,12 @@ export class ContentService {
         let x = val.payload.doc.data()
         x['id'] = val.payload.doc.id
         return x as Upload
+      }).sort((a, b) => {
+        if (a.displayName < b.displayName)
+          return -1
+        if (a.displayName > b.displayName)
+          return 1
+        return 0
       })
     })
     return this.contentList$

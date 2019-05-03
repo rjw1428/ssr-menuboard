@@ -23,7 +23,8 @@ declare var $: any;
 export class SinglePageComponent implements OnInit, OnChanges {
   @Input('vertical') vertical: boolean = false
   delay: number = 10
-  numFeatureSlides: number=2;
+  numFeatureSlides: number = 2;
+  numBeerSlides: number = 2;
   activeSlide = 0;
   logoUrl: string
   featuredList: FeaturedItem[] = []
@@ -38,14 +39,29 @@ export class SinglePageComponent implements OnInit, OnChanges {
   background = {
     //Default
     'background-color': "rgb(0,0,0)",
-    'background-image': ''
+    'background-image': '',
+    'animation': '',
+    'top': '',
+    'left': '',
   }
 
   border = {
     'border': '',
     'border-radius': '10px',
     'background-color': 'rgba(0,0,0, .5)',
-    'box-shadow': '10px 10px 10px black'
+    'box-shadow': '10px 10px 10px black',
+    'margin-top': '2vh',
+    'margin-bottom': '2vh',
+    'margin-left': '2vh',
+    'margin-right': '2vh',
+    'height': '96vh',
+    'width': '96vw'
+  }
+
+  logo = {
+    'height': '50vw',
+    'width': '50vw',
+    'opacity': '.5'
   }
   constructor(public storage: AngularFireStorage,
     private route: ActivatedRoute,
@@ -54,6 +70,7 @@ export class SinglePageComponent implements OnInit, OnChanges {
   }
 
   ngOnInit() {
+
     this.route.params.switchMap(bar => {
       this.client = bar['client'] as string
       this.screenNum = bar['screen'] as string
@@ -69,7 +86,7 @@ export class SinglePageComponent implements OnInit, OnChanges {
         )
     }).subscribe(vals => {
       this.featuredList = vals
-      this.getNextFeature()
+      //this.getNextFeature()
       // console.log("LEN: " + this.featuredList.length)
     })
 
@@ -95,22 +112,46 @@ export class SinglePageComponent implements OnInit, OnChanges {
         })
       })
     }).subscribe((props) => {
-      props.forEach((prop: { id: string, size: string, color: string, radius: string, image: string, value: string }) => {
+      props.forEach((prop:
+        {
+          id: string, size: string, color: string, radius: string, image: string, image2: string, value: string, marginVert: string,
+          marginHorz: string, animation: string, top: string, left: string, backgroundColor: string, shadow: string, 
+          backgroundSize: string, opacity: string
+        }) => {
         if (prop.id == "border") {
           this.border['border'] = prop.size + " solid " + prop.color
           this.border['border-radius'] = prop.radius
+          this.border['margin-bottom'] = prop.marginVert
+          this.border['margin-top'] = prop.marginVert
+          this.border['margin-left'] = prop.marginHorz
+          this.border['margin-right'] = prop.marginHorz
+          this.border['background-color'] = prop.backgroundColor
+          this.border['box-shadow'] = prop.shadow
+          this.border['height'] = `calc(100vh - 2 * ${prop.marginVert})`
+          this.border['width'] = `calc(100vw - 2 * ${prop.marginHorz})`
         }
         if (prop.id == "background") {
           this.background['background-color'] = prop.color
-          this.background['background-image'] = prop.image
+          if (this.screenNum == '1')
+            this.background['background-image'] = prop.image
+          else this.background['background-image'] = prop.image2
+          this.background['animation'] = prop.animation
+          this.background['top'] = prop.top
+          this.background['left'] = prop.left
+          this.background['background-size'] = prop.backgroundSize
         }
         if (prop.id == "delay") {
           this.delay = +prop.value
           this.carousel.interval = 1000 * this.delay;
         }
         if (prop.id == "features") {
-          this.numFeatureSlides= +prop.value
-          this.activeFeature=Array.from(new Array(this.numFeatureSlides), (val, index) => index)
+          this.numFeatureSlides = +prop.value
+          this.activeFeature = Array.from(new Array(this.numFeatureSlides), (val, index) => index)
+        }
+        if (prop.id == "logo") {
+          this.logo['width'] = prop.size
+          this.logo['height'] = prop.size
+          this.logo['opacity']= prop.opacity
         }
       })
     })

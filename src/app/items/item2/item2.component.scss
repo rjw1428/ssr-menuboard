@@ -189,13 +189,22 @@ img {
 
 p, h2, h3, h4 {
     color: white;
-    font-family: "American Typewriter";
+    //font-family: "American Typewriter";
+    font-family: 'Noto Sans', sans-serif;
     text-shadow: 3px 3px 3px black;
+}
+
+p {
+    margin: 0px;
+    // border: 1px solid red;
+}
+
+h3 {
+    font-weight: bolder;
 }
 
 .display{
     margin-top: 1vh;
-
 }
 
 .sold-out {
@@ -210,7 +219,8 @@ p, h2, h3, h4 {
     font-size: 6vh;
     opacity: .9;
     text-shadow: 2px 2px black;
-    left: 25%;
+    margin-left: 10%;
+    //left: 25%;
     font-family: "Blackwood";
     transform: rotate(15deg);
 }
@@ -221,14 +231,32 @@ p, h2, h3, h4 {
     z-index: 4;
     display: block;
     font-size: 4vh;
+    margin-top: 2%;
     text-shadow: 2px 2px black;
     transform: rotate(-15deg);
 }
 
 .img-container {
-    width: 75px;
-    height: 75px;
     position: relative;
+    height: 100%;
+    width: 100%;
+    // border: 1px solid green;
+}
+
+.img-logo {
+    position: relative;
+    width: 90%;
+    height: auto;
+    // height: 90%;
+    margin-top: 5%;
+    transform: translateX(-50%);
+    left: 50%;
+    // border: 1px solid red;
+}
+
+.img-logo-edit {
+    height: 75px;
+    width: 75px;
 }
 
 // @media screen and (max-height: 850px) {
@@ -259,7 +287,22 @@ p, h2, h3, h4 {
 }
 
 .background {
-    background-color: rgba(50,50,50,.4);
-    margin: 10px;
-    border-radius: 10px;
+    background-color: rgba(50,50,50,.5);
+    margin: 1vh;
+    height: 100%;
+    //border-radius: 10px;
+}
+
+.local-desc {
+    color:'white';
+    font-style: italic;
+}
+
+.location {
+    font-family: Arial, Helvetica, sans-serif;
+    font-style: italic;
+}
+
+.nowrap {
+    white-space: nowrap;
 }

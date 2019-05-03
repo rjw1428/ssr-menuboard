@@ -156,16 +156,15 @@ export class DataService {
       tap(reads => console.log("BEERS: " + reads.length)),
       docJoin(this.afs, this.storage, 'masterBreweryKey', 'masterBreweryList', 'brewery'),
       map((vals: Beer[]) => vals.sort((a, b) => {
-        // let t1 = a.withBrewery ? a.brewery.name + " " + a.name : a.name
-        // let t2 = b.withBrewery ? b.brewery.name + " " + b.name : b.name
-        // if (t1 > t2) return 1
-        // if (t1 < t2) return -1
+        let t1 = a.withBrewery ? a.brewery.name + " " + a.name : a.name
+        let t2 = b.withBrewery ? b.brewery.name + " " + b.name : b.name
+        if (t1 > t2) return 1
+        if (t1 < t2) return -1
         return 0
       })),
       map(beers => {
         return beers.map(beer => {
           let x = beer
-
           return x as Beer
         })
       }),
@@ -173,7 +172,7 @@ export class DataService {
     )
 
     this.breweryFirestoreList = this.afs.collection('masterBreweryList', ref => {
-      return ref.where('active', '==', true).limit(100)
+      return ref.where('active', '==', true)
     })
     this.breweryCollection = this.breweryFirestoreList.snapshotChanges().pipe(
       tap(reads => console.log("BREWS: " + reads.length)),
@@ -225,7 +224,6 @@ export class DataService {
       this.FeaturedCollection = this.localFirestoreList.snapshotChanges().pipe(
         map(val => {
           let x = val.payload.data() as { featuresList: FeaturedItem[] }
-          console.log(x.featuresList)
           return x.featuresList
         }),
         shareReplay(1),

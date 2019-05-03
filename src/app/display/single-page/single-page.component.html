@@ -1,9 +1,13 @@
-<!-- <div [ngClass]="{'alt-bg':client=='pointlomaseafood'}"></div> -->
-<div [ngClass]="{'main':client!='pointlomaseafood'}" [ngStyle]="background" (click)="onClick()">
+<div class="main">
+  <div class="bg" [ngStyle]="background"></div>
+</div>
+<div class="main" (click)="onClick()">
   <div *ngIf="pause">
-    <h1 style="position: absolute; top: 10px; right: 10px; color: white;">P</h1>
+    <h1 style="position: absolute; bottom: 10px; right: 10px; color: lightgrey;">P</h1>
   </div>
-  <img class="logo" [src]="logoUrl" *ngIf="logoUrl">
+  <div class="logo" [ngStyle]="logo">
+    <img class="logo-img" [src]="logoUrl" *ngIf="logoUrl">
+  </div>
   <ngb-carousel class="page" (slide)="onSlide($event)" #carousel>
     <ng-template ngbSlide>
       <div class="carousel-item active wrapper" [ngStyle]="border">
