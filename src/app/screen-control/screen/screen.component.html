@@ -1,4 +1,4 @@
-<div class="container bg">
+<div class="container bg ">
   <div class="row">
     <div class="col-4">
       <h3>{{screenInfo.name}}</h3>
@@ -7,9 +7,9 @@
       <p *ngIf="screenInfo.status">Status: {{screenInfo.status}}</p>
     </div>
     <div class="col-lg-4">
-      <button mat-raised-button [color]="setStaticButtonColor()" (click)="toggleStaticButton()">Static</button>
+      <!-- <button mat-raised-button [color]="setStaticButtonColor()" (click)="toggleStaticButton()">Static</button>
       <button mat-raised-button [color]="setDraftListButtonColor()" (click)="toggleDraftListButton()">Draft List</button>
-      <button mat-raised-button [color]="setFeaturesButtonColor()" (click)="toggleFeaturesButton()">Features</button>
+      <button mat-raised-button [color]="setFeaturesButtonColor()" (click)="toggleFeaturesButton()">Features</button> -->
       <button mat-raised-button color="accent" (click)="togglePauseButton()" *ngIf="screenInfo.pause; else pause">Play</button>
       <ng-template #pause>
           <button mat-raised-button (click)="togglePauseButton()">Pause</button>

@@ -24,3 +24,9 @@ button {
     float:right;
     right: 10vw;
 }
+
+.bg {
+    background-color:white;
+    margin: 10px;
+}
+

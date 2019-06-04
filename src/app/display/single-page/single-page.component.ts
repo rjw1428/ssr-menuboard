@@ -22,7 +22,8 @@ declare var $: any;
 })
 export class SinglePageComponent implements OnInit, OnChanges {
   @Input('vertical') vertical: boolean = false
-  delay: number = 10
+  beerDelay: number = 10
+  featureDelay: number = 10
   numFeatureSlides: number = 2;
   numBeerSlides: number = 2;
   activeSlide = 0;
@@ -115,8 +116,8 @@ export class SinglePageComponent implements OnInit, OnChanges {
       props.forEach((prop:
         {
           id: string, size: string, color: string, radius: string, image: string, image2: string, value: string, marginVert: string,
-          marginHorz: string, animation: string, top: string, left: string, backgroundColor: string, shadow: string, 
-          backgroundSize: string, opacity: string
+          marginHorz: string, animation: string, top: string, left: string, backgroundColor: string, shadow: string,
+          backgroundSize: string, opacity: string, beerlist: number, features: number
         }) => {
         if (prop.id == "border") {
           this.border['border'] = prop.size + " solid " + prop.color
@@ -141,8 +142,9 @@ export class SinglePageComponent implements OnInit, OnChanges {
           this.background['background-size'] = prop.backgroundSize
         }
         if (prop.id == "delay") {
-          this.delay = +prop.value
-          this.carousel.interval = 1000 * this.delay;
+          this.beerDelay = +prop.beerlist
+          this.featureDelay = +prop.features
+          this.carousel.interval = 1000 * this.beerDelay;
         }
         if (prop.id == "features") {
           this.numFeatureSlides = +prop.value
@@ -151,7 +153,7 @@ export class SinglePageComponent implements OnInit, OnChanges {
         if (prop.id == "logo") {
           this.logo['width'] = prop.size
           this.logo['height'] = prop.size
-          this.logo['opacity']= prop.opacity
+          this.logo['opacity'] = prop.opacity
         }
       })
     })
@@ -172,7 +174,9 @@ export class SinglePageComponent implements OnInit, OnChanges {
     this.activeSlide = +x[2]
     if (this.activeSlide == 0) {
       this.getNextFeature()
-    }
+      this.carousel.interval = 1000 * this.beerDelay;
+    } else
+      this.carousel.interval = 1000 * this.featureDelay;
   }
 
   getNextFeature() {
