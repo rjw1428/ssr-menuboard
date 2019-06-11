@@ -183,7 +183,12 @@ export class SearchComponent implements OnInit {
   }
 
   applyFilters() {
-    this.filteredBeerList = _.filter(this.beerList, _.conforms(this.filters))
+    if (Object.keys(this.filters).length > 0)
+      this.filteredBeerList = _.filter(this.beerList, _.conforms(this.filters))
+    else
+      this.filteredBeerList = this.beerList
+    // console.log("error")
+
     // .sort((a, b) => {
     //   let t1 = a.withBrewery ? a.brewery.name + " " + a.name : a.name
     //   let t2 = b.withBrewery ? b.brewery.name + " " + b.name : b.name

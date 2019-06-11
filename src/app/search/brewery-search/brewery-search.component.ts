@@ -104,11 +104,12 @@ export class BrewerySearchComponent implements OnInit {
   }
 
   applyFilters() {
-    this.mainFilteredList = _.filter(this.breweryList, _.conforms(this.filters)).sort((a, b) => {
-      if (a.name > b.name) return 1
-      if (a.name < b.name) return -1
-      return 0
-    })
+    // this.mainFilteredList = _.filter(this.breweryList, _.conforms(this.filters)).sort((a, b) => {
+    //   if (a.name > b.name) return 1
+    //   if (a.name < b.name) return -1
+    //   return 0
+    // })
+    console.log("error")
   }
 
   resetName() {
